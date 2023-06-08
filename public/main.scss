@@ -1,16 +1,15 @@
-// @import "../src/utilities/utilities";
-// @import "../src/homePage/homePage";
-// @import "../src/aboutPage/aboutPage";
-// @import "../src/servicesPage/servicesPage";
-// @import "../src/projectsPage/projectPage";
-// @import "../src/contactPage/contactPage";
-@use "./variables" as v;
+
+@import "./variables";
+@import "../src/utilities/utilities";
+@import "../src/homePage/homePage";
+@import "../src/servicesPage/servicesPage";
+@import "../src/projectsPage/projectPage";
 @import "./mediaQueries";
 html,
 body {
   margin: 0;
   padding: 0;
-  background-color: v.$white;
+  background-color: $white;
 }
 button {
   cursor: pointer;
