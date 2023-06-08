@@ -1,0 +1,55 @@
+@use "./subPages/projectSubPage" as subPage;
+@import "./subPages/projectSubPage";
+$namespace: "project-page";
+.#{$namespace} {
+  padding: 0 5%;
+  min-height: calc(100vh - #{$navbar-height});
+  display: flex;
+  flex-direction: column;
+}
+.#{$namespace}-text-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+  $fontSize: 1.7rem;
+  h2 {
+    align-self: center;
+    position: relative;
+    font-weight: 400;
+    font-family: "Vollkorn", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: $headlineFontColor;
+    margin: 0;
+    font-size: $fontSize;
+    margin: 1.5em 0;
+    &::after {
+      position: absolute;
+      content: "";
+      width: 125%;
+      left: -12.5%;
+      bottom: -0.2em;
+      height: 1px;
+      background-color: $gray;
+    }
+  }
+  p {
+    text-align: center;
+    font-size: $fontSize * 0.7;
+    margin: 0;
+    padding: 0 15%;
+    margin-bottom: 4em;
+    color: $fontColor;
+    font-family: "Vollkorn", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 155%;
+  }
+}
+.hospitality-pg {
+  .#{subPage.$namespace}-media-container {
+    grid-template-columns: 1fr 1fr 1.5fr;
+  }
+  .#{subPage.$namespace}-media-container-img {
+    &:nth-child(3n) {
+      aspect-ratio: 1.5/1;
+    }
+  }
+}

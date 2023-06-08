@@ -1,0 +1,41 @@
+@mixin scale-to-font-size-services-pg($fontSize: 1rem) {
+   $namespace: "services-pg";
+  $margin: $fontSize;
+  .#{$namespace}-row {
+    margin: $margin 0;
+    &:first-child {
+      margin-top: $margin * 3;
+    }
+    &:last-child {
+      margin-bottom: $margin * 3;
+    }
+    h2 {
+      font-size: $margin * 1.2;
+    }
+  }
+  .#{$namespace}-row-img {
+    margin-bottom: $margin * 2;
+  }
+  .#{$namespace}-row-items {
+    margin-bottom: 0;
+    font-size: $margin * 0.85;
+  }
+}
+@mixin services-pg-lg{
+  $namespace: "services-pg";
+  @include scale-to-font-size-services-pg(1rem)
+}
+@mixin services-pg-md {
+  $namespace: "services-pg";
+  @include scale-to-font-size-services-pg(1rem)
+}
+@mixin services-pg-sm {
+  @include scale-to-font-size-services-pg(0.8rem);
+  .#{$namespace}-row-items-container{
+  justify-content: center;
+}
+  $namespace: "services-pg";
+  .#{$namespace}-row-items {
+    grid-template-columns: repeat(2, 50%);
+  }
+}

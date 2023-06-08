@@ -1,0 +1,58 @@
+@use "sass:math";
+@use "../imageSlide/imageSlide" as imgSlide;
+@mixin scale-to-font-size-projects-clickable-banner($fontSize: 2rem) {
+  $namespace: "projects-clickable-banner";
+  .#{$namespace}-bottom-banner {
+    margin-bottom: math.div($fontSize, 2) * 3.5;
+  }
+  .#{$namespace}-bottom-banner-link {
+    .#{imgSlide.$namespace}-img-title {
+      font-size: math.div($fontSize, 2) * 0.9;
+    }
+  }
+}
+@mixin project-clickable-md {
+  $namespace: "projects-clickable-banner";
+  @include scale-to-font-size-projects-clickable-banner(2rem);
+  .#{$namespace}-bottom-banner {
+    flex-wrap: wrap;
+    //margin-bottom: 3.5em;
+  }
+  $margin-spacing: 3%;
+  .#{$namespace}-bottom-banner-link {
+    width: calc((100% - #{$margin-spacing}) / 2);
+    &:nth-child(odd) {
+      margin: 0;
+      margin-bottom: $margin-spacing;
+      margin-right: $margin-spacing;
+    }
+    &:nth-child(even) {
+      margin: 0;
+      margin-bottom: $margin-spacing;
+    }
+    &:nth-last-child(-n + 2) {
+      margin-bottom: 0;
+    }
+    .#{$namespace}-img-container {
+      aspect-ratio: 1;
+    }
+  }
+}
+@mixin project-clickable-sm {
+  @include scale-to-font-size-projects-clickable-banner(1.5rem);
+  $namespace: "projects-clickable-banner";
+  .#{$namespace}-bottom-banner {
+    flex-wrap: wrap;
+    // margin-bottom: 1em;
+  }
+}
+@mixin project-clickable-hover {
+  $namespace: "projects-clickable-banner";
+
+  .#{$namespace}-bottom-banner-link {
+    transition: transform 0.3s ease-out;
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}

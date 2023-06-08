@@ -1,0 +1,34 @@
+@import "./subPages/projectSubPageBreakpoints";
+
+@mixin project-pg-md {
+  $namespace: "project-page";
+
+  .#{$namespace}-text-content {
+    $fontSize: 1.4rem;
+    h2 {
+      font-size: $fontSize;
+    }
+    p {
+      font-size: $fontSize * 0.7;
+    }
+  }
+  @include project-sub-page-md;
+}
+@mixin project-pg-sm {
+  $namespace: "project-page";
+
+  .#{$namespace}-text-content {
+    $fontSize: 1.2rem;
+    h2 {
+      font-size: $fontSize;
+    }
+    p {
+      font-size: $fontSize * 0.7;
+      padding: 0 10%;
+    }
+  }
+  @include project-sub-page-sm;
+}
+@mixin project-pg-hover {
+  @include project-sub-page-hover;
+}

@@ -1,0 +1,44 @@
+$namespace: "pop-up-modal";
+.#{$namespace} {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 20;
+  background-color: rgba(0, 0, 0, 0.75);
+  width: 100%;
+  display: flex;
+  & > button {
+    @include remove-btn-default;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+.#{$namespace}-inner {
+  position: relative;
+  background-color: $off-white;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  padding: 2.5em 0;
+  border-radius: 0.5em;
+  .pop-up-modal-close-btn {
+    @include remove-btn-default;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    font-size: 1.2em;
+    padding: 0.8em;
+    right: 0;
+    svg{
+        stroke: $light-gray;
+    }
+  }
+}

@@ -1,0 +1,22 @@
+$namespace: "contact-action-banner";
+.#{$namespace}{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+  box-sizing: border-box;
+  margin-bottom: 5.5rem;
+  h3 {
+    font-size: 1.1rem;
+    font-family: "Vollkorn", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: $headlineFontColor;
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 1.5rem;
+  }
+  a {
+    @include action-btn-styles($width: 8.5rem);
+  }
+}

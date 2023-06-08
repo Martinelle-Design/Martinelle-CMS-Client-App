@@ -1,0 +1,42 @@
+@use "sass:math";
+@mixin scale-to-font-contact-action-banner(
+  $font-size: 2rem,
+  $navbar-height: $navbar-height
+) {
+  $namespace: "contact-action-banner";
+  .#{$namespace} {
+    margin-bottom: math.div($font-size, 2) * 5.5;
+    h3 {
+      font-size: math.div($font-size, 2) * 1.1;
+      margin-bottom: math.div($font-size, 2) * 1.5;
+    }
+    a {
+      @include action-btn-styles(
+        $width: math.div($navbar-height, 7) * 8.5,
+        $navbar-height: $navbar-height
+      );
+    }
+  }
+}
+@mixin contact-action-banner-md {
+  @include scale-to-font-contact-action-banner(
+    $font-size: 1.6rem,
+    $navbar-height: $medium-navbar-height
+  );
+  $namespace: "contact-action-banner";
+}
+@mixin contact-action-banner-sm {
+  @include scale-to-font-contact-action-banner(
+    $font-size: 1.4rem,
+    $navbar-height: $small-navbar-height
+  );
+  $namespace: "contact-action-banner";
+}
+@mixin contact-action-banner-hover {
+  $namespace: "contact-action-banner";
+  .#{$namespace} {
+    a {
+      @include action-btn-hover-styles;
+    }
+  }
+}

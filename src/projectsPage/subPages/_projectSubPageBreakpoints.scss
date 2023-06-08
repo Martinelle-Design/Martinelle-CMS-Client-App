@@ -1,0 +1,39 @@
+@mixin scale-to-spacing-project-sub-page($spacing: 3rem) {
+  $namespace: "project-subpage-pg";
+
+  .#{$namespace}-media-container {
+    padding: $spacing 0;
+    grid-gap: $spacing $spacing;
+  }
+  .#{$namespace}-media-container-img {
+    font-size: $spacing;
+  }
+}
+@mixin project-sub-page-md {
+  @include scale-to-spacing-project-sub-page(2rem);
+  $namespace: "project-subpage-pg";
+}
+@mixin project-sub-page-sm {
+  @include scale-to-spacing-project-sub-page(1rem);
+  $namespace: "project-subpage-pg";
+}
+@mixin project-sub-page-hover {
+  $namespace: "project-subpage-pg";
+  .#{$namespace}-media-container-img {
+    transition: transform ease-out 0.3s;
+    &:hover {
+      transform: scale(1.05) translateY(-0.4em);
+    }
+  }
+
+  .#{$namespace}-media-container-img-modal-buttons {
+    button {
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+      &:hover:disabled {
+        background-color: transparent;
+      }
+    }
+  }
+}

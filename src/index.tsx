@@ -1,15 +1,43 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-
+import React, { Suspense, lazy } from "react";
+import ReactDOM from "react-dom/client";
+import reportWebVitals from "./reportWebVitals";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Route,
+  createRoutesFromElements,
+} from "react-router-dom";
+import LoadingIcon from "./utilities/loadingIcon/LoadingIcon";
+import Root from "./root";
+const HomePage = lazy(() => import("./homePage/HomePage"));
+const ServicesPage = lazy(() => import("./servicesPage/ServicesPage"));
+const ProjectsPage = lazy(() => import("./projectsPage/ProjectsPage"));
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<Root />}>
+      <Route index element={<HomePage />} />
+      <Route path="home/*" element={<HomePage />} />
+      <Route path="services/*" element={<ServicesPage />} />
+      <Route path="projects/*" element={<ProjectsPage />} />
+    </Route>
+  )
+);
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <Suspense
+      fallback={
+        <LoadingIcon
+          entireViewPort
+          strokeColor="#37673F"
+          backgroundColor="#fdfdfd"
+        />
+      }
+    >
+      <RouterProvider router={router} />
+    </Suspense>
   </React.StrictMode>
 );
 

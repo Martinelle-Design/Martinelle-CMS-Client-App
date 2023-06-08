@@ -1,0 +1,17 @@
+@use "sass:math";
+@mixin pg-title-md {
+  .page-title {
+    font-size: math.div($medium-navbar-height, 6);
+    h1 {
+      font-size: math.div($medium-navbar-height, 6);
+    }
+  }
+}
+@mixin pg-title-sm {
+  .page-title {
+    font-size: math.div($small-navbar-height, 6);
+    h1 {
+      font-size: math.div($small-navbar-height, 6);
+    }
+  }
+}

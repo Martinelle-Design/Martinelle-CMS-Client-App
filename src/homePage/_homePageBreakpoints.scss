@@ -1,0 +1,76 @@
+@use "sass:math";
+@import "./utilities/homePageImageBannerBreakpoints";
+@mixin scale-fonts-down-home-pg(
+  $font-size: 2rem,
+  $navbar-height: $navbar-height
+) {
+  $namespace: "home-pg";
+  .#{$namespace}-bottom-banner-action {
+    h3 {
+      font-size: $font-size;
+      margin-bottom: 0.6em;
+      &::after {
+        bottom: -0.6em;
+      }
+    }
+    a {
+      @include action-btn-styles(
+        $width: math.div($navbar-height, 7) * 12,
+        $navbar-height: $navbar-height
+      );
+      margin-top: 3em;
+      margin-bottom: 3.5em;
+    }
+  }
+}
+@mixin home-pg-lg {
+  // @include home-pg-img-banner-lg;
+}
+@mixin home-pg-md {
+  @include home-pg-img-banner-md;
+  @include scale-fonts-down-home-pg(
+    $font-size: 1.6rem,
+    $navbar-height: $medium-navbar-height
+  );
+  $namespace: "home-pg";
+  .#{$namespace}-category-nav {
+    $btnWidth: 3em;
+    width: calc(100% - (#{$btnWidth} * 2));
+    @include carousel-btn-styles(
+      $fontColor: $darker-gray,
+      $btnWidth: $btnWidth,
+      $bgColor: $white,
+      $fontSize: 1.2em
+    );
+  }
+}
+@mixin home-pg-sm {
+  @include home-pg-img-banner-sm;
+  @include scale-fonts-down-home-pg(
+    $font-size: 1.4rem,
+    $navbar-height: $small-navbar-height
+  );
+  $namespace: "home-pg";
+  .#{$namespace}-category-nav {
+    $btnWidth: 2em;
+    width: calc(100% - (#{$btnWidth} * 2));
+    @include carousel-btn-styles(
+      $fontColor: $darker-gray,
+      $btnWidth: $btnWidth,
+      $bgColor: $white,
+      $fontSize: 0.8em
+    );
+  }
+}
+@mixin home-pg-hover {
+  @include home-pg-img-banner-hover;
+  $namespace: "home-pg";
+  .#{$namespace}-bottom-banner-action {
+    a {
+      @include action-btn-hover-styles;
+    }
+
+  }
+  
+}
+

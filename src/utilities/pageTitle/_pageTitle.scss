@@ -1,0 +1,23 @@
+@use "sass:math";
+.page-title {
+  box-sizing: border-box;
+  position: relative;
+  font-size: math.div($navbar-height, 6);
+  padding-bottom: 0.4em;
+  &::after {
+    position: absolute;
+    content: "";
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: $gray;
+    height: 1px;
+  }
+  h1 {
+    font-weight: 400;
+    color: $headlineFontColor;
+    font-family: "Vollkorn", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: math.div($navbar-height, 6);
+    margin: 0;
+  }
+}

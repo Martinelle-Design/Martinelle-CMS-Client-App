@@ -1,0 +1,28 @@
+$namespace: "adapative-carousel";
+.#{$namespace}-nav {
+  max-width: 100%;
+  position: relative;
+  margin: 0 auto;
+  .swiper-button-prev,
+  .swiper-button-next {
+    height: 100%;
+    top: 0;
+    margin: 0;
+    &::after {
+      margin: 0;
+    }
+  }
+  .swiper-button-prev {
+    left: 0;
+  }
+  .swiper-button-next {
+    right: 0;
+  }
+  .swiper-wrapper {
+    width: fit-content;
+    margin: auto;
+  }
+}
+.#{$namespace}-nav-link {
+  text-decoration: none;
+}

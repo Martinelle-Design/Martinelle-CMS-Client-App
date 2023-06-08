@@ -1,0 +1,135 @@
+@use "sass:math";
+@mixin scale-to-font-size-home-banner-full(
+  $font-size: 1.8rem,
+  $navbar-height: $navbar-height
+) {
+  $namespace: "home-pg-img-banner-full";
+  .#{$namespace}-img-container {
+    min-height: $font-size * 13.5;
+  }
+  .#{$namespace}-content-container {
+    padding: 0 5%;
+    width: 35%;
+    min-width: $font-size * 12.9;
+    h3 {
+      font-size: $font-size;
+      margin-bottom: 0.8em;
+    }
+    .#{$namespace}-content-btn {
+      margin-top: 3.5em;
+      @include action-btn-styles(
+        $width: math.div($navbar-height, 7) * 11,
+        $bgColor: $black,
+        $navbar-height: $navbar-height
+      );
+    }
+  }
+  //for banners with side-by-side text
+  $namespace: "home-page-img-banner";
+
+  .#{$namespace}-content-title {
+    font-size: $font-size;
+  }
+  .#{$namespace}-content-inner-container {
+    font-size: $font-size * 0.6;
+  }
+  .#{$namespace}-content-btn {
+    @include action-btn-styles(
+      $width: math.div($navbar-height, 7) * 13,
+      $navbar-height: $navbar-height
+    );
+  }
+}
+@mixin home-pg-img-banner-lg {
+  @include scale-to-font-size-home-banner-full(
+    $font-size: 1.5rem,
+    $navbar-height: $medium-navbar-height
+  );
+}
+@mixin home-pg-img-banner-md {
+  @include scale-to-font-size-home-banner-full(
+    $font-size: 1.3rem,
+    $navbar-height: $medium-navbar-height
+  );
+  $namespace: "home-page-img-banner";
+  .#{$namespace}-container {
+    position: relative;
+    flex-direction: column;
+  }
+  .#{$namespace}-content-container {
+    padding: 10% 0;
+  }
+  .#{$namespace}-content-title {
+    color: $black;
+    &::after {
+      background-color: $black;
+    }
+  };
+  .#{$namespace}-content-inner-container {
+    color: $black;
+  };
+  .#{$namespace}-img-container {
+    position: absolute;
+    &::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      content: "";
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.75);
+    }
+  }
+}
+@mixin home-pg-img-banner-sm {
+  @include scale-to-font-size-home-banner-full(
+    $font-size: 1.2rem,
+    $navbar-height: $small-navbar-height
+  );
+  $namespace: "home-pg-img-banner-full";
+  .#{$namespace}-img-container {
+    position: relative;
+    &::after {
+      position: absolute;
+      width: 100%;
+      top: 0;
+      left: 0;
+      height: 100%;
+      content: "";
+      background-color: rgba(255, 255, 255, 0.75);
+      z-index: 0;
+    }
+  }
+  .#{$namespace}-content-container {
+    min-width: unset;
+    $width: 60%;
+    position: absolute;
+    top: 0;
+    left: calc((100% - #{$width}) / 2);
+    height: 100%;
+    width: $width;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    z-index: 1;
+    line-height: 1.7em;
+    text-align: center;
+    background-color: unset;
+    background-color: none;
+    transform: translateX(0px);
+  }
+}
+@mixin home-pg-img-banner-hover {
+  $namespace: "home-page-img-banner";
+  .#{$namespace}-content-btn {
+    @include action-btn-hover-styles;
+  }
+  $namespace: "home-pg-img-banner-full";
+  .#{$namespace}-content-container {
+    .#{$namespace}-content-btn {
+      @include action-btn-hover-styles($bgColor: $black);
+    }
+  }
+}

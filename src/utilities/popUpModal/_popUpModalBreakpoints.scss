@@ -1,0 +1,12 @@
+@mixin pop-up-modal-md {
+  $namespace: "pop-up-modal";
+  .#{$namespace}-inner {
+    width: 70%;
+  }
+}
+@mixin pop-up-modal-sm {
+  $namespace: "pop-up-modal";
+  .#{$namespace}-inner {
+    width: 90%;
+  }
+}

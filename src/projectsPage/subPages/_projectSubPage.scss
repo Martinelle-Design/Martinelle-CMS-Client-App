@@ -1,0 +1,90 @@
+@use "../../../public/variables" as v;
+@use "sass:math";
+$namespace: "project-subpage-pg";
+.#{$namespace} {
+  padding: 0 5%;
+}
+$spacing: 3rem;
+.#{$namespace}-media-container {
+  padding: $spacing 0;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 1fr;
+  grid-gap: $spacing $spacing;
+}
+.#{$namespace}-media-container-img {
+  @include v.remove-btn-default;
+  font-size: $spacing;
+  background-color: black;
+  aspect-ratio: 1;
+  .lazy-load-image-background {
+    width: 100%;
+    height: 100%;
+    @include v.img-fill;
+  }
+}
+.#{$namespace}-media-container-img-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 20;
+}
+.#{$namespace}-media-container-img-modal-backdrop {
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 300%;
+  height: 300%;
+  z-index: 0;
+}
+.#{$namespace}-media-container-img-modal-content {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+.#{$namespace}-media-container-img-modal-buttons {
+  $height: 2.8rem;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 0.8rem;
+  left: calc(50% - #{$height}* 3 / 2);
+  width: $height * 3;
+  border-radius: $height * 3;
+  height: $height;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 2;
+  button {
+    @include v.remove-btn-default;
+    color: v.$white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1;
+    border-radius: $height * 3;
+    font-size: math.div($height, 2.4);
+    svg {
+      height: 1em;
+    }
+    path {
+      fill: v.$white;
+    }
+    &:disabled {
+      cursor: default;
+      color: darken(v.$white, 40%);
+      path {
+        fill: darken(v.$white, 40%);
+      }
+    }
+  }
+}

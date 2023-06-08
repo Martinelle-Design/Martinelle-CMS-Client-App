@@ -1,0 +1,54 @@
+@mixin secondary-navbar-md {
+  $namespace: "secondary-navbar";
+  .#{$namespace}-nav {
+    $btnWidth: 1em;
+
+    @include carousel-btn-styles(
+      $fontColor: $darker-gray,
+      $btnWidth: $btnWidth,
+      $bgColor: $white,
+      $fontSize: 0.8rem
+    );
+  }
+  .#{$namespace}-nav-link {
+    font-size: 0.85rem;
+  }
+}
+@mixin secondary-navbar-sm {
+  $namespace: "secondary-navbar";
+  .#{$namespace}-nav-link {
+    font-size: 0.75rem;
+  }
+}
+@mixin secondary-navbar-hover {
+  $namespace: "secondary-navbar";
+  .#{$namespace}-nav {
+    $btnWidth: 1em;
+    @include carousel-btn-styles(
+      $fontColor: $darker-gray,
+      $btnWidth: $btnWidth,
+      $bgColor: $white,
+      $fontSize: 0.7rem
+    );
+  }
+  .#{$namespace}-nav-link {
+    padding-bottom: 0.3em;
+    &::before {
+      position: absolute;
+      bottom: 0em;
+      left: 15%;
+      content: "";
+      width: 0%;
+      height: 1px;
+      background-color: $dark-green;
+      transition: all 0.3s ease-out;
+      z-index: 1;
+    }
+    &:hover {
+      color: $dark-green;
+      &::before {
+        width: 70%;
+      }
+    }
+  }
+}

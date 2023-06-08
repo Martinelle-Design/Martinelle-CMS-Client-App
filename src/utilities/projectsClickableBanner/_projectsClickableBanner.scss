@@ -1,0 +1,23 @@
+$namespace: "projects-clickable-banner";
+.#{$namespace}-bottom-banner {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3.5rem;
+}
+.#{$namespace}-bottom-banner-link {
+  text-decoration: none;
+  color: $headlineFontColor;
+  width: 100%;
+  margin: 0 2%;
+  padding: 0;
+  .image-slide-img-container {
+    height: auto;
+  }
+  cursor: pointer;
+  &:first-child {
+    margin-left: 0;
+  }
+  &:last-child {
+    margin-right: 0;
+  }
+}
