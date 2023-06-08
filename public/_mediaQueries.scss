@@ -1,18 +1,31 @@
+@import "../src/utilities/utilitiesBreakpoints";
+@import "../src/homePage/homePageBreakpoints";
+@import "../src/servicesPage/servicesPageBreakpoints";
+@import "../src/projectsPage/projectPageBreakpoints";
 @media (min-width: 992px) {
 }
 
 @media (max-width: 992px) {
-
+  @include home-pg-lg;
+  @include services-pg-lg;
 }
 
 @media (max-width: 768px) {
-
+  @include utilities-md;
+  @include home-pg-md;
+  @include services-pg-md;
+  @include project-pg-md;
 }
 
 @media (max-width: 575px) {
-
+  @include utilities-sm;
+  @include home-pg-sm;
+  @include services-pg-sm;
+  @include project-pg-sm;
 }
 
 @media (any-hover: hover) {
-
+  @include utilities-hover;
+  @include home-pg-hover;
+  @include project-pg-hover;
 }

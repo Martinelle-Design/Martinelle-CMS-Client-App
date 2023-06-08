@@ -1,22 +1,8 @@
 import HomePageImageBanner from "./utilities/HomePageImageBanner";
 import HomePageImageBannerFull from "./utilities/HomePageImgBannerFull";
-import ProjectsClickableBanner from "../utilities/projectsClickableBanner/ProjectsClickableBanner";
-import { Link } from "react-router-dom";
-import ContactActionButton from "../utilities/contactActionBanner/ContactActionBanner";
+import PageTitle from "../utilities/pageTitle/PageTitle";
 import homePageData from "./homePageData";
 const namespace = "home-pg";
-const HomePageBottomBanner = () => {
-  return (
-    <>
-      <div className={`${namespace}-bottom-banner-action`}>
-        <h3>Browse Interior Projects</h3>
-        <Link to="/projects">EXPLORE</Link>
-      </div>
-      <ProjectsClickableBanner />
-      <ContactActionButton />
-    </>
-  );
-};
 const HomePage = () => {
   const orderedHomePageItems = homePageData.sort(
     (a, b) => a.orderIdx - b.orderIdx
@@ -24,6 +10,7 @@ const HomePage = () => {
   return (
     <div className={`${namespace}-container`}>
       <div className={`${namespace}-inner-container`}>
+        <PageTitle text={"Home Page".toUpperCase()} />
         {orderedHomePageItems.map((item) => {
           const { id, subType, actionBtnData, title, textDescription, images } =
             item;
@@ -70,7 +57,6 @@ const HomePage = () => {
             </HomePageImageBanner>
           );
         })}
-        <HomePageBottomBanner />
       </div>
     </div>
   );

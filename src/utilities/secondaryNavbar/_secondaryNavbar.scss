@@ -3,7 +3,7 @@ $namespace: "secondary-navbar";
   padding: 0 5%;
 }
 .#{$namespace}-nav {
-  margin-top: 1em;
+  margin-top: 2em;
   margin-bottom: 2em;
   $btnWidth: 1em;
   width: calc(100% - (#{$btnWidth} * 2));

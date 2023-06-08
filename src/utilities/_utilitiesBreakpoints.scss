@@ -1,7 +1,5 @@
 @import "./popUpModal/popUpModalBreakpoints";
-@import "./generalNavbar/generalNavbarBreakpoints";
 @import "./secondaryNavbar/secondaryNavbarBreakpoints";
-@import "./footer/footerBreakpoints";
 @import "./pageTitle/pageTitleBreakpoints";
 @import "./imageSlide/imageSlideBreakpoints";
 @import "./projectsClickableBanner/projectsClickableBannerBreakpoints";
@@ -10,29 +8,20 @@
 // }
 @mixin utilities-md {
   @include pop-up-modal-md;
-  @include general-navbar-md;
-  @include footer-md;
   @include secondary-navbar-md;
   @include pg-title-md;
   @include img-slide-md;
   @include project-clickable-md;
-  @include contact-action-banner-md;
 }
 @mixin utilities-sm {
   @include pop-up-modal-sm;
-  @include general-navbar-sm;
-  @include footer-sm;
   @include secondary-navbar-sm;
   @include pg-title-sm;
   @include img-slide-sm;
   @include project-clickable-sm;
-  @include contact-action-banner-sm;
 }
 @mixin utilities-hover {
-  @include general-navbar-hover;
   @include secondary-navbar-hover;
-  @include footer-hover;
   @include img-slide-hover;
   @include project-clickable-hover;
-  @include contact-action-banner-hover;
 }

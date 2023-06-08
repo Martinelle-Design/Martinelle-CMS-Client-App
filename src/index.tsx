@@ -12,6 +12,12 @@ import Root from "./root";
 const HomePage = lazy(() => import("./homePage/HomePage"));
 const ServicesPage = lazy(() => import("./servicesPage/ServicesPage"));
 const ProjectsPage = lazy(() => import("./projectsPage/ProjectsPage"));
+const ProjectsClickableBannerEditable = lazy(() =>
+  import("./utilities/projectsClickableBanner/ProjectsClickableBanner").then(
+    (module) => ({ default: module.ProjectClickableBannerEditable })
+  )
+);
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />}>
@@ -19,6 +25,10 @@ const router = createBrowserRouter(
       <Route path="home/*" element={<HomePage />} />
       <Route path="services/*" element={<ServicesPage />} />
       <Route path="projects/*" element={<ProjectsPage />} />
+      <Route
+        path="project-categories/*"
+        element={<ProjectsClickableBannerEditable />}
+      />
     </Route>
   )
 );

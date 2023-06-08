@@ -1,7 +1,20 @@
 import { ImageSlide } from "../imageSlide/ImageSlide";
 import { Link } from "react-router-dom";
 import { projectsClickableData } from "./projectsClickableData";
+import PageTitle from "../pageTitle/PageTitle";
 const namespace = "projects-clickable-banner";
+export const ProjectClickableBannerEditable = () => {
+  const namespace = 'project-page';
+  return (
+    <div className={namespace}>
+      <PageTitle text={"Project Categories".toUpperCase()} />
+      <div className={`${namespace}-text-content`}>
+        <h2></h2>
+        <ProjectsClickableBanner />
+      </div>
+    </div>
+  )
+}
 const ProjectsClickableBanner = () => {
   const orderedProjectButtonItems = projectsClickableData.sort(
     (a, b) => a.orderIdx - b.orderIdx

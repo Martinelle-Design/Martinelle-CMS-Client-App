@@ -6,8 +6,8 @@ const ProjectIndexPage = () => {
     <div className={namespace}>
       <PageTitle text={"Projects".toUpperCase()} />
       <div className={`${namespace}-text-content`}>
-          <h2>Our Expertise</h2>
-          <ProjectsClickableBanner />
+        <h2></h2>
+        <ProjectsClickableBanner />
       </div>
     </div>
   );
