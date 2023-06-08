@@ -41,7 +41,7 @@ const HomePageImageBannerFull = ({
         >
           {children}
         </h3>
-        {btnData.url ? (
+        {btnData.url && !btnData.disabled ? (
           <Link
             className={`${namespace}-content-btn`}
             to={btnData.url}
@@ -53,6 +53,7 @@ const HomePageImageBannerFull = ({
           <button
             className={`${namespace}-content-btn`}
             onClick={btnData.onClick}
+            disabled={btnData.disabled}
           >
             {btnData.text}
           </button>

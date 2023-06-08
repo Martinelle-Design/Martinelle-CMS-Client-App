@@ -9,7 +9,7 @@ export const ProjectClickableBannerEditable = () => {
     <div className={namespace}>
       <PageTitle text={"Project Categories".toUpperCase()} />
       <div className={`${namespace}-text-content`}>
-        <h2></h2>
+        <h2>{""}</h2>
         <ProjectsClickableBanner />
       </div>
     </div>

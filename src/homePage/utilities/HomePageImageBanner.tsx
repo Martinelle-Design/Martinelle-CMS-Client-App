@@ -11,6 +11,7 @@ export type HomePageImageBannerContentProps = {
   btnData: {
     text: string;
     url?: string;
+    disabled?: boolean;
     onClick?: (
       e:
         | React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -38,7 +39,7 @@ const HomePageImageBannerContent = ({
           {title}
         </h3>
         <div className={`${namespace}-content-inner-container`}>{children}</div>
-        {btnData.url ? (
+        {btnData.url && !btnData.disabled ? (
           <Link
             className={`${namespace}-content-btn`}
             to={btnData.url}
@@ -50,6 +51,7 @@ const HomePageImageBannerContent = ({
           <button
             className={`${namespace}-content-btn`}
             onClick={btnData.onClick}
+            disabled={btnData.disabled}
           >
             {btnData.text}
           </button>

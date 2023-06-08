@@ -29,6 +29,7 @@ const HomePage = () => {
                 btnData={{
                   text: actionBtnData.text.toUpperCase(),
                   url: actionBtnData.url,
+                  disabled: true,
                 }}
               >
                 {title}
@@ -47,6 +48,8 @@ const HomePage = () => {
               btnData={{
                 text: actionBtnData.text.toUpperCase(),
                 url: actionBtnData.url,
+                disabled: true,
+
               }}
             >
               {textDescription
