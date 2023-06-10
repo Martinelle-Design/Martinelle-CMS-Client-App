@@ -15,6 +15,11 @@ $namespace: "home-pg";
     max-width: 1300px;
     width: 100%;
   }
+  .sortable-item {
+    & > * {
+      width: 100%;
+    }
+  }
 }
 
 .#{$namespace}-category-nav-title {
@@ -35,10 +40,10 @@ $namespace: "home-pg";
     $fontSize: 2em
   );
 }
-.#{$namespace}-img-banner-left,
-.#{$namespace}-img-banner-right {
-  margin-top: 3em;
-}
+// .#{$namespace}-img-banner-left,
+// .#{$namespace}-img-banner-right {
+//   margin-top: 3em;
+// }
 .#{$namespace}-bottom-banner-action {
   margin-top: 3em;
   display: flex;

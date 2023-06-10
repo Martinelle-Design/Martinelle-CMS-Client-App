@@ -14,11 +14,14 @@ const HomePageImageBannerFull = ({
   imgPlaceholderUrl,
   children,
   btnData,
-}: { customClass: string } & ImageProps &
+  intersectionAnimation = true,
+}: { customClass: string; intersectionAnimation?: boolean } & ImageProps &
   Omit<HomePageImageBannerContentProps, "title">) => {
   const titleRef = useRef<HTMLHeadingElement | null>(null);
   const titleEntry = useIntersectionObserver(titleRef, {});
-  const isTitleVisible = !!titleEntry?.isIntersecting;
+  const isTitleVisible = intersectionAnimation
+    ? !!titleEntry?.isIntersecting
+    : true;
   return (
     <div
       className={`${namespace}-img-container${

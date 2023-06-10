@@ -8,6 +8,7 @@ const namespace = "home-page-img-banner";
 export type HomePageImageBannerContentProps = {
   title: string;
   children: string | JSX.Element | JSX.Element[];
+  intersectionAnimation?: boolean;
   btnData: {
     text: string;
     url?: string;
@@ -23,10 +24,13 @@ const HomePageImageBannerContent = ({
   title,
   children,
   btnData,
+  intersectionAnimation = true,
 }: HomePageImageBannerContentProps) => {
   const titleRef = useRef<HTMLHeadingElement | null>(null);
   const titleEntry = useIntersectionObserver(titleRef, {});
-  const isTitleVisible = !!titleEntry?.isIntersecting;
+  const isTitleVisible = intersectionAnimation
+    ? !!titleEntry?.isIntersecting
+    : true;
   return (
     <div className={`${namespace}-content-container`}>
       <div className={`${namespace}-content`}>
@@ -84,7 +88,9 @@ const HomePageImageBanner = ({
   title,
   children,
   btnData,
+  intersectionAnimation = true,
 }: {
+  intersectionAnimation?: boolean;
   customClass?: string;
   contentDirection?: "left" | "right";
 } & ImageProps &
@@ -102,7 +108,11 @@ const HomePageImageBanner = ({
           imgPlaceholderUrl={imgPlaceholderUrl}
         />
       )}
-      <HomePageImageBannerContent title={title} btnData={btnData}>
+      <HomePageImageBannerContent
+        title={title}
+        btnData={btnData}
+        intersectionAnimation={intersectionAnimation}
+      >
         {children}
       </HomePageImageBannerContent>
       {contentDirection === "right" && (
