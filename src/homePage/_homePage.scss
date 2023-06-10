@@ -75,3 +75,18 @@ $namespace: "home-pg";
     margin-bottom: 3.5em;
   }
 }
+.#{$namespace}-grid-list {
+  box-sizing: border-box;
+  background-color: gray;
+  margin: 2em 0;
+  padding: 5%;
+  & > * {
+    margin: 5% 0;
+    &:first-child {
+      margin-top: 0;
+    }
+    &:nth-last-child(3) {
+      margin-bottom: 0;
+    }
+  }
+}

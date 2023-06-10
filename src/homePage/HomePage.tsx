@@ -100,7 +100,9 @@ const HomePage = () => {
     <div className={`${namespace}-container`}>
       <div className={`${namespace}-inner-container`}>
         <PageTitle text={"Home Page".toUpperCase()} />
-        <HomePageGridList />
+        <div className={`${namespace}-grid-list`}>
+          <HomePageGridList />
+        </div>
       </div>
     </div>
   );
