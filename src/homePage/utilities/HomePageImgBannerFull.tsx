@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { useRef } from "react";
 import useIntersectionObserver from "../../hooks/use-intersection-observer";
+import useElementSize from "../../hooks/use-element-size";
 
 const namespace = "home-pg-img-banner-full";
 const HomePageImageBannerFull = ({
@@ -22,8 +23,15 @@ const HomePageImageBannerFull = ({
   const isTitleVisible = intersectionAnimation
     ? !!titleEntry?.isIntersecting
     : true;
+  const [elSizeRef, size] = useElementSize();
+  const style = {
+    height: size.height ? size.height : undefined,
+    width: size.width ? size.width : undefined,
+  };
   return (
     <div
+      ref={(ref) => elSizeRef(ref)}
+      style={style}
       className={`${namespace}-img-container${
         customClass ? " " + customClass : ""
       }`}

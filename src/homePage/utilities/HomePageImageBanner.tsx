@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useRef } from "react";
 import useIntersectionObserver from "../../hooks/use-intersection-observer";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import useElementSize from "../../hooks/use-element-size";
 const namespace = "home-page-img-banner";
 export type HomePageImageBannerContentProps = {
   title: string;
@@ -95,11 +96,18 @@ const HomePageImageBanner = ({
   contentDirection?: "left" | "right";
 } & ImageProps &
   HomePageImageBannerContentProps) => {
+  const [elSizeRef, size] = useElementSize();
+  const style = {
+    height: size.height ? size.height : undefined,
+    width: size.width ? size.width : undefined,
+  };
   return (
     <div
+      ref={(el) => elSizeRef(el)}
       className={`${namespace}-container${
         customClass ? " " + customClass : ""
       }`}
+      style={style}
     >
       {contentDirection === "left" && (
         <HomePageImageBannerImage

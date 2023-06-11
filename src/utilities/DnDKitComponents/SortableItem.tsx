@@ -9,16 +9,18 @@ export function SortableItem({
 }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: id });
+
   const style = {
-    transform: CSS.Transform.toString(transform),
-    // backgroundColor: isOver ? "gray" : undefined,
+    transform: CSS.Transform.toString(transform) //+ " scaleX(1) scaleY(1)"
+    ,
     transition,
   };
-
   return (
     <div
       className="sortable-item"
-      ref={setNodeRef}
+      ref={(ref) => {
+        setNodeRef(ref);
+      }}
       style={style}
       {...attributes}
       {...listeners}

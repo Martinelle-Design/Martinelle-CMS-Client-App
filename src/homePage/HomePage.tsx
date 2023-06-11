@@ -79,7 +79,12 @@ const HomePageGridList = () => {
         const activeId = e.active.id;
         const activeItemIdx = activeData.data?.current?.sortable?.index;
         const newActiveItemIdx = overData.data?.current?.sortable?.index;
-        if (activeItemIdx === undefined || newActiveItemIdx === undefined)
+        if (
+          activeItemIdx === undefined ||
+          newActiveItemIdx === undefined ||
+          activeItemIdx === null ||
+          newActiveItemIdx === null
+        )
           return;
         const newItem = items.find((item) => item.id === activeId);
         if (!newItem) return;
