@@ -4,7 +4,7 @@ import PageTitle from "../utilities/pageTitle/PageTitle";
 import homePageData from "./homePageData";
 import { useState } from "react";
 import { HomePageItems } from "../utilities/types/types";
-import { DndContext, DragOverlay } from "@dnd-kit/core";
+import { DndContext, DragOverEvent, DragOverlay } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 import { SortableItem } from "../utilities/DnDKitComponents/SortableItem";
 const namespace = "home-pg";
@@ -13,8 +13,27 @@ const HomePageGridList = () => {
     (a, b) => a.orderIdx - b.orderIdx
   );
   const [items, setItems] = useState<HomePageItems[]>(orderedHomePageItems);
-
   const [activeId, setActiveId] = useState<null | string | number>(null);
+  const handleUpdateArr = (e: DragOverEvent) => {
+    const activeData = e.active as any;
+    const overData = e.over as any;
+    const newItems = [...items];
+    const activeId = e.active.id;
+    const activeItemIdx = activeData?.data?.current?.sortable?.index;
+    const newActiveItemIdx = overData?.data?.current?.sortable?.index;
+    if (
+      activeItemIdx === undefined ||
+      newActiveItemIdx === undefined ||
+      activeItemIdx === null ||
+      newActiveItemIdx === null
+    )
+      return;
+    const newItem = items.find((item) => item.id === activeId);
+    if (!newItem) return;
+    newItems.splice(activeItemIdx, 1);
+    newItems.splice(newActiveItemIdx, 0, newItem);
+    setItems(newItems);
+  };
   const itemElements = items.map((item, idx) => {
     const { id, subType, actionBtnData, title, textDescription, images } = item;
     const imgEntries = Object.entries(images);
@@ -71,31 +90,19 @@ const HomePageGridList = () => {
   return (
     <DndContext
       onDragStart={(e) => setActiveId(e.active.id)}
-      onDragEnd={(e) => {
-        setActiveId(null);
-        const activeData = e.active as any;
-        const overData = e.over as any;
-        const newItems = [...items];
-        const activeId = e.active.id;
-        const activeItemIdx = activeData.data?.current?.sortable?.index;
-        const newActiveItemIdx = overData.data?.current?.sortable?.index;
-        if (
-          activeItemIdx === undefined ||
-          newActiveItemIdx === undefined ||
-          activeItemIdx === null ||
-          newActiveItemIdx === null
-        )
-          return;
-        const newItem = items.find((item) => item.id === activeId);
-        if (!newItem) return;
-        newItems.splice(activeItemIdx, 1);
-        newItems.splice(newActiveItemIdx, 0, newItem);
-        setItems(newItems);
-      }}
+      onDragOver={handleUpdateArr}
+      onDragEnd={() => setActiveId(null)}
     >
-      <SortableContext items={items.map((item) => item.id)}>
+      <SortableContext
+        items={items.map((item) => item.id)}
+        strategy={() => {
+          return null;
+        }}
+      >
         {itemElements}
-        <DragOverlay>{activeId ? itemElementMap[activeId] : null}</DragOverlay>
+        <DragOverlay adjustScale={false}>
+          {activeId ? itemElementMap[activeId] : null}
+        </DragOverlay>
       </SortableContext>
     </DndContext>
   );

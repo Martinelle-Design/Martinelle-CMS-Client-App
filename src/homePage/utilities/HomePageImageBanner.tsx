@@ -96,18 +96,11 @@ const HomePageImageBanner = ({
   contentDirection?: "left" | "right";
 } & ImageProps &
   HomePageImageBannerContentProps) => {
-  const [elSizeRef, size] = useElementSize();
-  const style = {
-    height: size.height ? size.height : undefined,
-    width: size.width ? size.width : undefined,
-  };
   return (
     <div
-      ref={(el) => elSizeRef(el)}
       className={`${namespace}-container${
         customClass ? " " + customClass : ""
       }`}
-      style={style}
     >
       {contentDirection === "left" && (
         <HomePageImageBannerImage

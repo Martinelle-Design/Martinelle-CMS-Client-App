@@ -11,7 +11,7 @@ export function SortableItem({
     useSortable({ id: id });
 
   const style = {
-    transform: CSS.Transform.toString(transform) //+ " scaleX(1) scaleY(1)"
+    transform: CSS.Translate.toString(transform) 
     ,
     transition,
   };
