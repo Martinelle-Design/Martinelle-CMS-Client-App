@@ -7,12 +7,17 @@ export function SortableItem({
   id: string;
   children: JSX.Element | JSX.Element[] | string;
 }) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: id });
-
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: id });
   const style = {
-    transform: CSS.Translate.toString(transform) 
-    ,
+    transform: CSS.Translate.toString(transform),
+    opacity: isDragging ? 0.6 : 1,
     transition,
   };
   return (

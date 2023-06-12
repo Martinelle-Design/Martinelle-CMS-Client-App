@@ -2,39 +2,15 @@ import HomePageImageBanner from "./utilities/HomePageImageBanner";
 import HomePageImageBannerFull from "./utilities/HomePageImgBannerFull";
 import PageTitle from "../utilities/pageTitle/PageTitle";
 import homePageData from "./homePageData";
-import { useState } from "react";
 import { HomePageItems } from "../utilities/types/types";
-import { DndContext, DragOverEvent, DragOverlay } from "@dnd-kit/core";
+import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 import { SortableItem } from "../utilities/DnDKitComponents/SortableItem";
+import useSortableList from "../hooks/use-sortable-list";
+import { useState } from "react";
 const namespace = "home-pg";
-const HomePageGridList = () => {
-  const orderedHomePageItems = homePageData.sort(
-    (a, b) => a.orderIdx - b.orderIdx
-  );
-  const [items, setItems] = useState<HomePageItems[]>(orderedHomePageItems);
-  const [activeId, setActiveId] = useState<null | string | number>(null);
-  const handleUpdateArr = (e: DragOverEvent) => {
-    const activeData = e.active as any;
-    const overData = e.over as any;
-    const newItems = [...items];
-    const activeId = e.active.id;
-    const activeItemIdx = activeData?.data?.current?.sortable?.index;
-    const newActiveItemIdx = overData?.data?.current?.sortable?.index;
-    if (
-      activeItemIdx === undefined ||
-      newActiveItemIdx === undefined ||
-      activeItemIdx === null ||
-      newActiveItemIdx === null
-    )
-      return;
-    const newItem = items.find((item) => item.id === activeId);
-    if (!newItem) return;
-    newItems.splice(activeItemIdx, 1);
-    newItems.splice(newActiveItemIdx, 0, newItem);
-    setItems(newItems);
-  };
-  const itemElements = items.map((item, idx) => {
+const homePageItemElements = (items: HomePageItems[]) =>
+  items.map((item, idx) => {
     const { id, subType, actionBtnData, title, textDescription, images } = item;
     const imgEntries = Object.entries(images);
     const imgOrder = imgEntries.sort((a, b) =>
@@ -42,32 +18,12 @@ const HomePageGridList = () => {
     );
     if (subType === "full-banner")
       return (
-        <SortableItem key={id} id={id}>
-          <HomePageImageBannerFull
-            customClass={`${namespace}-intro-banner`}
-            imgUrl={imgOrder[0][1].imgUrl}
-            imgPlaceholderUrl={imgOrder[0][1].placeholderUrl}
-            imgDescription={imgOrder[0][1].description}
-            intersectionAnimation={false}
-            btnData={{
-              text: actionBtnData.text.toUpperCase(),
-              url: actionBtnData.url,
-              disabled: true,
-            }}
-          >
-            {title}
-          </HomePageImageBannerFull>
-        </SortableItem>
-      );
-    const bannerDirection = subType === "half-banner-left" ? "left" : "right";
-    return (
-      <SortableItem key={id} id={id}>
-        <HomePageImageBanner
-          customClass={`${namespace}-img-banner-${bannerDirection}`}
-          contentDirection={bannerDirection}
+        <HomePageImageBannerFull
+          key={id}
+          customClass={`${namespace}-intro-banner`}
           imgUrl={imgOrder[0][1].imgUrl}
           imgPlaceholderUrl={imgOrder[0][1].placeholderUrl}
-          title={title.toUpperCase()}
+          imgDescription={imgOrder[0][1].description}
           intersectionAnimation={false}
           btnData={{
             text: actionBtnData.text.toUpperCase(),
@@ -75,23 +31,62 @@ const HomePageGridList = () => {
             disabled: true,
           }}
         >
-          {textDescription
-            ? textDescription
-                .split("\n")
-                .map((item, idx) => <p key={idx}>{item}</p>)
-            : []}
-        </HomePageImageBanner>
-      </SortableItem>
+          {title}
+        </HomePageImageBannerFull>
+      );
+    const bannerDirection = subType === "half-banner-left" ? "left" : "right";
+    return (
+      <HomePageImageBanner
+        key={id}
+        customClass={`${namespace}-img-banner-${bannerDirection}`}
+        contentDirection={bannerDirection}
+        imgUrl={imgOrder[0][1].imgUrl}
+        imgPlaceholderUrl={imgOrder[0][1].placeholderUrl}
+        title={title.toUpperCase()}
+        intersectionAnimation={false}
+        btnData={{
+          text: actionBtnData.text.toUpperCase(),
+          url: actionBtnData.url,
+          disabled: true,
+        }}
+      >
+        {textDescription
+          ? textDescription
+              .split("\n")
+              .map((item, idx) => <p key={idx}>{item}</p>)
+          : []}
+      </HomePageImageBanner>
     );
   });
+const HomePageGridList = ({
+  items,
+  activeId,
+  onDragEnd,
+  onDragOver,
+  onDragStart,
+}: {
+  items: HomePageItems[];
+  activeId: string | number | null;
+  onDragEnd: (event: any) => void;
+  onDragOver: (event: any) => void;
+  onDragStart: (event: any) => void;
+}) => {
+  const itemElements = homePageItemElements(items).map((item, idx) => (
+    <SortableItem
+      key={item.key}
+      id={item.key ? item.key.toString() : idx.toString()}
+    >
+      {item}
+    </SortableItem>
+  ));
   const itemElementMap = Object.fromEntries(
     Object.entries(itemElements).map(([key, value]) => [value.key, value])
   );
   return (
     <DndContext
-      onDragStart={(e) => setActiveId(e.active.id)}
-      onDragOver={handleUpdateArr}
-      onDragEnd={() => setActiveId(null)}
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDragEnd={onDragEnd}
     >
       <SortableContext
         items={items.map((item) => item.id)}
@@ -108,13 +103,28 @@ const HomePageGridList = () => {
   );
 };
 const HomePage = () => {
+  const orderedHomePageItems = homePageData.sort(
+    (a, b) => a.orderIdx - b.orderIdx
+  );
+  const { items, activeId, onDragEnd, onDragOver, onDragStart } =
+    useSortableList<HomePageItems>({ defaultArr: orderedHomePageItems });
+  const [edit, setEdit] = useState(false);
   return (
     <div className={`${namespace}-container`}>
       <div className={`${namespace}-inner-container`}>
         <PageTitle text={"Home Page".toUpperCase()} />
-        <div className={`${namespace}-grid-list`}>
-          <HomePageGridList />
-        </div>
+        {edit && (
+          <div className={`${namespace}-grid-list`}>
+            <HomePageGridList
+              items={items}
+              activeId={activeId}
+              onDragEnd={onDragEnd}
+              onDragOver={onDragOver}
+              onDragStart={onDragStart}
+            />
+          </div>
+        )}
+        {!edit && homePageItemElements(items)}
       </div>
     </div>
   );

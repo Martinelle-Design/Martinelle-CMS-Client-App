@@ -6,6 +6,7 @@ $namespace: "home-page-img-banner";
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: $white;
 }
 
 .#{$namespace}-content-container {
@@ -94,6 +95,7 @@ $namespace: "home-page-img-banner";
 //for the full image banner
 $namespace: "home-pg-img-banner-full";
 .#{$namespace}-img-container {
+  background-color: $white;
   position: relative;
   aspect-ratio: 16/8;
   @include img-fill;
