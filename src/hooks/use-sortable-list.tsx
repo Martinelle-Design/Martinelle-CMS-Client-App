@@ -1,12 +1,53 @@
 import { useState } from "react";
 import { DragEndEvent, DragOverEvent, DragStartEvent } from "@dnd-kit/core";
+import { v4 as uuid } from "uuid";
 const useSortableList = <T,>({
   defaultArr,
+  addItemFunc,
+  updateItemFunc,
 }: {
+  addItemFunc?: (e?: { [k: string]: FormDataEntryValue }) => T | undefined;
+  updateItemFunc?: (e?: { [k: string]: FormDataEntryValue }) =>
+    | {
+        itemIdx: number;
+        item: Partial<T>;
+      }
+    | undefined;
   defaultArr: (T & { id: string })[];
 }) => {
   const [items, setItems] = useState(defaultArr ? defaultArr : []);
   const [activeId, setActiveId] = useState<null | string | number>(null);
+  const addItem = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+    if (!addItemFunc) return;
+    const newItem = addItemFunc(data);
+    if (!newItem) return;
+    setItems([{ ...newItem, id: uuid() }, ...items]);
+  };
+  const updateItem = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+    if (!updateItemFunc) return;
+
+    const result = updateItemFunc(data);
+    if (!result) return;
+    const { itemIdx, item } = result;
+    if (!item || (!itemIdx && itemIdx !== 0)) return;
+    const newItems = [...items];
+    const oldItem = newItems[itemIdx];
+    newItems[itemIdx] = { ...oldItem, ...item, id: oldItem.id };
+    setItems(newItems);
+  };
+
+  const deleteItem = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const dataset = e.currentTarget.dataset;
+    const id = dataset.id;
+    const newItems = items.filter((item) => item.id !== id);
+    setItems(newItems);
+  };
   const onDragOver = (e: DragOverEvent) => {
     const activeData = e.active as any;
     const overData = e.over as any;
@@ -34,6 +75,9 @@ const useSortableList = <T,>({
   return {
     items,
     activeId,
+    addItem,
+    deleteItem,
+    updateItem,
     setActiveId,
     setItems,
     onDragOver,

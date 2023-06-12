@@ -7,7 +7,12 @@ import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 import { SortableItem } from "../utilities/DnDKitComponents/SortableItem";
 import useSortableList from "../hooks/use-sortable-list";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { Button, Stack } from "@mui/material";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { v4 as uuid } from "uuid";
+import getUnixTime from "date-fns/getUnixTime";
 const namespace = "home-pg";
 const homePageItemElements = (items: HomePageItems[]) =>
   items.map((item, idx) => {
@@ -102,17 +107,107 @@ const HomePageGridList = ({
     </DndContext>
   );
 };
+const addItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
+  if (!e) return;
+  const newDoc: HomePageItems = {
+    itemType: "home-page-item",
+    pk: {
+      orderIdx: 0,
+      itemType: "home-page-item",
+    },
+    id: uuid(),
+    subType: e.subType as HomePageItems["subType"],
+    images: {},
+    orderIdx: 0,
+    timestamp: getUnixTime(new Date()),
+    textDescription: e.textDescription
+      ? e.textDescription.toString()
+      : undefined,
+    title: e.title ? e.title.toString() : "",
+    actionBtnData: {
+      text: e.actionBtnText ? e.actionBtnText.toString() : "",
+      url: e.actionBtnUrl ? e.actionBtnUrl.toString() : "",
+    },
+  };
+  return newDoc;
+};
+const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
+  if (!e) return;
+  const idx = e.idx ? parseInt(e.idx.toString()) : 0;
+  const newDoc: Partial<HomePageItems> = {};
+  return {
+    itemIdx: idx,
+    item: newDoc,
+  };
+};
 const HomePage = () => {
   const orderedHomePageItems = homePageData.sort(
     (a, b) => a.orderIdx - b.orderIdx
   );
-  const { items, activeId, onDragEnd, onDragOver, onDragStart } =
-    useSortableList<HomePageItems>({ defaultArr: orderedHomePageItems });
+  const {
+    items,
+    activeId,
+    onDragEnd,
+    onDragOver,
+    onDragStart,
+    setItems,
+    addItem,
+    updateItem,
+  } = useSortableList<HomePageItems>({
+    defaultArr: orderedHomePageItems,
+    addItemFunc,
+    updateItemFunc,
+  });
+  const defaultItems = useRef<HomePageItems[]>([]);
   const [edit, setEdit] = useState(false);
   return (
     <div className={`${namespace}-container`}>
       <div className={`${namespace}-inner-container`}>
         <PageTitle text={"Home Page".toUpperCase()} />
+        <Stack
+          direction={"row"}
+          spacing={2}
+          justifyContent={"flex-end"}
+          marginTop={"2em"}
+        >
+          {!edit && (
+            <Button
+              variant="contained"
+              onClick={() => {
+                setEdit(true);
+                defaultItems.current = items;
+              }}
+            >
+              <FontAwesomeIcon icon={faEdit} />
+              <span style={{ marginLeft: "0.5em" }}>Edit</span>
+            </Button>
+          )}
+          {edit && (
+            <>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  defaultItems.current = [];
+                  setEdit(false);
+                }}
+              >
+                Save
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => {
+                  setEdit(false);
+                  setItems(defaultItems.current);
+                  defaultItems.current = [];
+                }}
+              >
+                Cancel
+              </Button>
+            </>
+          )}
+        </Stack>
+
         {edit && (
           <div className={`${namespace}-grid-list`}>
             <HomePageGridList

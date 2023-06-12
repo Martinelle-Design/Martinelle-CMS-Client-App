@@ -19,6 +19,7 @@ export function SortableItem({
     transform: CSS.Translate.toString(transform),
     opacity: isDragging ? 0.6 : 1,
     transition,
+    cursor: isDragging ? "grabbing" : "grab",
   };
   return (
     <div
