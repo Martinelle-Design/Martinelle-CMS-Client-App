@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { useRef } from "react";
 import useIntersectionObserver from "../../hooks/use-intersection-observer";
-import useElementSize from "../../hooks/use-element-size";
 
 const namespace = "home-pg-img-banner-full";
 const HomePageImageBannerFull = ({

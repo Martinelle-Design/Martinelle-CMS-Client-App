@@ -13,6 +13,7 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { v4 as uuid } from "uuid";
 import getUnixTime from "date-fns/getUnixTime";
+import { generateSingleImg } from "../utilities/helpers/generateImgDoc";
 const namespace = "home-pg";
 const homePageItemElements = (items: HomePageItems[]) =>
   items.map((item, idx) => {
@@ -63,6 +64,64 @@ const homePageItemElements = (items: HomePageItems[]) =>
       </HomePageImageBanner>
     );
   });
+
+const addItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
+  if (!e) return;
+  const newDoc: HomePageItems = {
+    itemType: "home-page-item",
+    pk: {
+      orderIdx: 0,
+      itemType: "home-page-item",
+    },
+    id: uuid(),
+    subType: e.subType as HomePageItems["subType"],
+    images: {},
+    orderIdx: 0,
+    timestamp: getUnixTime(new Date()),
+    textDescription: e.textDescription
+      ? e.textDescription.toString()
+      : undefined,
+    title: e.title ? e.title.toString() : "",
+    actionBtnData: {
+      text: e.actionBtnText ? e.actionBtnText.toString() : "",
+      url: e.actionBtnUrl ? e.actionBtnUrl.toString() : "",
+    },
+  };
+  return newDoc;
+};
+const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
+  if (!e) return;
+  const idx = e.idx ? parseInt(e.idx.toString()) : 0;
+  const newDoc: Partial<HomePageItems> = {
+    subType: e.subType as HomePageItems["subType"],
+    textDescription: e.textDescription
+      ? e.textDescription.toString()
+      : undefined,
+    title: e.title ? e.title.toString() : "",
+    actionBtnData: {
+      text: e.actionBtnText ? e.actionBtnText.toString() : "",
+      url: e.actionBtnUrl ? e.actionBtnUrl.toString() : "",
+    },
+  };
+  const img = generateSingleImg({
+    imgUrl: e.imgUrl?.toString(),
+    placeholderUrl: e.imgPlaceholderUrl?.toString(),
+    description: e.imgDescription?.toString(),
+    pk: {
+      itemType: "home-pg-item-img",
+      orderIdx: 0,
+    },
+  });
+  if (img)
+    newDoc.images = {
+      [img.id]: img,
+    };
+
+  return {
+    itemIdx: idx,
+    item: newDoc,
+  };
+};
 const HomePageGridList = ({
   items,
   activeId,
@@ -107,39 +166,6 @@ const HomePageGridList = ({
     </DndContext>
   );
 };
-const addItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
-  if (!e) return;
-  const newDoc: HomePageItems = {
-    itemType: "home-page-item",
-    pk: {
-      orderIdx: 0,
-      itemType: "home-page-item",
-    },
-    id: uuid(),
-    subType: e.subType as HomePageItems["subType"],
-    images: {},
-    orderIdx: 0,
-    timestamp: getUnixTime(new Date()),
-    textDescription: e.textDescription
-      ? e.textDescription.toString()
-      : undefined,
-    title: e.title ? e.title.toString() : "",
-    actionBtnData: {
-      text: e.actionBtnText ? e.actionBtnText.toString() : "",
-      url: e.actionBtnUrl ? e.actionBtnUrl.toString() : "",
-    },
-  };
-  return newDoc;
-};
-const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
-  if (!e) return;
-  const idx = e.idx ? parseInt(e.idx.toString()) : 0;
-  const newDoc: Partial<HomePageItems> = {};
-  return {
-    itemIdx: idx,
-    item: newDoc,
-  };
-};
 const HomePage = () => {
   const orderedHomePageItems = homePageData.sort(
     (a, b) => a.orderIdx - b.orderIdx
@@ -153,6 +179,7 @@ const HomePage = () => {
     setItems,
     addItem,
     updateItem,
+    deleteItem,
   } = useSortableList<HomePageItems>({
     defaultArr: orderedHomePageItems,
     addItemFunc,
