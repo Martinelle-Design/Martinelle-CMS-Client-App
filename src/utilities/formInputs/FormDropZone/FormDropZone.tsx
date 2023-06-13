@@ -39,6 +39,7 @@ export const StoredMedia = memo(
   }) => {
     const { storedImages, storedVideos, setStoredImages, setStoredVideos } =
       useDropZoneProvider();
+    console.log(storedImages)
     useEffect(() => {
       let mounted = true;
       if (files && mounted) {
@@ -96,7 +97,7 @@ const FormDropZone = ({
   includeThumbnails = true,
   multiple = false,
 }: FormDropZoneProps) => {
-  const { newImages, newVideos, setNewImages, setNewVideos } =
+  const { newImages, newVideos, setNewImages, setNewVideos, setStoredImages } =
     useDropZoneProvider();
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState<ErrorProps>({
@@ -104,7 +105,9 @@ const FormDropZone = ({
     files: [],
   });
   const [isOver, setIsOver] = useState(false);
-
+  useEffect(() => {
+    if (defaultFiles) setStoredImages(defaultFiles);
+  }, [defaultFiles, setStoredImages]);
   useEffect(() => {
     let mounted = true;
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
@@ -150,7 +153,10 @@ const FormDropZone = ({
           const newFiles: MediaFile[] = allFiles.filter(isMediaFiles);
           //only use one if not multiple
           if (multiple) return [...state, ...newFiles];
-          else if (newFiles.length > 0) return [newFiles[0]];
+          else if (newFiles.length > 0) {
+            setStoredImages([]);
+            return [newFiles[0]];
+          }
           return state;
         });
       if (mediaType === "videos")
@@ -171,7 +177,10 @@ const FormDropZone = ({
           ) as MediaFile[];
           //only use one if not multiple
           if (multiple) return [...state, ...newFiles];
-          else if (newFiles.length > 0) return [newFiles[0]];
+          else if (newFiles.length > 0) {
+            setStoredImages([]);
+            return [newFiles[0]];
+          }
           return state;
         });
       setErr({
@@ -297,14 +306,12 @@ const FormDropZone = ({
                 </div>
               )}
 
-              {includeThumbnails &&
-                (newThumbnails.length > 0 ||
-                  (defaultFiles && defaultFiles.length > 0)) && (
-                  <div className="thumbnails-container">
-                    {newThumbnails}
-                    {<StoredMedia mediaType={mediaType} files={defaultFiles} />}
-                  </div>
-                )}
+              {includeThumbnails && (
+                <div className="thumbnails-container">
+                  {newThumbnails.length > 0 && newThumbnails}
+                  {<StoredMedia mediaType={mediaType} />}
+                </div>
+              )}
             </section>
           );
         }}
