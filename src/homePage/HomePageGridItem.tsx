@@ -65,6 +65,9 @@ const HomePageGridItemForm = ({
           onSubmit={onSubmit}
           style={{
             width: "85%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
           {status === "loading" && (
@@ -241,20 +244,30 @@ export const HomePageGridItem = ({
               />
             </FormControl>
           </CategoryFormControl>
-          <FormControl fullWidth style={{ marginBottom: "1em" }}>
-            <InputLabel>{"Upload Image"}</InputLabel>
+          <CategoryFormControl heading="Banner Image">
             <FormDropZone
               defaultFiles={imgData ? [imgData] : undefined}
               multiple={false}
               maxFiles={1}
-              name={data?.id ? data.id : ""}
+              name={imgData?.id ? imgData.id : ""}
               maxSize={10 ** 7}
               mediaType="images"
-              description={data?.textDescription ? data.textDescription : ""}
+              description={"Upload Image"}
               includeThumbnails
             />
-          </FormControl>
-          <Button variant="contained" type="submit">
+            <TextField
+              name={"imgDescription"}
+              label="Image Description"
+              defaultValue={""}
+              multiline={false}
+              variant="standard"
+            />
+          </CategoryFormControl>
+          <Button
+            variant="contained"
+            type="submit"
+            style={{ marginBottom: "1em" }}
+          >
             Save
           </Button>
         </HomePageGridItemForm>

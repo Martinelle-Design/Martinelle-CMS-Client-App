@@ -93,8 +93,8 @@ const HomePage = () => {
     updateItemFunc,
   });
   const defaultItems = useRef<HomePageItems[]>([]);
-  // const [edit, setEdit] = useState(false);
-  const [edit, setEdit] = useState(true);
+  const [edit, setEdit] = useState(false);
+  // const [edit, setEdit] = useState(true);
 
   return (
     <div className={`${namespace}-container`}>
@@ -103,8 +103,9 @@ const HomePage = () => {
         <Stack
           direction={"row"}
           spacing={2}
-          justifyContent={"flex-end"}
+          justifyContent={"center"}
           marginTop={"2em"}
+          marginBottom={"0.5em"}
         >
           {!edit && (
             <Button

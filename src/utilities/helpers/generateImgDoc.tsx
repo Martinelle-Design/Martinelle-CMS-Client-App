@@ -82,7 +82,7 @@ export const generateSingleImg = (e: Partial<Image>): Image => {
       orderIdx: 0,
       imgUrl: "",
       placeholderUrl: "",
-      description: "",
+      description: description,
     };
   return {
     timestamp: getUnixTime(new Date()),
