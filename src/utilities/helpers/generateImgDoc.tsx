@@ -3,7 +3,7 @@ import { v4 as uuid } from "uuid";
 import getUnixTime from "date-fns/getUnixTime";
 import { ResizeProps, resizeImg } from "./resizeImg";
 import axios from "axios";
-export const uploadImg = async ({
+export const uploadImgToS3 = async ({
   token,
   itemType,
   id,
@@ -12,7 +12,7 @@ export const uploadImg = async ({
   token: string;
   itemType: string;
   id: string;
-  resizeProps: ResizeProps;
+  resizeProps: Partial<ResizeProps>;
 }) => {
   //get presigned urls
   const { data } = await axios({
@@ -63,16 +63,27 @@ export const uploadImg = async ({
   };
 };
 
-export const generateSingleImg = (e: Partial<Image>): Image | undefined => {
+export const generateSingleImg = (e: Partial<Image>): Image => {
   const { imgUrl, placeholderUrl, description, pk, id } = e;
+  const imageId = id ? id : uuid();
   if (
     !imgUrl ||
     !placeholderUrl ||
     !pk?.itemType ||
     (!pk?.orderIdx && pk.orderIdx !== 0)
   )
-    return;
-  const imageId = id ? id : uuid();
+    return {
+      timestamp: getUnixTime(new Date()),
+      pk: {
+        itemType: "",
+        orderIdx: 0,
+      },
+      id: imageId,
+      orderIdx: 0,
+      imgUrl: "",
+      placeholderUrl: "",
+      description: "",
+    };
   return {
     timestamp: getUnixTime(new Date()),
     pk: {

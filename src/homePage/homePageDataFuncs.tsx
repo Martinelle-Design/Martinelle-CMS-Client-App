@@ -3,8 +3,93 @@ import HomePageImageBannerFull from "./utilities/HomePageImgBannerFull";
 import { HomePageItems } from "../utilities/types/types";
 import { v4 as uuid } from "uuid";
 import getUnixTime from "date-fns/getUnixTime";
-import { generateSingleImg } from "../utilities/helpers/generateImgDoc";
+import { unstable_batchedUpdates } from "react-dom";
+import {
+  MediaFile,
+  MediaLink,
+  isMediaLink,
+} from "../utilities/formInputs/Thumbnails";
+import { SortableListProps } from "../hooks/use-sortable-list";
+import {
+  generateSingleImg,
+  uploadImgToS3,
+} from "../utilities/helpers/generateImgDoc";
 const namespace = "home-pg";
+export const submitFormFunc = async ({
+  e,
+  updateItem,
+  newImages,
+  storedImages,
+}: {
+  e: React.FormEvent<HTMLFormElement>;
+  updateItem?: SortableListProps<HomePageItems>["updateItem"];
+  newImages: MediaFile[];
+  storedImages: MediaLink[];
+}) => {
+  if (!updateItem) return;
+  //this means there's no images to upload, so we can immeaditely update
+  const images = [...newImages, ...storedImages];
+  if (images.length <= 0) {
+    updateItem(e);
+    return;
+  }
+  //we continue since we need to upload images
+  const result = updateItem(e, false);
+  if (!result) return;
+  const { setItems, newItems, itemIdx } = result;
+  const currItemData = newItems[itemIdx];
+  const createSingleDoc = generateSingleImg({});
+  //upload content to s3 bucket
+  if (isMediaLink(images[0])) {
+    const { placeholderUrl, url, description } = images[0];
+    if (!placeholderUrl || !url) return;
+    newItems[itemIdx].images = {
+      ...currItemData.images,
+      [createSingleDoc.id]: {
+        ...createSingleDoc,
+        pk: {
+          ...createSingleDoc.pk,
+          itemType: "home-pg-item-img",
+        },
+        imgUrl: url,
+        placeholderUrl: placeholderUrl,
+        description: description ? description : undefined,
+      },
+    };
+    unstable_batchedUpdates(() => {
+      setItems(newItems);
+    });
+    return;
+  }
+  const fileData = images[0];
+  const arrayBuffer = await fileData.file.arrayBuffer();
+  const { imgUrl, imgPlaceholderUrl } = await uploadImgToS3({
+    token: "",
+    itemType: currItemData.itemType,
+    id: currItemData.id,
+    resizeProps: {
+      mimeType: fileData.file.type,
+      fileBuffer: Buffer.from(arrayBuffer),
+    },
+  });
+  newItems[itemIdx].images = {
+    ...currItemData.images,
+    [createSingleDoc.id]: {
+      ...createSingleDoc,
+      pk: {
+        ...createSingleDoc.pk,
+        itemType: "home-pg-item-img",
+      },
+      imgUrl: imgUrl,
+      placeholderUrl: imgPlaceholderUrl,
+      //description: description ? description : undefined,
+    },
+  };
+  unstable_batchedUpdates(() => {
+    setItems(newItems);
+  });
+  return;
+};
 export const homePageItemElements = (items: HomePageItems[]) =>
   items.map((item, idx) => {
     const { id, subType, actionBtnData, title, textDescription, images } = item;

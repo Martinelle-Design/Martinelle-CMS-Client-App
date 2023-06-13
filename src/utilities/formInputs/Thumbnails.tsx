@@ -27,7 +27,7 @@ export function isMediaLink(e: any): e is MediaLink {
 }
 export function isMediaFile(e: any): e is MediaFile {
   try {
-    return has(e, "name") && has(e, "preview");
+    return has(e, "id") && has(e, "preview");
   } catch (err) {
     return false;
   }
@@ -44,7 +44,7 @@ export interface ThumbnailProps {
   file: MediaFileProps | MediaLink;
   onRemoveThumbnail?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
-export type MediaFile = MediaFileProps & File;
+export type MediaFile = MediaFileProps & {file: File};
 
 export const ThumbnailWrapper = ({
   children,

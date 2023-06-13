@@ -14,6 +14,7 @@ import {
   homePageItemElements,
   updateItemFunc,
   addItemFunc,
+  submitFormFunc,
 } from "./homePageDataFuncs";
 import PopUpModal from "../utilities/popUpModal/PopUpModal";
 import {
@@ -22,24 +23,61 @@ import {
 } from "../utilities/formInputs/FormDropZone/FormDropZoneContext";
 import FormDropZone from "../utilities/formInputs/FormDropZone/FormDropZone";
 import { MediaLink } from "../utilities/formInputs/Thumbnails";
+import LoadingIcon from "../utilities/loadingIcon/LoadingIcon";
+import useLoadingState from "../hooks/use-loading-state";
 const namespace = "home-pg";
 const HomePageGridItemForm = ({
   updateItem,
   setOpenModal,
   children,
 }: {
-  updateItem?: (e: React.FormEvent<HTMLFormElement>) => void;
+  updateItem?: SortableListProps<HomePageItems>["updateItem"];
   setOpenModal: (open: boolean) => void;
   children?: JSX.Element | JSX.Element[] | string;
 }) => {
   const { newImages, storedImages } = useDropZoneProvider();
+  const { status, callFunction } = useLoadingState({
+    asyncFunc: submitFormFunc,
+  });
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    callFunction({
+      e,
+      updateItem,
+      newImages,
+      storedImages,
+    });
+  };
   return (
     <PopUpModal
       onClose={() => {
         setOpenModal(false);
       }}
     >
-      <form onSubmit={updateItem}>{children}</form>
+      <form onSubmit={onSubmit}>
+        {status === "loading" && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              zIndex: 2,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "#ebebeb",
+            }}
+          >
+            <LoadingIcon
+              strokeColor="#37673F"
+              backgroundColor="#ebebeb"
+              width={"35%"}
+            />
+          </div>
+        )}
+        {children}
+      </form>
     </PopUpModal>
   );
 };
@@ -56,7 +94,7 @@ const HomePageGridItem = ({
   idx: number;
 } & Partial<SortableListProps<HomePageItems>>) => {
   const [openModal, setOpenModal] = useState(false);
-  const [data, setData] = useState<HomePageItems | undefined>(item.data);
+  const data = item.data;
   if (!data) return <></>;
   const imgsData = Object.entries(data.images as HomePageItems["images"]).map(
     ([id, value]) => value

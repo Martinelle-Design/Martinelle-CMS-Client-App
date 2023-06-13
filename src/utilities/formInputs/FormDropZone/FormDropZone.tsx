@@ -139,7 +139,8 @@ const FormDropZone = ({
           const allFiles = acceptedFiles.map((file) => {
             if (file.name in map) return null;
             else
-              return Object.assign(file, {
+              return Object.assign({
+                file,
                 id: uuid(),
                 preview: URL.createObjectURL(file),
               });
@@ -158,15 +159,16 @@ const FormDropZone = ({
           const allFiles = acceptedFiles.map((file) => {
             if (file.name in map) return null;
             else
-              return Object.assign(file, {
+              return Object.assign({
+                file,
                 id: uuid(),
                 preview: URL.createObjectURL(file),
               });
           });
-          const isMediaFiles = (file: MediaFile | null): file is MediaFile =>
-            file !== null;
 
-          const newFiles: MediaFile[] = allFiles.filter(isMediaFiles);
+          const newFiles = allFiles.filter(
+            (file) => file !== null
+          ) as MediaFile[];
           //only use one if not multiple
           if (multiple) return [...state, ...newFiles];
           else if (newFiles.length > 0) return [newFiles[0]];
@@ -214,7 +216,7 @@ const FormDropZone = ({
     mediaType === "images"
       ? newImages.map((file) => (
           <ImageThumbnail
-            key={isMediaLink(file) ? file.url : file.name}
+            key={isMediaLink(file) ? file.id : file.id}
             file={file}
             onRemoveThumbnail={onRemoveThumbnail}
           />
@@ -222,7 +224,7 @@ const FormDropZone = ({
       : mediaType === "videos"
       ? newVideos.map((file) => (
           <VideoThumbnail
-            key={isMediaLink(file) ? file.url : file.name}
+            key={isMediaLink(file) ? file.id : file.id}
             file={file}
             onRemoveThumbnail={onRemoveThumbnail}
           />

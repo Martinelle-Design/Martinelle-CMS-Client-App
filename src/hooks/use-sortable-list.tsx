@@ -9,8 +9,25 @@ export type SortableListProps<T> = {
   onDragStart: (event: any) => void;
   setActiveId: React.Dispatch<React.SetStateAction<string | number | null>>;
   addItem?: (e: React.FormEvent<HTMLFormElement>) => void;
-  updateItem?: (e: React.FormEvent<HTMLFormElement>) => void;
   deleteItem?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  updateItem?: (
+    e: React.FormEvent<HTMLFormElement>,
+    update?: boolean
+  ) =>
+    | {
+        setItems: React.Dispatch<
+          React.SetStateAction<
+            (T & {
+              id: string;
+            })[]
+          >
+        >;
+        newItems: (T & {
+          id: string;
+        })[];
+        itemIdx: number;
+      }
+    | undefined;
   setItems: React.Dispatch<
     React.SetStateAction<
       (T & {
@@ -44,12 +61,14 @@ const useSortableList = <T,>({
     if (!newItem) return;
     setItems([{ ...newItem, id: uuid() }, ...items]);
   };
-  const updateItem = (e: React.FormEvent<HTMLFormElement> ) => {
+  const updateItem = (
+    e: React.FormEvent<HTMLFormElement>,
+    update?: boolean
+  ) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
     if (!updateItemFunc) return;
-
     const result = updateItemFunc(data);
     if (!result) return;
     const { itemIdx, item } = result;
@@ -57,7 +76,13 @@ const useSortableList = <T,>({
     const newItems = [...items];
     const oldItem = newItems[itemIdx];
     newItems[itemIdx] = { ...oldItem, ...item, id: oldItem.id };
-    setItems(newItems);
+    if (update) setItems(newItems);
+    else
+      return {
+        setItems,
+        newItems,
+        itemIdx,
+      };
   };
 
   const deleteItem = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
