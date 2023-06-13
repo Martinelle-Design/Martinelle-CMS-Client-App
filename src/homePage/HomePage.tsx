@@ -1,126 +1,99 @@
-import HomePageImageBanner from "./utilities/HomePageImageBanner";
-import HomePageImageBannerFull from "./utilities/HomePageImgBannerFull";
 import PageTitle from "../utilities/pageTitle/PageTitle";
 import homePageData from "./homePageData";
 import { HomePageItems } from "../utilities/types/types";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 import { SortableItem } from "../utilities/DnDKitComponents/SortableItem";
-import useSortableList from "../hooks/use-sortable-list";
+import useSortableList, { SortableListProps } from "../hooks/use-sortable-list";
 import { useRef, useState } from "react";
 import { Button, Stack } from "@mui/material";
 import { faClose, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { v4 as uuid } from "uuid";
-import getUnixTime from "date-fns/getUnixTime";
-import { generateSingleImg } from "../utilities/helpers/generateImgDoc";
 import { createPortal } from "react-dom";
+import {
+  homePageItemElements,
+  updateItemFunc,
+  addItemFunc,
+} from "./homePageDataFuncs";
+import PopUpModal from "../utilities/popUpModal/PopUpModal";
 const namespace = "home-pg";
-const homePageItemElements = (items: HomePageItems[]) =>
-  items.map((item, idx) => {
-    const { id, subType, actionBtnData, title, textDescription, images } = item;
-    const imgEntries = Object.entries(images);
-    const imgOrder = imgEntries.sort((a, b) =>
-      a[1].orderIdx > b[1].orderIdx ? 1 : -1
-    );
-    if (subType === "full-banner")
-      return (
-        <HomePageImageBannerFull
-          key={id}
-          customClass={`${namespace}-intro-banner`}
-          imgUrl={imgOrder[0][1].imgUrl}
-          imgPlaceholderUrl={imgOrder[0][1].placeholderUrl}
-          imgDescription={imgOrder[0][1].description}
-          intersectionAnimation={false}
-          btnData={{
-            text: actionBtnData.text.toUpperCase(),
-            url: actionBtnData.url,
-            disabled: true,
+const HomePageGridItem = ({
+  idx,
+  item,
+  deleteItem,
+  updateItem,
+}: {
+  item: {
+    data: HomePageItems;
+    el: JSX.Element;
+  };
+  idx: number;
+} & Partial<SortableListProps<HomePageItems>>) => {
+  const [openModal, setOpenModal] = useState(false);
+  const [data, setData] = useState<HomePageItems | undefined>(item.data);
+  const btnStyles: React.CSSProperties = {
+    minWidth: "2.5em",
+    width: "5%",
+    aspectRatio: "1",
+  };
+  return (
+    <>
+      {openModal && (
+        <PopUpModal
+          onClose={() => {
+            setOpenModal(false);
           }}
         >
-          {title}
-        </HomePageImageBannerFull>
-      );
-    const bannerDirection = subType === "half-banner-left" ? "left" : "right";
-    return (
-      <HomePageImageBanner
-        key={id}
-        customClass={`${namespace}-img-banner-${bannerDirection}`}
-        contentDirection={bannerDirection}
-        imgUrl={imgOrder[0][1].imgUrl}
-        imgPlaceholderUrl={imgOrder[0][1].placeholderUrl}
-        title={title.toUpperCase()}
-        intersectionAnimation={false}
-        btnData={{
-          text: actionBtnData.text.toUpperCase(),
-          url: actionBtnData.url,
-          disabled: true,
-        }}
+          <form onSubmit={updateItem}>
+            <Button variant="contained" type="submit">
+              Save
+            </Button>
+          </form>
+        </PopUpModal>
+      )}
+      <SortableItem
+        key={item.el.key}
+        id={item.el.key ? item.el.key.toString() : idx.toString()}
       >
-        {textDescription
-          ? textDescription
-              .split("\n")
-              .map((item, idx) => <p key={idx}>{item}</p>)
-          : []}
-      </HomePageImageBanner>
-    );
-  });
-const addItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
-  if (!e) return;
-  const newDoc: HomePageItems = {
-    itemType: "home-page-item",
-    pk: {
-      orderIdx: 0,
-      itemType: "home-page-item",
-    },
-    id: uuid(),
-    subType: e.subType as HomePageItems["subType"],
-    images: {},
-    orderIdx: 0,
-    timestamp: getUnixTime(new Date()),
-    textDescription: e.textDescription
-      ? e.textDescription.toString()
-      : undefined,
-    title: e.title ? e.title.toString() : "",
-    actionBtnData: {
-      text: e.actionBtnText ? e.actionBtnText.toString() : "",
-      url: e.actionBtnUrl ? e.actionBtnUrl.toString() : "",
-    },
-  };
-  return newDoc;
-};
-const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
-  if (!e) return;
-  const idx = e.idx ? parseInt(e.idx.toString()) : 0;
-  const newDoc: Partial<HomePageItems> = {
-    subType: e.subType as HomePageItems["subType"],
-    textDescription: e.textDescription
-      ? e.textDescription.toString()
-      : undefined,
-    title: e.title ? e.title.toString() : "",
-    actionBtnData: {
-      text: e.actionBtnText ? e.actionBtnText.toString() : "",
-      url: e.actionBtnUrl ? e.actionBtnUrl.toString() : "",
-    },
-  };
-  const img = generateSingleImg({
-    imgUrl: e.imgUrl?.toString(),
-    placeholderUrl: e.imgPlaceholderUrl?.toString(),
-    description: e.imgDescription?.toString(),
-    pk: {
-      itemType: "home-pg-item-img",
-      orderIdx: 0,
-    },
-  });
-  if (img)
-    newDoc.images = {
-      [img.id]: img,
-    };
-
-  return {
-    itemIdx: idx,
-    item: newDoc,
-  };
+        <Stack
+          direction={"row"}
+          spacing={1}
+          justifyContent={"flex-end"}
+          style={{
+            position: "absolute",
+            top: "0.5em",
+            right: "0.5em",
+            zIndex: 3,
+          }}
+        >
+          <Button
+            variant="contained"
+            color="info"
+            onClick={(e) => {
+              setOpenModal(true);
+            }}
+            data-id={item.el.key}
+            style={btnStyles}
+          >
+            <FontAwesomeIcon icon={faEdit} style={{ height: "80%" }} />
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={(e) => {
+              if (!deleteItem) return;
+              deleteItem(e);
+            }}
+            data-id={item.el.key}
+            style={btnStyles}
+          >
+            <FontAwesomeIcon icon={faClose} style={{ height: "100%" }} />
+          </Button>
+        </Stack>
+        {item.el}
+      </SortableItem>
+    </>
+  );
 };
 const HomePageGridList = ({
   items,
@@ -131,49 +104,22 @@ const HomePageGridList = ({
   addItem,
   updateItem,
   deleteItem,
-}: {
-  items: HomePageItems[];
-  activeId: string | number | null;
-  onDragEnd: (event: any) => void;
-  onDragOver: (event: any) => void;
-  onDragStart: (event: any) => void;
-  addItem?: (e: React.FormEvent<HTMLFormElement>) => void;
-  updateItem?: (e: React.FormEvent<HTMLFormElement>) => void;
-  deleteItem?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-}) => {
+}: Partial<SortableListProps<HomePageItems>>) => {
+  const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
+  if (!items) return <></>;
   const itemElements = homePageItemElements(items).map((item, idx) => (
-    <SortableItem
-      key={item.key}
-      id={item.key ? item.key.toString() : idx.toString()}
-    >
-      <Button
-        variant="contained"
-        color="error"
-        onClick={(e) => {
-          e.stopPropagation();
-          if (!deleteItem) return;
-          deleteItem(e);
-        }}
-        data-id={item.key}
-        style={{
-          minWidth: "2.5em",
-          width: "5%",
-          aspectRatio: "1",
-          position: "absolute",
-          top: "0.5em",
-          right: "0.5em",
-          zIndex: 3,
-        }}
-      >
-        <FontAwesomeIcon icon={faClose} style={{ height: "100%" }} />
-      </Button>
-      {item}
-    </SortableItem>
+    <HomePageGridItem
+      key={item.el.key}
+      idx={idx}
+      item={item}
+      deleteItem={deleteItem}
+      updateItem={updateItem}
+      addItem={addItem}
+    />
   ));
   const itemElementMap = Object.fromEntries(
     Object.entries(itemElements).map(([key, value]) => [value.key, value])
   );
-  const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
   return (
     <div className={`${namespace}-grid-list`}>
       <div ref={(ref) => setContainerRef(ref)}></div>
@@ -284,7 +230,7 @@ const HomePage = () => {
             deleteItem={deleteItem}
           />
         )}
-        {!edit && homePageItemElements(items)}
+        {!edit && homePageItemElements(items).map((item) => item.el)}
       </div>
     </div>
   );

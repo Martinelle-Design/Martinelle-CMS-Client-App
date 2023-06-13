@@ -1,6 +1,24 @@
 import { useState } from "react";
 import { DragEndEvent, DragOverEvent, DragStartEvent } from "@dnd-kit/core";
 import { v4 as uuid } from "uuid";
+export type SortableListProps<T> = {
+  items: T[];
+  activeId: string | number | null;
+  onDragEnd: (event: any) => void;
+  onDragOver: (event: any) => void;
+  onDragStart: (event: any) => void;
+  setActiveId: React.Dispatch<React.SetStateAction<string | number | null>>;
+  addItem?: (e: React.FormEvent<HTMLFormElement>) => void;
+  updateItem?: (e: React.FormEvent<HTMLFormElement>) => void;
+  deleteItem?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  setItems: React.Dispatch<
+    React.SetStateAction<
+      (T & {
+        id: string;
+      })[]
+    >
+  >;
+};
 const useSortableList = <T,>({
   defaultArr,
   addItemFunc,
@@ -14,7 +32,7 @@ const useSortableList = <T,>({
       }
     | undefined;
   defaultArr: (T & { id: string })[];
-}) => {
+}): SortableListProps<T> => {
   const [items, setItems] = useState(defaultArr ? defaultArr : []);
   const [activeId, setActiveId] = useState<null | string | number>(null);
   const addItem = (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,7 +44,7 @@ const useSortableList = <T,>({
     if (!newItem) return;
     setItems([{ ...newItem, id: uuid() }, ...items]);
   };
-  const updateItem = (e: React.FormEvent<HTMLFormElement>) => {
+  const updateItem = (e: React.FormEvent<HTMLFormElement> ) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
