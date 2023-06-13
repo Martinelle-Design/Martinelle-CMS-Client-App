@@ -16,7 +16,33 @@ import {
   addItemFunc,
 } from "./homePageDataFuncs";
 import PopUpModal from "../utilities/popUpModal/PopUpModal";
+import {
+  DropZoneProvider,
+  useDropZoneProvider,
+} from "../utilities/formInputs/FormDropZone/FormDropZoneContext";
+import FormDropZone from "../utilities/formInputs/FormDropZone/FormDropZone";
+import { MediaLink } from "../utilities/formInputs/Thumbnails";
 const namespace = "home-pg";
+const HomePageGridItemForm = ({
+  updateItem,
+  setOpenModal,
+  children,
+}: {
+  updateItem?: (e: React.FormEvent<HTMLFormElement>) => void;
+  setOpenModal: (open: boolean) => void;
+  children?: JSX.Element | JSX.Element[] | string;
+}) => {
+  const { newImages, storedImages } = useDropZoneProvider();
+  return (
+    <PopUpModal
+      onClose={() => {
+        setOpenModal(false);
+      }}
+    >
+      <form onSubmit={updateItem}>{children}</form>
+    </PopUpModal>
+  );
+};
 const HomePageGridItem = ({
   idx,
   item,
@@ -31,6 +57,20 @@ const HomePageGridItem = ({
 } & Partial<SortableListProps<HomePageItems>>) => {
   const [openModal, setOpenModal] = useState(false);
   const [data, setData] = useState<HomePageItems | undefined>(item.data);
+  if (!data) return <></>;
+  const imgsData = Object.entries(data.images as HomePageItems["images"]).map(
+    ([id, value]) => value
+  );
+  const imgData: MediaLink | undefined =
+    imgsData.length > 0
+      ? {
+          id: imgsData[0].id,
+          url: imgsData[0].imgUrl,
+          placeholderUrl: imgsData[0].placeholderUrl,
+          description: imgsData[0].description,
+          mediaType: "image",
+        }
+      : undefined;
   const btnStyles: React.CSSProperties = {
     minWidth: "2.5em",
     width: "5%",
@@ -39,17 +79,24 @@ const HomePageGridItem = ({
   return (
     <>
       {openModal && (
-        <PopUpModal
-          onClose={() => {
-            setOpenModal(false);
-          }}
+        <HomePageGridItemForm
+          updateItem={updateItem}
+          setOpenModal={setOpenModal}
         >
-          <form onSubmit={updateItem}>
-            <Button variant="contained" type="submit">
-              Save
-            </Button>
-          </form>
-        </PopUpModal>
+          <FormDropZone
+            defaultFiles={imgData ? [imgData] : undefined}
+            multiple={false}
+            maxFiles={1}
+            name={data?.id ? data.id : ""}
+            maxSize={10 ** 7}
+            mediaType="images"
+            description={data?.textDescription ? data.textDescription : ""}
+            includeThumbnails
+          />
+          <Button variant="contained" type="submit">
+            Save
+          </Button>
+        </HomePageGridItemForm>
       )}
       <SortableItem
         key={item.el.key}
@@ -108,14 +155,16 @@ const HomePageGridList = ({
   const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
   if (!items) return <></>;
   const itemElements = homePageItemElements(items).map((item, idx) => (
-    <HomePageGridItem
-      key={item.el.key}
-      idx={idx}
-      item={item}
-      deleteItem={deleteItem}
-      updateItem={updateItem}
-      addItem={addItem}
-    />
+    <DropZoneProvider key={item.el.key}>
+      <HomePageGridItem
+        key={item.el.key}
+        idx={idx}
+        item={item}
+        deleteItem={deleteItem}
+        updateItem={updateItem}
+        addItem={addItem}
+      />
+    </DropZoneProvider>
   ));
   const itemElementMap = Object.fromEntries(
     Object.entries(itemElements).map(([key, value]) => [value.key, value])

@@ -18,8 +18,8 @@ interface FormDropZoneProps {
   name: string;
   maxSize: number;
   maxFiles: number;
-  description: string | JSX.Element;
   mediaType: "videos" | "images";
+  description?: string | JSX.Element;
   className?: string;
   defaultFiles?: MediaLink[];
   includeThumbnails?: boolean;
@@ -50,11 +50,11 @@ export const StoredMedia = memo(
       };
     }, [files, mediaType, setStoredImages, setStoredVideos]);
     const onRemoveThumbnail = (e: React.MouseEvent<HTMLButtonElement>) => {
-      //const fileName = e.currentTarget.dataset["fileName"];
-      // if (mediaType === "images")
-      //   setStoredImages((files) => files.filter((file) => file !== fileName));
-      // if (mediaType === "videos")
-      //   setStoredVideos((files) => files.filter((file) => file !== fileName));
+      const fileId = e.currentTarget.dataset["fileId"];
+      if (mediaType === "images")
+        setStoredImages((files) => files.filter((file) => file.id !== fileId));
+      if (mediaType === "videos")
+        setStoredVideos((files) => files.filter((file) => file.id !== fileId));
     };
     const thumbnails =
       mediaType === "images"
@@ -180,14 +180,14 @@ const FormDropZone = ({
     });
   };
   const onRemoveThumbnail = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const fileName = e.currentTarget.dataset["fileName"];
+    const fileId = e.currentTarget.dataset["fileId"];
     if (mediaType === "images")
       setNewImages((files) =>
-        files.filter((file) => isMediaLink(file) || file.name !== fileName)
+        files.filter((file) => isMediaLink(file) || file.id !== fileId)
       );
     if (mediaType === "videos")
       setNewVideos((files) =>
-        files.filter((file) => isMediaLink(file) || file.name !== fileName)
+        files.filter((file) => isMediaLink(file) || file.id !== fileId)
       );
   };
   const onRemoveErr = (e: React.MouseEvent<HTMLButtonElement>) => {

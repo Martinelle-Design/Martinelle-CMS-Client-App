@@ -9,6 +9,7 @@ import LazyLoad from "react-lazyload";
 export type MediaLink = {
   id: string;
   url: string;
+  placeholderUrl?: string;
   description?: string;
   mediaType: "image" | "video";
 };
