@@ -15,11 +15,12 @@ export function SortableItem({
     transition,
     isDragging,
   } = useSortable({ id: id });
-  const style = {
+  const style: React.CSSProperties = {
     transform: CSS.Translate.toString(transform),
     opacity: isDragging ? 0.6 : 1,
     transition,
     cursor: isDragging ? "grabbing" : "grab",
+    position: "relative",
   };
   return (
     <div

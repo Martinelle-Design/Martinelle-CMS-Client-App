@@ -9,11 +9,12 @@ import { SortableItem } from "../utilities/DnDKitComponents/SortableItem";
 import useSortableList from "../hooks/use-sortable-list";
 import { useRef, useState } from "react";
 import { Button, Stack } from "@mui/material";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faClose, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { v4 as uuid } from "uuid";
 import getUnixTime from "date-fns/getUnixTime";
 import { generateSingleImg } from "../utilities/helpers/generateImgDoc";
+import { createPortal } from "react-dom";
 const namespace = "home-pg";
 const homePageItemElements = (items: HomePageItems[]) =>
   items.map((item, idx) => {
@@ -64,7 +65,6 @@ const homePageItemElements = (items: HomePageItems[]) =>
       </HomePageImageBanner>
     );
   });
-
 const addItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   if (!e) return;
   const newDoc: HomePageItems = {
@@ -128,42 +128,77 @@ const HomePageGridList = ({
   onDragEnd,
   onDragOver,
   onDragStart,
+  addItem,
+  updateItem,
+  deleteItem,
 }: {
   items: HomePageItems[];
   activeId: string | number | null;
   onDragEnd: (event: any) => void;
   onDragOver: (event: any) => void;
   onDragStart: (event: any) => void;
+  addItem?: (e: React.FormEvent<HTMLFormElement>) => void;
+  updateItem?: (e: React.FormEvent<HTMLFormElement>) => void;
+  deleteItem?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }) => {
   const itemElements = homePageItemElements(items).map((item, idx) => (
     <SortableItem
       key={item.key}
       id={item.key ? item.key.toString() : idx.toString()}
     >
+      <Button
+        variant="contained"
+        color="error"
+        onClick={(e) => {
+          e.stopPropagation();
+          if (!deleteItem) return;
+          deleteItem(e);
+        }}
+        data-id={item.key}
+        style={{
+          minWidth: "2.5em",
+          width: "5%",
+          aspectRatio: "1",
+          position: "absolute",
+          top: "0.5em",
+          right: "0.5em",
+          zIndex: 3,
+        }}
+      >
+        <FontAwesomeIcon icon={faClose} style={{ height: "100%" }} />
+      </Button>
       {item}
     </SortableItem>
   ));
   const itemElementMap = Object.fromEntries(
     Object.entries(itemElements).map(([key, value]) => [value.key, value])
   );
+  const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
   return (
-    <DndContext
-      onDragStart={onDragStart}
-      onDragOver={onDragOver}
-      onDragEnd={onDragEnd}
-    >
-      <SortableContext
-        items={items.map((item) => item.id)}
-        strategy={() => {
-          return null;
-        }}
+    <div className={`${namespace}-grid-list`}>
+      <div ref={(ref) => setContainerRef(ref)}></div>
+      <DndContext
+        onDragStart={onDragStart}
+        onDragOver={onDragOver}
+        onDragEnd={onDragEnd}
       >
-        {itemElements}
-        <DragOverlay adjustScale={false}>
-          {activeId ? itemElementMap[activeId] : null}
-        </DragOverlay>
-      </SortableContext>
-    </DndContext>
+        <SortableContext
+          items={items.map((item) => item.id)}
+          strategy={() => {
+            return null;
+          }}
+        >
+          {itemElements}
+        </SortableContext>
+        {containerRef &&
+          createPortal(
+            <DragOverlay>
+              {activeId ? itemElementMap[activeId] : null}
+            </DragOverlay>,
+            containerRef
+          )}
+      </DndContext>
+    </div>
   );
 };
 const HomePage = () => {
@@ -186,7 +221,9 @@ const HomePage = () => {
     updateItemFunc,
   });
   const defaultItems = useRef<HomePageItems[]>([]);
-  const [edit, setEdit] = useState(false);
+  // const [edit, setEdit] = useState(false);
+  const [edit, setEdit] = useState(true);
+
   return (
     <div className={`${namespace}-container`}>
       <div className={`${namespace}-inner-container`}>
@@ -236,15 +273,16 @@ const HomePage = () => {
         </Stack>
 
         {edit && (
-          <div className={`${namespace}-grid-list`}>
-            <HomePageGridList
-              items={items}
-              activeId={activeId}
-              onDragEnd={onDragEnd}
-              onDragOver={onDragOver}
-              onDragStart={onDragStart}
-            />
-          </div>
+          <HomePageGridList
+            items={items}
+            activeId={activeId}
+            onDragEnd={onDragEnd}
+            onDragOver={onDragOver}
+            onDragStart={onDragStart}
+            addItem={addItem}
+            updateItem={updateItem}
+            deleteItem={deleteItem}
+          />
         )}
         {!edit && homePageItemElements(items)}
       </div>
