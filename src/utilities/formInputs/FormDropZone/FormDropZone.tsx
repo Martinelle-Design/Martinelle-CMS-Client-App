@@ -23,6 +23,7 @@ interface FormDropZoneProps {
   className?: string;
   defaultFiles?: MediaLink[];
   includeThumbnails?: boolean;
+  multiple?: boolean;
 }
 interface ErrorProps {
   err: boolean;
@@ -57,7 +58,7 @@ export const StoredMedia = memo(
     };
     const thumbnails =
       mediaType === "images"
-        ? storedImages 
+        ? storedImages
         : mediaType === "videos"
         ? storedVideos
         : [];
@@ -93,6 +94,7 @@ const FormDropZone = ({
   className,
   defaultFiles,
   includeThumbnails = true,
+  multiple = false,
 }: FormDropZoneProps) => {
   const { newImages, newVideos, setNewImages, setNewVideos } =
     useDropZoneProvider();
@@ -145,7 +147,10 @@ const FormDropZone = ({
           const isMediaFiles = (file: MediaFile | null): file is MediaFile =>
             file !== null;
           const newFiles: MediaFile[] = allFiles.filter(isMediaFiles);
-          return [...state, ...newFiles];
+          //only use one if not multiple
+          if (multiple) return [...state, ...newFiles];
+          else if (newFiles.length > 0) return [newFiles[0]];
+          return state;
         });
       if (mediaType === "videos")
         setNewVideos((state) => {
@@ -162,7 +167,10 @@ const FormDropZone = ({
             file !== null;
 
           const newFiles: MediaFile[] = allFiles.filter(isMediaFiles);
-          return [...state, ...newFiles];
+          //only use one if not multiple
+          if (multiple) return [...state, ...newFiles];
+          else if (newFiles.length > 0) return [newFiles[0]];
+          return state;
         });
       setErr({
         err: fileRejections.length > 0,
@@ -200,7 +208,7 @@ const FormDropZone = ({
   } =
     mediaType === "videos"
       ? { "video/*": [".mp4"] }
-      : { "image/*": [".png", ".gif", ".jpeg", ".jpg"] };
+      : { "image/*": [".png", ".jpeg", ".jpg"] };
 
   const newThumbnails =
     mediaType === "images"
@@ -227,7 +235,7 @@ const FormDropZone = ({
         onDragLeave={onDragLeave}
         onDrop={onDrop}
         accept={acceptedFiles}
-        multiple
+        multiple={false}
         maxSize={maxSize}
         maxFiles={maxFiles}
       >
