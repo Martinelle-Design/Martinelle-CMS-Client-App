@@ -13,8 +13,6 @@ export const isPhoneNumber = (
   const isPossible = newNumber.isPossible();
   return isValid && isPossible;
 };
-export const validatePhoneNumber = (phoneNumber: string): boolean => {
-    console.log(!countryValidation(phoneNumber).every((e) => !e))
-    
+export const validatePhoneNumber = (phoneNumber: string): boolean => {    
   return !countryValidation(phoneNumber).every((e) => !e);
 };

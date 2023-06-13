@@ -39,7 +39,6 @@ export const StoredMedia = memo(
   }) => {
     const { storedImages, storedVideos, setStoredImages, setStoredVideos } =
       useDropZoneProvider();
-    console.log(storedImages)
     useEffect(() => {
       let mounted = true;
       if (files && mounted) {
