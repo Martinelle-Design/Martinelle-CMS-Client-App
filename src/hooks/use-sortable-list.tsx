@@ -8,7 +8,7 @@ export type SortableListProps<T> = {
   onDragOver: (event: any) => void;
   onDragStart: (event: any) => void;
   setActiveId: React.Dispatch<React.SetStateAction<string | number | null>>;
-  addItem?: (e: React.FormEvent<HTMLFormElement>) => void;
+  addItem?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   deleteItem?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   updateItem?: (
     e: React.FormEvent<HTMLFormElement>,
@@ -26,6 +26,9 @@ export type SortableListProps<T> = {
           id: string;
         })[];
         itemIdx: number;
+        data: {
+          [k: string]: FormDataEntryValue;
+        };
       }
     | undefined;
   setItems: React.Dispatch<
@@ -40,6 +43,7 @@ const useSortableList = <T,>({
   defaultArr,
   addItemFunc,
   updateItemFunc,
+  customOnDragOver,
 }: {
   addItemFunc?: (e?: { [k: string]: FormDataEntryValue }) => T | undefined;
   updateItemFunc?: (e?: { [k: string]: FormDataEntryValue }) =>
@@ -49,15 +53,14 @@ const useSortableList = <T,>({
       }
     | undefined;
   defaultArr: (T & { id: string })[];
+  customOnDragOver?: (event: DragOverEvent) => void;
 }): SortableListProps<T> => {
   const [items, setItems] = useState(defaultArr ? defaultArr : []);
   const [activeId, setActiveId] = useState<null | string | number>(null);
-  const addItem = (e: React.FormEvent<HTMLFormElement>) => {
+  const addItem = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
     if (!addItemFunc) return;
-    const newItem = addItemFunc(data);
+    const newItem = addItemFunc();
     if (!newItem) return;
     setItems([{ ...newItem, id: uuid() }, ...items]);
   };
@@ -82,6 +85,7 @@ const useSortableList = <T,>({
         setItems,
         newItems,
         itemIdx,
+        data,
       };
   };
 
@@ -91,26 +95,28 @@ const useSortableList = <T,>({
     const newItems = items.filter((item) => item.id !== id);
     setItems(newItems);
   };
-  const onDragOver = (e: DragOverEvent) => {
-    const activeData = e.active as any;
-    const overData = e.over as any;
-    const newItems = [...items];
-    const activeId = e.active.id;
-    const activeItemIdx = activeData?.data?.current?.sortable?.index;
-    const newActiveItemIdx = overData?.data?.current?.sortable?.index;
-    if (
-      activeItemIdx === undefined ||
-      newActiveItemIdx === undefined ||
-      activeItemIdx === null ||
-      newActiveItemIdx === null
-    )
-      return;
-    const newItem = items.find((item) => item.id === activeId);
-    if (!newItem) return;
-    newItems.splice(activeItemIdx, 1);
-    newItems.splice(newActiveItemIdx, 0, newItem);
-    setItems(newItems);
-  };
+  const onDragOver = customOnDragOver
+    ? customOnDragOver
+    : (e: DragOverEvent) => {
+        const activeData = e.active as any;
+        const overData = e.over as any;
+        const newItems = [...items];
+        const activeId = e.active.id;
+        const activeItemIdx = activeData?.data?.current?.sortable?.index;
+        const newActiveItemIdx = overData?.data?.current?.sortable?.index;
+        if (
+          activeItemIdx === undefined ||
+          newActiveItemIdx === undefined ||
+          activeItemIdx === null ||
+          newActiveItemIdx === null
+        )
+          return;
+        const newItem = items.find((item) => item.id === activeId);
+        if (!newItem) return;
+        newItems.splice(activeItemIdx, 1);
+        newItems.splice(newActiveItemIdx, 0, newItem);
+        setItems(newItems);
+      };
   const onDragEnd = (e: DragEndEvent) => {
     setActiveId(null);
   };

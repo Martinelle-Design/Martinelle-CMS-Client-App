@@ -20,6 +20,7 @@ export const HomePageGridItem = ({
   idx,
   item,
   deleteItem,
+  addItem,
   updateItem,
 }: {
   item: {

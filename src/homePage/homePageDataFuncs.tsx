@@ -36,7 +36,7 @@ export const submitFormFunc = async ({
   //we continue since we need to upload images
   const result = updateItem(e, false);
   if (!result) return;
-  const { setItems, newItems, itemIdx } = result;
+  const { setItems, newItems, itemIdx, data } = result;
   const currItemData = newItems[itemIdx];
   const createSingleDoc = generateSingleImg({});
   //upload content to s3 bucket
@@ -82,7 +82,7 @@ export const submitFormFunc = async ({
       },
       imgUrl: imgUrl,
       placeholderUrl: imgPlaceholderUrl,
-      //description: description ? description : undefined,
+      description: data.imgDescription.toString()
     },
   };
   unstable_batchedUpdates(() => {
@@ -152,7 +152,7 @@ export const addItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   const newDoc: HomePageItems = {
     itemType: "home-page-item",
     pk: {
-      orderIdx: 0, 
+      orderIdx: 0,
       itemType: "home-page-item",
     },
     id: uuid(),

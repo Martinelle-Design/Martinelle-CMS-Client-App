@@ -1,5 +1,5 @@
-import { Button, FormControl, Select, Stack, TextField } from "@mui/material";
-import { SortableListProps } from "../hooks/use-sortable-list";
+import { Button, FormControl, TextField } from "@mui/material";
+import useSortableList, { SortableListProps } from "../hooks/use-sortable-list";
 import { SortableFormWrapper } from "../utilities/formInputs/SortableFormWrapper";
 import { MediaLink } from "../utilities/formInputs/Thumbnails";
 import { ServiceItem } from "../utilities/types/types";
@@ -7,7 +7,51 @@ import { useState } from "react";
 import BannerSortableDndItem from "../utilities/DnDKitComponents/bannerSortableDndList/BannerSortableDndItem";
 import FormDropZone from "../utilities/formInputs/FormDropZone/FormDropZone";
 import { CategoryFormControl } from "../utilities/formInputs/CategoryFormControl";
+import { v4 as uuid } from "uuid";
+import GridLayoutGrid from "../utilities/DnDKitComponents/gridLayoutComponents/GridLayoutGrid";
+const namespace = "services-pg";
 const submitFormFunc = async () => {};
+const addItemFunc = () => {
+  return {
+    id: uuid(),
+    content: "",
+  };
+};
+type CategoryInput = {
+  id: string;
+  content: string;
+};
+const ServicePageGridItemCategoriesInput = ({
+  defaultArr,
+}: {
+  defaultArr: CategoryInput[];
+}) => {
+  const {
+    items,
+    onDragEnd,
+    onDragOver,
+    onDragStart,
+    addItem,
+    deleteItem,
+    setItems,
+  } = useSortableList<CategoryInput>({
+    addItemFunc,
+    defaultArr,
+  });
+  return (
+    <GridLayoutGrid
+      items={items}
+      onDragEnd={onDragEnd}
+      onDragOver={onDragOver}
+      onDragStart={onDragStart}
+      namespace={namespace}
+      columns={2}
+    >
+      {[]}
+    </GridLayoutGrid>
+  );
+};
+
 export const ServicePageGridItem = ({
   idx,
   item,
