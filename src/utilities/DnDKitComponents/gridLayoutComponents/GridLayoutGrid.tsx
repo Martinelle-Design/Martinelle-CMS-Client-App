@@ -1,6 +1,6 @@
 import { createPortal } from "react-dom";
 import { SortableListProps } from "../../../hooks/use-sortable-list";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { splitArray } from "../../helpers/splitArr";
 import { SortableContext } from "@dnd-kit/sortable";
@@ -20,13 +20,26 @@ const GridLayoutGrid = <T,>({
   columns: number;
 }) => {
   const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
+  const [colsArr, setColArr] = useState(
+    Array(columns)
+      .fill(0)
+      .map((_) => ({ id: uuid() }))
+  );
+  useEffect(() => {
+    setColArr((state) => {
+      if (state.length < columns) {
+        return [...state, { id: uuid() }];
+      }
+      if (state.length > columns) {
+        return state.slice(0, columns);
+      }
+      return state;
+    });
+  }, [columns]);
   if (!items) return <></>;
   const itemElementMap = Object.fromEntries(
     Object.entries(children).map(([key, value]) => [value.key, value])
   );
-  const colArr = Array(columns)
-    .fill(0)
-    .map((_) => ({ id: uuid() }));
   const itemsArr = splitArray(items, columns);
   const childrenArr = splitArray(children, columns);
   return (
@@ -44,7 +57,7 @@ const GridLayoutGrid = <T,>({
             </DragOverlay>,
             containerRef
           )}
-        {colArr.map((e, idx) => (
+        {colsArr.map((e, idx) => (
           <SortableContext
             key={e.id}
             items={itemsArr[idx]}
@@ -52,11 +65,11 @@ const GridLayoutGrid = <T,>({
               return null;
             }}
           >
-            {childrenArr[idx]}
+            <div className="sortable-list-column">{childrenArr[idx]}</div>
           </SortableContext>
         ))}
       </DndContext>
     </div>
   );
 };
-export default GridLayoutGrid
+export default GridLayoutGrid;

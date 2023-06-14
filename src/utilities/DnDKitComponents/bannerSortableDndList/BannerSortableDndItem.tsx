@@ -8,18 +8,24 @@ const BannerSortableDndItem = <T,>({
   idx,
   setOpenModal,
   deleteItem,
+  hideEditBtn,
+  fontSize
 }: {
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenModal?: React.Dispatch<React.SetStateAction<boolean>>;
   item: {
     data: T;
     el: JSX.Element;
   };
   idx: number;
+  hideEditBtn?: boolean;
+  fontSize?: string;
 } & Partial<SortableListProps<T>>) => {
   const btnStyles: React.CSSProperties = {
     minWidth: "2.5em",
     width: "5%",
     aspectRatio: "1",
+    padding: "0.5em",
+    fontSize: fontSize ? fontSize : "",
   };
   return (
     <SortableItem
@@ -37,17 +43,19 @@ const BannerSortableDndItem = <T,>({
           zIndex: 3,
         }}
       >
-        <Button
-          variant="contained"
-          color="info"
-          onClick={(e) => {
-            setOpenModal(true);
-          }}
-          data-id={item.el.key}
-          style={btnStyles}
-        >
-          <FontAwesomeIcon icon={faEdit} style={{ height: "80%" }} />
-        </Button>
+        {!hideEditBtn && (
+          <Button
+            variant="contained"
+            color="info"
+            onClick={(e) => {
+              if (setOpenModal) setOpenModal(true);
+            }}
+            data-id={item.el.key}
+            style={btnStyles}
+          >
+            <FontAwesomeIcon icon={faEdit} style={{ height: "80%" }} />
+          </Button>
+        )}
         <Button
           variant="contained"
           color="error"

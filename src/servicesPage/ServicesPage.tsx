@@ -2,7 +2,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import PageTitle from "../utilities/pageTitle/PageTitle";
 import { servicesData } from "./servicesData";
 import { ServiceItem } from "../utilities/types/types";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import useSortableList, { SortableListProps } from "../hooks/use-sortable-list";
 import {
   serviceItemsElements,
