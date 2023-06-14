@@ -3,7 +3,7 @@ import { v4 as uuid } from "uuid";
 import { generateImgLocation } from "../utilities/helpers/generateImgLocation";
 export const servicesData: ServiceItem[] = [
   {
-    subType: "markets",
+    title: "markets",
     id: uuid(),
     itemType: "service-item",
     orderIdx: 0,
@@ -47,7 +47,7 @@ export const servicesData: ServiceItem[] = [
     ],
   },
   {
-    subType: "architecture-interior",
+    title: "architecture-interior",
     id: uuid(),
     itemType: "service-item",
     orderIdx: 1,
@@ -91,7 +91,7 @@ export const servicesData: ServiceItem[] = [
     ],
   },
   {
-    subType: "furniture-manufacturing",
+    title: "furniture-manufacturing",
     id: uuid(),
     itemType: "service-item",
     orderIdx: 2,
@@ -133,7 +133,7 @@ export const servicesData: ServiceItem[] = [
     ],
   },
   {
-    subType: "client-visualization",
+    title: "client-visualization",
     id: uuid(),
     itemType: "service-item",
     orderIdx: 3,

@@ -39,15 +39,15 @@ export type HomePageItems = {
 } & GeneralProps;
 export type ServiceItem = {
   itemType: "service-item";
-  subType: (typeof serviceSubType)[number];
   images: {
     [key: string]: Image;
   };
+  title: string;
   subCategories: string[];
 } & GeneralProps;
 export type ProjectItem = {
   itemType: "project-item";
-  subType: (typeof projectSubType)[number];
+  subType: string;
   images: {
     [key: string]: Image;
   };

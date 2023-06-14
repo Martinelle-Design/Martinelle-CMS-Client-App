@@ -1,7 +1,18 @@
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import PageTitle from "../utilities/pageTitle/PageTitle";
 import { servicesData } from "./servicesData";
-import seperateToWords from "../utilities/helpers/seperateToWords";
+import { ServiceItem } from "../utilities/types/types";
+import { useRef, useState } from "react";
+import useSortableList, { SortableListProps } from "../hooks/use-sortable-list";
+import {
+  serviceItemsElements,
+  addItemFunc,
+  updateItemFunc,
+} from "./servicePageDataFuncs";
+import useEditLogic from "../hooks/use-edit-logic";
+import { BannerSortableDnDList } from "../utilities/bannerSortableDndList/BannerSortableDndList";
+import { DropZoneProvider } from "../utilities/formInputs/FormDropZone/FormDropZoneContext";
+import { ServicePageGridItem } from "./ServicePageGridItem";
 const namespace = "services-pg";
 type ServiceRowProps = {
   title: string;
@@ -10,7 +21,8 @@ type ServiceRowProps = {
   imgDescription?: string;
   items: string[];
 };
-const ServiceRow = ({
+
+export const ServiceRow = ({
   title,
   imgUrl,
   imgPlaceholderUrl,
@@ -40,32 +52,93 @@ const ServiceRow = ({
     </div>
   );
 };
+const ServicePageGridList = ({
+  items,
+  activeId,
+  onDragEnd,
+  onDragOver,
+  onDragStart,
+  addItem,
+  updateItem,
+  deleteItem,
+}: Partial<SortableListProps<ServiceItem>>) => {
+  if (!items) return <></>;
+  const itemElements = serviceItemsElements({ items }).map((item, idx) => (
+    <DropZoneProvider key={item.el.key}>
+      <ServicePageGridItem
+        key={item.el.key}
+        idx={idx}
+        item={item}
+        deleteItem={deleteItem}
+        updateItem={updateItem}
+        addItem={addItem}
+      />
+    </DropZoneProvider>
+  ));
+  return (
+    <BannerSortableDnDList
+      items={items}
+      activeId={activeId}
+      onDragEnd={onDragEnd}
+      onDragOver={onDragOver}
+      onDragStart={onDragStart}
+      namespace={namespace}
+    >
+      {itemElements}
+    </BannerSortableDnDList>
+  );
+};
 const ServicesPage = () => {
   const orderedServicePageItems = servicesData.sort(
     (a, b) => a.orderIdx - b.orderIdx
   );
+  const {
+    items,
+    activeId,
+    onDragEnd,
+    onDragOver,
+    onDragStart,
+    setItems,
+    addItem,
+    updateItem,
+    deleteItem,
+  } = useSortableList<ServiceItem>({
+    defaultArr: orderedServicePageItems,
+    addItemFunc,
+    updateItemFunc,
+  });
+  const defaultItems = useRef<ServiceItem[]>([]);
+  const serviceItems = serviceItemsElements({ items: orderedServicePageItems });
+  const { edit, editButtons } = useEditLogic<ServiceItem>({
+    onCancel: () => {
+      setItems(defaultItems.current);
+      defaultItems.current = [];
+    },
+    onSave: () => {
+      defaultItems.current = [];
+    },
+    onEdit: () => {
+      defaultItems.current = items;
+    },
+  });
   return (
     <div className={namespace}>
       <PageTitle text={"Services".toUpperCase()} />
+      {editButtons}
       <div className={`${namespace}-rows`}>
-        {orderedServicePageItems.map((service) => {
-          const { id, images, subCategories, subType } = service;
-          const imgEntries = Object.entries(images);
-          const imgOrder = imgEntries.sort((a, b) =>
-            a[1].orderIdx > b[1].orderIdx ? 1 : -1
-          );
-          const title = seperateToWords(subType).toUpperCase();
-          return (
-            <ServiceRow
-              items={subCategories}
-              title={title}
-              key={id}
-              imgUrl={imgOrder[0][1].imgUrl}
-              imgDescription={imgOrder[0][1].description}
-              imgPlaceholderUrl={imgOrder[0][1].placeholderUrl}
-            />
-          );
-        })}
+        {!edit && serviceItems.map((serviceItem) => serviceItem.el)}
+        {edit && (
+          <ServicePageGridList
+            items={items}
+            activeId={activeId}
+            onDragEnd={onDragEnd}
+            onDragOver={onDragOver}
+            onDragStart={onDragStart}
+            addItem={addItem}
+            updateItem={updateItem}
+            deleteItem={deleteItem}
+          />
+        )}
       </div>
     </div>
   );

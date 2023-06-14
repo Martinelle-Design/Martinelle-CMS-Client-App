@@ -1,17 +1,10 @@
 import { HomePageItems } from "../utilities/types/types";
-import { SortableItem } from "../utilities/DnDKitComponents/SortableItem";
 import { SortableListProps } from "../hooks/use-sortable-list";
 import { useState } from "react";
-import { Button, Stack } from "@mui/material";
-import { faClose, faEdit } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { submitFormFunc } from "./homePageDataFuncs";
-import PopUpModal from "../utilities/popUpModal/PopUpModal";
-import { useDropZoneProvider } from "../utilities/formInputs/FormDropZone/FormDropZoneContext";
+import { Button } from "@mui/material";
 import FormDropZone from "../utilities/formInputs/FormDropZone/FormDropZone";
 import { MediaLink } from "../utilities/formInputs/Thumbnails";
-import LoadingIcon from "../utilities/loadingIcon/LoadingIcon";
-import useLoadingState from "../hooks/use-loading-state";
+import { CategoryFormControl } from "../utilities/formInputs/CategoryFormControl";
 import {
   FormControl,
   InputLabel,
@@ -19,114 +12,10 @@ import {
   Select,
   TextField,
 } from "@mui/material";
+import { SortableFormWrapper } from "../utilities/formInputs/SortableFormWrapper";
+import { submitFormFunc } from "./homePageDataFuncs";
+import BannerSortableDndItem from "../utilities/bannerSortableDndList/BannerSortableDndItem";
 // const namespace = "home-pg";
-const HomePageGridItemForm = ({
-  updateItem,
-  setOpenModal,
-  children,
-}: {
-  updateItem?: SortableListProps<HomePageItems>["updateItem"];
-  setOpenModal: (open: boolean) => void;
-  children?: JSX.Element | JSX.Element[] | string;
-}) => {
-  const { newImages, storedImages, setNewImages, setStoredImages } =
-    useDropZoneProvider();
-  const { status, callFunction } = useLoadingState({
-    asyncFunc: submitFormFunc,
-  });
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    callFunction({
-      e,
-      updateItem,
-      newImages,
-      storedImages,
-    });
-  };
-  return (
-    <PopUpModal
-      onClose={() => {
-        setOpenModal(false);
-        setNewImages([]);
-        setStoredImages([]);
-      }}
-    >
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          height: "100%",
-          alignItems: "start",
-          justifyContent: "center",
-          overflow: "auto",
-          maxHeight: "80vh",
-        }}
-      >
-        <form
-          onSubmit={onSubmit}
-          style={{
-            width: "85%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          {status === "loading" && (
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                zIndex: 2,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "#ebebeb",
-              }}
-            >
-              <LoadingIcon
-                strokeColor="#37673F"
-                backgroundColor="#ebebeb"
-                width={"35%"}
-              />
-            </div>
-          )}
-          {children}
-        </form>
-      </div>
-    </PopUpModal>
-  );
-};
-export const CategoryFormControl = ({
-  children,
-  heading,
-}: {
-  children: JSX.Element | JSX.Element[] | string;
-  heading: string;
-}) => {
-  const categoryBoxesStyles: React.CSSProperties = {
-    marginBottom: "1em",
-    padding: "7% 10%",
-    boxSizing: "border-box",
-    border: "1.5px solid lightgray",
-    borderRadius: "0.3em",
-  };
-  return (
-    <FormControl fullWidth style={categoryBoxesStyles}>
-      <h3
-        style={{
-          width: "100%",
-          marginTop: 0,
-          fontFamily: `"Roboto","Helvetica","Arial","sans-serif"`,
-        }}
-      >
-        {heading}
-      </h3>
-      {children}
-    </FormControl>
-  );
-};
 export const HomePageGridItem = ({
   idx,
   item,
@@ -155,22 +44,19 @@ export const HomePageGridItem = ({
           mediaType: "image",
         }
       : undefined;
-  const btnStyles: React.CSSProperties = {
-    minWidth: "2.5em",
-    width: "5%",
-    aspectRatio: "1",
-  };
 
   return (
     <>
       {openModal && (
-        <HomePageGridItemForm
+        <SortableFormWrapper
+          submitFormFunc={submitFormFunc}
           updateItem={updateItem}
           setOpenModal={setOpenModal}
         >
           <input
             name="idx"
             value={idx}
+            readOnly
             style={{
               opacity: 0,
               visibility: "hidden",
@@ -270,49 +156,14 @@ export const HomePageGridItem = ({
           >
             Save
           </Button>
-        </HomePageGridItemForm>
+        </SortableFormWrapper>
       )}
-      <SortableItem
-        key={item.el.key}
-        id={item.el.key ? item.el.key.toString() : idx.toString()}
-      >
-        <Stack
-          direction={"row"}
-          spacing={1}
-          justifyContent={"flex-end"}
-          style={{
-            position: "absolute",
-            top: "0.5em",
-            right: "0.5em",
-            zIndex: 3,
-          }}
-        >
-          <Button
-            variant="contained"
-            color="info"
-            onClick={(e) => {
-              setOpenModal(true);
-            }}
-            data-id={item.el.key}
-            style={btnStyles}
-          >
-            <FontAwesomeIcon icon={faEdit} style={{ height: "80%" }} />
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={(e) => {
-              if (!deleteItem) return;
-              deleteItem(e);
-            }}
-            data-id={item.el.key}
-            style={btnStyles}
-          >
-            <FontAwesomeIcon icon={faClose} style={{ height: "100%" }} />
-          </Button>
-        </Stack>
-        {item.el}
-      </SortableItem>
+      <BannerSortableDndItem
+        item={item}
+        deleteItem={deleteItem}
+        setOpenModal={setOpenModal}
+        idx={idx}
+      />
     </>
   );
 };

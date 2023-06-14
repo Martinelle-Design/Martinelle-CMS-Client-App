@@ -5,19 +5,16 @@ import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
 import useSortableList, { SortableListProps } from "../hooks/use-sortable-list";
 import { useRef, useState } from "react";
-import { Button, Stack } from "@mui/material";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { createPortal } from "react-dom";
 import {
   homePageItemElements,
   updateItemFunc,
   addItemFunc,
 } from "./homePageDataFuncs";
-import {
-  DropZoneProvider,
-} from "../utilities/formInputs/FormDropZone/FormDropZoneContext";
+import { DropZoneProvider } from "../utilities/formInputs/FormDropZone/FormDropZoneContext";
 import { HomePageGridItem } from "./HomePageGridItem";
+import useEditLogic from "../hooks/use-edit-logic";
+import { BannerSortableDnDList } from "../utilities/bannerSortableDndList/BannerSortableDndList";
 const namespace = "home-pg";
 const HomePageGridList = ({
   items,
@@ -29,7 +26,6 @@ const HomePageGridList = ({
   updateItem,
   deleteItem,
 }: Partial<SortableListProps<HomePageItems>>) => {
-  const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
   if (!items) return <></>;
   const itemElements = homePageItemElements(items).map((item, idx) => (
     <DropZoneProvider key={item.el.key}>
@@ -43,34 +39,17 @@ const HomePageGridList = ({
       />
     </DropZoneProvider>
   ));
-  const itemElementMap = Object.fromEntries(
-    Object.entries(itemElements).map(([key, value]) => [value.key, value])
-  );
   return (
-    <div className={`${namespace}-grid-list`}>
-      <div ref={(ref) => setContainerRef(ref)}></div>
-      <DndContext
-        onDragStart={onDragStart}
-        onDragOver={onDragOver}
-        onDragEnd={onDragEnd}
-      >
-        <SortableContext
-          items={items.map((item) => item.id)}
-          strategy={() => {
-            return null;
-          }}
-        >
-          {itemElements}
-        </SortableContext>
-        {containerRef &&
-          createPortal(
-            <DragOverlay>
-              {activeId ? itemElementMap[activeId] : null}
-            </DragOverlay>,
-            containerRef
-          )}
-      </DndContext>
-    </div>
+    <BannerSortableDnDList
+      items={items}
+      activeId={activeId}
+      onDragEnd={onDragEnd}
+      onDragOver={onDragOver}
+      onDragStart={onDragStart}
+      namespace={namespace}
+    >
+      {itemElements}
+    </BannerSortableDnDList>
   );
 };
 const HomePage = () => {
@@ -93,58 +72,23 @@ const HomePage = () => {
     updateItemFunc,
   });
   const defaultItems = useRef<HomePageItems[]>([]);
-  const [edit, setEdit] = useState(false);
-  // const [edit, setEdit] = useState(true);
-
+  const { edit, editButtons } = useEditLogic<HomePageItems>({
+    onCancel: () => {
+      setItems(defaultItems.current);
+      defaultItems.current = [];
+    },
+    onSave: () => {
+      defaultItems.current = [];
+    },
+    onEdit: () => {
+      defaultItems.current = items;
+    },
+  });
   return (
     <div className={`${namespace}-container`}>
       <div className={`${namespace}-inner-container`}>
         <PageTitle text={"Home Page".toUpperCase()} />
-        <Stack
-          direction={"row"}
-          spacing={2}
-          justifyContent={"center"}
-          marginTop={"2em"}
-          marginBottom={"0.5em"}
-        >
-          {!edit && (
-            <Button
-              variant="contained"
-              onClick={() => {
-                setEdit(true);
-                defaultItems.current = items;
-              }}
-            >
-              <FontAwesomeIcon icon={faEdit} />
-              <span style={{ marginLeft: "0.5em" }}>Edit</span>
-            </Button>
-          )}
-          {edit && (
-            <>
-              <Button
-                variant="contained"
-                onClick={() => {
-                  defaultItems.current = [];
-                  setEdit(false);
-                }}
-              >
-                Save
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => {
-                  setEdit(false);
-                  setItems(defaultItems.current);
-                  defaultItems.current = [];
-                }}
-              >
-                Cancel
-              </Button>
-            </>
-          )}
-        </Stack>
-
+        {editButtons}
         {edit && (
           <HomePageGridList
             items={items}
