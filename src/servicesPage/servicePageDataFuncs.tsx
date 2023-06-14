@@ -49,7 +49,14 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   if (!e) return;
   const idx = e.idx ? parseInt(e.idx.toString()) : 0;
   const newDoc: Partial<ServiceItem> = {
+    orderIdx: idx,
+    pk: {
+      itemType: "service-item",
+      orderIdx: idx,
+    },
     title: e.title ? e.title.toString() : "",
+    //we need to add a subcategory logic here...
+    subCategories: [],
   };
   const img = generateSingleImg({
     imgUrl: e.imgUrl?.toString(),

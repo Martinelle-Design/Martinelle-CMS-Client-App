@@ -152,7 +152,7 @@ export const addItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   const newDoc: HomePageItems = {
     itemType: "home-page-item",
     pk: {
-      orderIdx: 0,
+      orderIdx: 0, 
       itemType: "home-page-item",
     },
     id: uuid(),
@@ -175,6 +175,11 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   if (!e) return;
   const idx = e.idx ? parseInt(e.idx.toString()) : 0;
   const newDoc: Partial<HomePageItems> = {
+    orderIdx: idx,
+    pk: {
+      itemType: "service-item",
+      orderIdx: idx,
+    },
     subType: e.subType as HomePageItems["subType"],
     textDescription: e.textDescription
       ? e.textDescription.toString()
