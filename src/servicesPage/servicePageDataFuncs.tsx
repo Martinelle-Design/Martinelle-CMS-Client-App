@@ -4,7 +4,6 @@ import { ServiceRow } from "./ServicesPage";
 import getUnixTime from "date-fns/getUnixTime";
 import { generateSingleImg } from "../utilities/helpers/generateImgDoc";
 import { v4 as uuid } from "uuid";
-
 export const serviceItemsElements = ({ items }: { items: ServiceItem[] }) => {
   return items.map((service) => {
     const { id, images, subCategories, title } = service;

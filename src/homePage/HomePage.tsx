@@ -14,7 +14,7 @@ import {
 import { DropZoneProvider } from "../utilities/formInputs/FormDropZone/FormDropZoneContext";
 import { HomePageGridItem } from "./HomePageGridItem";
 import useEditLogic from "../hooks/use-edit-logic";
-import { BannerSortableDnDList } from "../utilities/bannerSortableDndList/BannerSortableDndList";
+import { BannerSortableDnDList } from "../utilities/DnDKitComponents/bannerSortableDndList/BannerSortableDndList";
 const namespace = "home-pg";
 const HomePageGridList = ({
   items,

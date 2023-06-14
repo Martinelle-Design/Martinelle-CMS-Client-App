@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { SortableFormWrapper } from "../utilities/formInputs/SortableFormWrapper";
 import { submitFormFunc } from "./homePageDataFuncs";
-import BannerSortableDndItem from "../utilities/bannerSortableDndList/BannerSortableDndItem";
+import BannerSortableDndItem from "../utilities/DnDKitComponents/bannerSortableDndList/BannerSortableDndItem";
 // const namespace = "home-pg";
 export const HomePageGridItem = ({
   idx,

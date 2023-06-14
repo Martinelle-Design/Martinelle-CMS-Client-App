@@ -10,7 +10,7 @@ import {
   updateItemFunc,
 } from "./servicePageDataFuncs";
 import useEditLogic from "../hooks/use-edit-logic";
-import { BannerSortableDnDList } from "../utilities/bannerSortableDndList/BannerSortableDndList";
+import { BannerSortableDnDList } from "../utilities/DnDKitComponents/bannerSortableDndList/BannerSortableDndList";
 import { DropZoneProvider } from "../utilities/formInputs/FormDropZone/FormDropZoneContext";
 import { ServicePageGridItem } from "./ServicePageGridItem";
 const namespace = "services-pg";

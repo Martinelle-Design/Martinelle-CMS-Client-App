@@ -4,7 +4,7 @@ import { SortableFormWrapper } from "../utilities/formInputs/SortableFormWrapper
 import { MediaLink } from "../utilities/formInputs/Thumbnails";
 import { ServiceItem } from "../utilities/types/types";
 import { useState } from "react";
-import BannerSortableDndItem from "../utilities/bannerSortableDndList/BannerSortableDndItem";
+import BannerSortableDndItem from "../utilities/DnDKitComponents/bannerSortableDndList/BannerSortableDndItem";
 import FormDropZone from "../utilities/formInputs/FormDropZone/FormDropZone";
 import { CategoryFormControl } from "../utilities/formInputs/CategoryFormControl";
 const submitFormFunc = async () => {};

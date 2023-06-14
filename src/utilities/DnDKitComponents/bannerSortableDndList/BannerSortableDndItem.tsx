@@ -1,8 +1,8 @@
-import { SortableItem } from "../DnDKitComponents/SortableItem";
+import { SortableItem } from "../SortableItem";
 import { Button, Stack } from "@mui/material";
 import { faClose, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { SortableListProps } from "../../hooks/use-sortable-list";
+import { SortableListProps } from "../../../hooks/use-sortable-list";
 const BannerSortableDndItem = <T,>({
   item,
   idx,

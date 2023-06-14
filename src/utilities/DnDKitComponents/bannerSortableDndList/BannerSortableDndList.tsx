@@ -1,6 +1,6 @@
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
-import { SortableListProps } from "../../hooks/use-sortable-list";
+import { SortableListProps } from "../../../hooks/use-sortable-list";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 export const BannerSortableDnDList = <T,>({
