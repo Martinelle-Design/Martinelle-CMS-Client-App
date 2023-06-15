@@ -22,7 +22,10 @@ export const BannerSortableDnDList = <T,>({
   );
   return (
     <div className={`${namespace}-grid-list`}>
-      <div ref={(ref) => setContainerRef(ref)}></div>
+      <div
+        ref={(ref) => setContainerRef(ref)}
+        className="dnd-overlay-container"
+      ></div>
       <DndContext
         onDragStart={onDragStart}
         onDragOver={onDragOver}

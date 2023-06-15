@@ -37,6 +37,16 @@
       aspect-ratio: 1;
     }
   }
+  .#{$namespace}-grid-list {
+    $margin: 2%;
+    $columns: 2;
+    .sortable-item {
+      width: math.div(100%, $columns) - (2 * $margin);
+    }
+    & > * {
+      margin: $margin;
+    }
+  }
 }
 @mixin project-clickable-sm {
   @include scale-to-font-size-projects-clickable-banner(1.5rem);

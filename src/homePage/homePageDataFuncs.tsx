@@ -3,16 +3,13 @@ import HomePageImageBannerFull from "./utilities/HomePageImgBannerFull";
 import { HomePageItems } from "../utilities/types/types";
 import { v4 as uuid } from "uuid";
 import getUnixTime from "date-fns/getUnixTime";
-import { unstable_batchedUpdates } from "react-dom";
 import {
   MediaFile,
   MediaLink,
-  isMediaLink,
 } from "../utilities/formInputs/Thumbnails";
 import { SortableListProps } from "../hooks/use-sortable-list";
 import {
   generateSingleImg,
-  uploadImgToS3,
 } from "../utilities/helpers/generateImgDoc";
 import { submitClientAppItemsFormFunc } from "../utilities/helpers/submitClientAppItemsFormFunc";
 const namespace = "home-pg";

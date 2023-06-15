@@ -173,7 +173,7 @@ export const ServicePageGridItem = ({
   idx: number;
 } & Partial<SortableListProps<ServiceItem>>) => {
   const [openModal, setOpenModal] = useState(false);
-  const [data, setData] = useState<
+  const dataRef = useRef<
     Omit<ServiceItem, "subCategories"> & {
       subCategories: CategoryInput[];
     }
@@ -184,6 +184,7 @@ export const ServicePageGridItem = ({
       content: content,
     })),
   });
+  const data = dataRef.current;
   const imgsObj = data.images as ServiceItem["images"];
   const imgsData = imgsObj
     ? Object.entries(imgsObj).map(([id, value]) => value)

@@ -13,9 +13,7 @@ import {
 } from "./projectClickableBannerDataFuncs";
 import { DropZoneProvider } from "../formInputs/FormDropZone/FormDropZoneContext";
 import { ProjectButtonsGridItem } from "./ProjectsButtonGridItem";
-import { gridOnDragOver } from "../DnDKitComponents/gridLayoutComponents/gridOnDragOver";
-import GridLayoutGrid from "../DnDKitComponents/gridLayoutComponents/GridLayoutGrid";
-import useWindowWidth from "../../hooks/use-window-width";
+import { BannerSortableDnDList } from "../DnDKitComponents/bannerSortableDndList/BannerSortableDndList";
 const namespace = "projects-clickable-banner";
 export const ProjectClickableBannerEditable = () => {
   const namespace = "project-page";
@@ -70,7 +68,6 @@ const ProjectButtonsGridList = ({
   updateItem,
   deleteItem,
 }: Partial<SortableListProps<ProjectButtonItem>>) => {
-  const mediumWindowWidth = useWindowWidth(768);
   if (!items) return <></>;
   const itemElements = projectButtonItemsElements({ items }).map(
     (item, idx) => (
@@ -85,17 +82,16 @@ const ProjectButtonsGridList = ({
     )
   );
   return (
-    <GridLayoutGrid
+    <BannerSortableDnDList
       items={items}
       onDragEnd={onDragEnd}
       onDragOver={onDragOver}
       onDragStart={onDragStart}
       namespace={namespace}
-      columns={mediumWindowWidth ? 4 : 2}
       activeId={activeId}
     >
       {itemElements}
-    </GridLayoutGrid>
+    </BannerSortableDnDList>
   );
 };
 const ProjectsClickableBanner = () => {
@@ -114,7 +110,6 @@ const ProjectsClickableBanner = () => {
     deleteItem,
   } = useSortableList<ProjectButtonItem>({
     defaultArr: orderedProjectButtonItems,
-    customOnDragOver: gridOnDragOver,
     addItemFunc,
     updateItemFunc,
   });
