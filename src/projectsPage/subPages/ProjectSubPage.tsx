@@ -9,6 +9,7 @@ import useWindowResize from "../../hooks/use-window-resize";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { ReactComponent as ResetZoom } from "./ResetZoom.svg";
+import { ProjectItem } from "../../utilities/types/types";
 type RecentCoordinates = {
   x1: number;
   y1: number;
@@ -39,8 +40,10 @@ const ProjectSubPageImagePopUpModal = ({
   if (!recentCoordinates.current) return <></>;
   const {
     //x1, x2, y1, y2,
-    
-    imgHeight, imgWidth } = recentCoordinates.current;
+
+    imgHeight,
+    imgWidth,
+  } = recentCoordinates.current;
   const imgStyles: { [key: string]: string } = {
     objectFit: "contain",
     aspectRatio: (imgWidth / imgHeight).toString(),
@@ -122,7 +125,7 @@ const ProjectSubPageImagePopUpModal = ({
                       const realAspectRatio = imgWidth / imgHeight;
                       const clickRelativeToImg = {
                         x: clickCoordinates.x,
-                        y: clickCoordinates.y, 
+                        y: clickCoordinates.y,
                       };
                       const centerX = x + width / 2;
                       const centerY = y + height / 2;
@@ -216,14 +219,23 @@ const ProjectSubPageImage = ({ img }: { img: ImageProps }) => {
 const ProjectSubPage = ({
   className,
   title,
-  imgArr,
+  projectItemArr,
 }: {
   className?: string;
   title: string;
-  imgArr: (ImageProps & {
-    id: string;
-  })[];
+  projectItemArr: ProjectItem[];
 }) => {
+  const imgArr = projectItemArr.map((item) => {
+    const imgsObj = item.images;
+    const images = imgsObj ? Object.entries(imgsObj) : [];
+    const image = images.length > 0 ? images[0][1] : null;
+    return {
+      id: item.id,
+      imgPlaceholderUrl: image ? image.placeholderUrl : "",
+      imgUrl: image ? image.imgUrl : "",
+      imgDescription: image ? image.description : "",
+    };
+  });
   return (
     <div className={`${namespace} ${className ? className : ""}`}>
       <PageTitle text={title.toUpperCase()} />

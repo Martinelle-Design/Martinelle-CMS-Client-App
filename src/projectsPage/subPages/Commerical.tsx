@@ -1,13 +1,11 @@
 import ProjectSubPage from "./ProjectSubPage";
-import { ImageProps } from "../../utilities/imageSlide/ImageSlide";
 import { generateProjectImagesLocation } from "./generateProjectImageLocation";
-const imageArr: (ImageProps & {
-  id: string;
-})[] = generateProjectImagesLocation({
+const imageArr = generateProjectImagesLocation({
   folderName: "CommercialPage", 
   number: 18,
+  subType: "commercial",
 });
 const Commercial = () => {
-  return <ProjectSubPage title="Featured Commercial" imgArr={imageArr} />;
+  return <ProjectSubPage title="Featured Commercial" projectItemArr={imageArr} />;
 };
 export default Commercial;

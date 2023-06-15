@@ -94,7 +94,11 @@ const ProjectButtonsGridList = ({
     </BannerSortableDnDList>
   );
 };
-const ProjectsClickableBanner = () => {
+const ProjectsClickableBanner = ({
+  noEdit
+}: {
+  noEdit?: boolean;
+}) => {
   const orderedProjectButtonItems = projectsClickableData.sort(
     (a, b) => a.orderIdx - b.orderIdx
   );
@@ -117,9 +121,8 @@ const ProjectsClickableBanner = () => {
   const projectButtonItems = projectButtonItemsElements({
     items: orderedProjectButtonItems,
   });
-  const edit = true;
   const {
-    //edit,
+    edit,
     editButtons,
   } = useEditLogic<ProjectButtonItem>({
     onCancel: () => {
@@ -135,10 +138,10 @@ const ProjectsClickableBanner = () => {
   });
   return (
     <>
-      {editButtons}
+      {!noEdit && editButtons}
       <div className={`${namespace}-bottom-banner`}>
-        {!edit && projectButtonItems.map((item) => item.el)}
-        {edit && (
+        {(noEdit || !edit) && projectButtonItems.map((item) => item.el)}
+        {!noEdit && edit && (
           <ProjectButtonsGridList
             items={items}
             activeId={activeId}

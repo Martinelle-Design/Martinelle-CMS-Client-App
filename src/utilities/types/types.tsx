@@ -30,7 +30,6 @@ export type Image = {
 export type HomePageItems = {
   itemType: "home-page-item";
   subType: "full-banner" | "half-banner-left" | "half-banner-right";
-
   textDescription?: string;
   title: string;
   actionBtnData: {
