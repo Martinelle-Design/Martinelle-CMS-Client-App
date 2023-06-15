@@ -102,6 +102,8 @@ $margin: 1rem;
     box-sizing: border-box;
     width: 100%;
     & > * {
+      background-color: $white;
+      padding: 10%;
       &:first-child {
         margin-top: 10%;
       }

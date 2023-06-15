@@ -3,9 +3,13 @@ import { CSS } from "@dnd-kit/utilities";
 export function SortableItem({
   id,
   children,
+  colIdx,
+  totalColumns,
 }: {
   id: string;
   children: JSX.Element | JSX.Element[] | string;
+  colIdx?: number;
+  totalColumns?: number;
 }) {
   const {
     attributes,
@@ -14,7 +18,13 @@ export function SortableItem({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: id });
+  } = useSortable({
+    id: id,
+    data: {
+      colIdx,
+      totalColumns
+    },
+  });
   const style: React.CSSProperties = {
     transform: CSS.Translate.toString(transform),
     opacity: isDragging ? 0.6 : 1,

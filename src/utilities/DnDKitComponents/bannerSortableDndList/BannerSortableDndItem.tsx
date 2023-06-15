@@ -6,10 +6,12 @@ import { SortableListProps } from "../../../hooks/use-sortable-list";
 const BannerSortableDndItem = <T,>({
   item,
   idx,
+  colIdx,
   setOpenModal,
   deleteItem,
   hideEditBtn,
-  fontSize
+  fontSize,
+  totalColumns,
 }: {
   setOpenModal?: React.Dispatch<React.SetStateAction<boolean>>;
   item: {
@@ -17,6 +19,8 @@ const BannerSortableDndItem = <T,>({
     el: JSX.Element;
   };
   idx: number;
+  colIdx?: number;
+  totalColumns?: number;
   hideEditBtn?: boolean;
   fontSize?: string;
 } & Partial<SortableListProps<T>>) => {
@@ -31,6 +35,8 @@ const BannerSortableDndItem = <T,>({
     <SortableItem
       key={item.el.key}
       id={item.el.key ? item.el.key.toString() : idx.toString()}
+      colIdx={colIdx}
+      totalColumns={totalColumns}
     >
       <Stack
         direction={"row"}

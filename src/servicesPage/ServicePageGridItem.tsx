@@ -40,9 +40,13 @@ const ServicePageGridItemCategoryItem = ({
   idx,
   deleteItem,
   setItems,
+  colIdx,
+  totalColumns,
 }: {
+  colIdx?: number;
   item: CategoryInput;
   idx: number;
+  totalColumns?: number;
 } & Partial<SortableListProps<CategoryInput>>) => {
   const [openModal, setOpenModal] = useState(false);
   const [value, setValue] = useState(item.content);
@@ -80,10 +84,12 @@ const ServicePageGridItemCategoryItem = ({
       {!openModal && (
         <BannerSortableDndItem
           item={itemData}
+          colIdx={colIdx}
           idx={idx}
           deleteItem={deleteItem}
           setOpenModal={setOpenModal}
           fontSize="0.4rem"
+          totalColumns={totalColumns}
         />
       )}
       {openModal && (

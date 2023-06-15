@@ -1,6 +1,6 @@
 import { createPortal } from "react-dom";
 import { SortableListProps } from "../../../hooks/use-sortable-list";
-import { useState, useEffect } from "react";
+import { useState, useEffect, cloneElement } from "react";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import { splitArray } from "../../helpers/splitArr";
 import { SortableContext } from "@dnd-kit/sortable";
@@ -63,6 +63,7 @@ const GridLayoutGrid = <T,>({
         {colsArr.map((e, idx) => {
           return (
             <SortableContext
+              id={e.id}
               key={e.id}
               items={idx >= itemsArr.length ? [] : itemsArr[idx]}
               strategy={() => {
@@ -70,7 +71,15 @@ const GridLayoutGrid = <T,>({
               }}
             >
               <div className="sortable-list-column">
-                {idx >= childrenArr.length ? [] : childrenArr[idx]}
+                {idx >= childrenArr.length
+                  ? []
+                  : childrenArr[idx].map((el) => {
+                      const colIdx = idx;
+                      return cloneElement(el, {
+                        colIdx,
+                        totalColumns: columns,
+                      });
+                    })}
               </div>
             </SortableContext>
           );
