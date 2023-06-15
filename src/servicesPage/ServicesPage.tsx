@@ -21,7 +21,6 @@ type ServiceRowProps = {
   imgDescription?: string;
   items: string[];
 };
-
 export const ServiceRow = ({
   title,
   imgUrl,

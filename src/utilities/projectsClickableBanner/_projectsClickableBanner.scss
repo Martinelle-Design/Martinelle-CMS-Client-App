@@ -21,3 +21,37 @@ $namespace: "projects-clickable-banner";
     margin-right: 0;
   }
 }
+.#{$namespace}-grid-layout-grid {
+  display: flex;
+  width: 100%;
+  background-color: gray;
+  box-sizing: border-box;
+  .sortable-item {
+    background-color: $white;
+    box-sizing: border-box;
+  }
+  .sortable-list-column {
+    box-sizing: border-box;
+    width: 100%;
+    & > * {
+      background-color: $white;
+      &:first-child {
+        margin-top: 10%;
+      }
+      &:last-child {
+        margin-bottom: 10%;
+      }
+      margin: 5%;
+    }
+    &:nth-child(2) {
+      & > * {
+        margin-left: 10%;
+      }
+    }
+    &:nth-last-child(3) {
+      & > * {
+        margin-right: 10%;
+      }
+    }
+  }
+}

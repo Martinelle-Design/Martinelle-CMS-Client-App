@@ -15,6 +15,10 @@ import { gridOnDragOver } from "../utilities/DnDKitComponents/gridLayoutComponen
 import { useOnClickOutside } from "usehooks-ts";
 import { unstable_batchedUpdates } from "react-dom";
 import { submitFormFunc } from "./servicePageDataFuncs";
+type CategoryInput = {
+  id: string;
+  content: string;
+};
 const namespace = "services-pg";
 const inputHiddenStyles: React.CSSProperties = {
   opacity: 0,
@@ -25,15 +29,11 @@ const inputHiddenStyles: React.CSSProperties = {
   margin: 0,
   border: "none",
 };
-const addItemFunc = () => {
+const addItemCategoryFunc = () => {
   return {
     id: uuid(),
     content: "Placeholder",
   };
-};
-type CategoryInput = {
-  id: string;
-  content: string;
 };
 const ServicePageGridItemCategoryItem = ({
   item,
@@ -44,9 +44,10 @@ const ServicePageGridItemCategoryItem = ({
   totalColumns,
 }: {
   colIdx?: number;
+  totalColumns?: number;
+
   item: CategoryInput;
   idx: number;
-  totalColumns?: number;
 } & Partial<SortableListProps<CategoryInput>>) => {
   const [openModal, setOpenModal] = useState(false);
   const [value, setValue] = useState(item.content);
@@ -84,11 +85,11 @@ const ServicePageGridItemCategoryItem = ({
       {!openModal && (
         <BannerSortableDndItem
           item={itemData}
-          colIdx={colIdx}
           idx={idx}
           deleteItem={deleteItem}
           setOpenModal={setOpenModal}
           fontSize="0.4rem"
+          colIdx={colIdx}
           totalColumns={totalColumns}
         />
       )}
@@ -121,7 +122,7 @@ const ServicePageGridItemCategoriesInput = ({
     setItems,
   } = useSortableList<CategoryInput>({
     customOnDragOver: gridOnDragOver,
-    addItemFunc,
+    addItemFunc: addItemCategoryFunc,
     defaultArr,
   });
   return (
