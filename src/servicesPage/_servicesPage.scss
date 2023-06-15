@@ -93,21 +93,22 @@ $margin: 1rem;
   width: 100%;
   background-color: gray;
   box-sizing: border-box;
+  .sortable-item {
+    background-color: $white;
+    padding: 10%;
+    box-sizing: border-box;
+  }
   .sortable-list-column {
     box-sizing: border-box;
     width: 100%;
     & > * {
-      box-sizing: border-box;
-      //width: 100%;
       &:first-child {
         margin-top: 10%;
       }
       &:last-child {
         margin-bottom: 10%;
       }
-      background-color: $white;
       margin: 5%;
-      padding: 10%;
     }
     &:nth-child(2) {
       & > * {

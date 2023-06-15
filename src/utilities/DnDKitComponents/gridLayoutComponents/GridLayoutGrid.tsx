@@ -44,7 +44,10 @@ const GridLayoutGrid = <T,>({
   const childrenArr = splitArray(children, columns);
   return (
     <div className={`${namespace}-grid-layout-grid`}>
-      <div ref={(ref) => setContainerRef(ref)}></div>
+      <div
+        ref={(ref) => setContainerRef(ref)}
+        //className="sortable-list-column"
+      ></div>
       <DndContext
         onDragStart={onDragStart}
         onDragOver={onDragOver}

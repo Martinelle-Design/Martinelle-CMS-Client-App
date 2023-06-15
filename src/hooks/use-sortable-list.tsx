@@ -120,7 +120,7 @@ const useSortableList = <T,>({
   const onDragEnd = (e: DragEndEvent) => {
     setActiveId(null);
   };
-  const onDragStart = (e: DragStartEvent) => setActiveId(e.active.id);
+  const onDragStart = (e: DragStartEvent) => setActiveId(e.active.id)
   return {
     items,
     activeId,

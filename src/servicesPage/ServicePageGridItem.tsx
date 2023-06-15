@@ -106,6 +106,7 @@ const ServicePageGridItemCategoriesInput = ({
 }) => {
   const {
     items,
+    activeId,
     onDragEnd,
     onDragOver,
     onDragStart,
@@ -131,6 +132,7 @@ const ServicePageGridItemCategoriesInput = ({
         onDragStart={onDragStart}
         namespace={namespace}
         columns={2}
+        activeId={activeId}
       >
         {items.map((item, idx) => (
           <ServicePageGridItemCategoryItem
@@ -158,8 +160,7 @@ export const ServicePageGridItem = ({
   };
   idx: number;
 } & Partial<SortableListProps<ServiceItem>>) => {
-  //const [openModal, setOpenModal] = useState(false);
-  const [openModal, setOpenModal] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
   const [data, setData] = useState<
     Omit<ServiceItem, "subCategories"> & {
       subCategories: CategoryInput[];
