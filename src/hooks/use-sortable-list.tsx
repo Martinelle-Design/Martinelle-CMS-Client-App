@@ -78,7 +78,16 @@ const useSortableList = <T,>({
     if (!addItemFunc) return;
     const newItem = addItemFunc();
     if (!newItem) return;
-    setItems([{ ...newItem, id: uuid() }, ...items]);
+    const containsId = (e: any): e is T & { id: string } => {
+      try {
+        return e.id;
+      } catch (err) {
+        return false;
+      }
+    };
+    if (containsId(newItem))
+      setItems([newItem as T & { id: string }, ...items]);
+    else setItems([{ ...newItem, id: uuid() }, ...items]);
   };
   const updateItem = (
     e: React.FormEvent<HTMLFormElement>,

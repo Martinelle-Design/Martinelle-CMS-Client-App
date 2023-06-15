@@ -30,8 +30,7 @@ export const serviceItemsElements = ({ items }: { items: ServiceItem[] }) => {
     };
   });
 };
-export const addItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
-  if (!e) return;
+export const addItemFunc = () => {
   const newDoc: ServiceItem = {
     itemType: "service-item",
     pk: {
@@ -43,7 +42,7 @@ export const addItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
     orderIdx: 0,
     timestamp: getUnixTime(new Date()),
     subCategories: [],
-    title: e.title ? e.title.toString() : "",
+    title: "Placeholder Title",
   };
   return newDoc;
 };
