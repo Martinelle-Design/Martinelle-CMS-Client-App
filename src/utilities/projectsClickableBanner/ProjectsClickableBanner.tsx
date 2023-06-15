@@ -4,7 +4,7 @@ import { projectsClickableData } from "./projectsClickableData";
 import PageTitle from "../pageTitle/PageTitle";
 const namespace = "projects-clickable-banner";
 export const ProjectClickableBannerEditable = () => {
-  const namespace = 'project-page';
+  const namespace = "project-page";
   return (
     <div className={namespace}>
       <PageTitle text={"Project Categories".toUpperCase()} />
@@ -13,8 +13,8 @@ export const ProjectClickableBannerEditable = () => {
         <ProjectsClickableBanner />
       </div>
     </div>
-  )
-}
+  );
+};
 const ProjectsClickableBanner = () => {
   const orderedProjectButtonItems = projectsClickableData.sort(
     (a, b) => a.orderIdx - b.orderIdx
@@ -23,14 +23,19 @@ const ProjectsClickableBanner = () => {
     <div className={`${namespace}-bottom-banner`}>
       {orderedProjectButtonItems.map((category) => {
         const { title, images, url, id } = category;
+        const imageArr = images ? Object.entries(images) : undefined;
+        const image =
+          imageArr && imageArr.length > 0 ? imageArr[0][1] : undefined;
         const el = url ? (
           <Link key={id} to={url} className={`${namespace}-bottom-banner-link`}>
-            <ImageSlide
-              name={title}
-              imgUrl={images.imgUrl}
-              imgDescription={images.description}
-              imgPlaceholderUrl={images.placeholderUrl}
-            />
+            {image && (
+              <ImageSlide
+                name={title}
+                imgUrl={image.imgUrl}
+                imgDescription={image.description}
+                imgPlaceholderUrl={image.placeholderUrl}
+              />
+            )}
           </Link>
         ) : (
           <button
@@ -38,12 +43,14 @@ const ProjectsClickableBanner = () => {
             // onClick={category.onClick}
             className={`${namespace}-bottom-banner-link`}
           >
-            <ImageSlide
-              name={title}
-              imgUrl={images.imgUrl}
-              imgDescription={images.description}
-              imgPlaceholderUrl={images.placeholderUrl}
-            />
+            {image && (
+              <ImageSlide
+                name={title}
+                imgUrl={image.imgUrl}
+                imgDescription={image.description}
+                imgPlaceholderUrl={image.placeholderUrl}
+              />
+            )}
           </button>
         );
         return el;

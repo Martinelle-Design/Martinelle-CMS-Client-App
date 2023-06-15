@@ -14,6 +14,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { gridOnDragOver } from "../utilities/DnDKitComponents/gridLayoutComponents/gridOnDragOver";
 import { useOnClickOutside } from "usehooks-ts";
 import { unstable_batchedUpdates } from "react-dom";
+import { submitFormFunc } from "./servicePageDataFuncs";
 const namespace = "services-pg";
 const inputHiddenStyles: React.CSSProperties = {
   opacity: 0,
@@ -24,7 +25,6 @@ const inputHiddenStyles: React.CSSProperties = {
   margin: 0,
   border: "none",
 };
-const submitFormFunc = async () => {};
 const addItemFunc = () => {
   return {
     id: uuid(),
@@ -183,9 +183,10 @@ export const ServicePageGridItem = ({
       content: content,
     })),
   });
-  const imgsData = Object.entries(data.images as ServiceItem["images"]).map(
-    ([id, value]) => value
-  );
+  const imgsObj = data.images as ServiceItem["images"];
+  const imgsData = imgsObj
+    ? Object.entries(imgsObj).map(([id, value]) => value)
+    : [];
   const imgData: MediaLink | undefined =
     imgsData.length > 0
       ? {

@@ -14,20 +14,22 @@ export const projectsClickableData: ProjectButtonItem[] = [
       orderIdx: 0,
     },
     images: {
-      pk: {
-        itemType: "project-button-item",
+      [uuid()]: {
+        pk: {
+          itemType: "project-button-item",
+          orderIdx: 0,
+        },
+        id: uuid(),
+        timestamp: Date.now(),
+        imgUrl: generateImgLocation(
+          "Homepage/home/BrowseInteriorProjects/PrivateResidential/index"
+        ).imgUrl,
+        placeholderUrl: generateImgLocation(
+          "Homepage/home/BrowseInteriorProjects/PrivateResidential/index"
+        ).imgPlaceholderUrl,
+        description: "",
         orderIdx: 0,
       },
-      id: uuid(),
-      timestamp: Date.now(),
-      imgUrl: generateImgLocation(
-        "Homepage/home/BrowseInteriorProjects/PrivateResidential/index"
-      ).imgUrl,
-      placeholderUrl: generateImgLocation(
-        "Homepage/home/BrowseInteriorProjects/PrivateResidential/index"
-      ).imgPlaceholderUrl,
-      description: "",
-      orderIdx: 0,
     },
   },
   {
@@ -42,20 +44,22 @@ export const projectsClickableData: ProjectButtonItem[] = [
       orderIdx: 1,
     },
     images: {
-      pk: {
-        itemType: "project-button-item",
+      [uuid()]: {
+        pk: {
+          itemType: "project-button-item",
+          orderIdx: 0,
+        },
+        id: uuid(),
+        timestamp: Date.now(),
+        imgUrl: generateImgLocation(
+          "Homepage/home/BrowseInteriorProjects/Commercial/index"
+        ).imgUrl,
+        placeholderUrl: generateImgLocation(
+          "Homepage/home/BrowseInteriorProjects/Commercial/index"
+        ).imgPlaceholderUrl,
+        description: "",
         orderIdx: 0,
       },
-      id: uuid(),
-      timestamp: Date.now(),
-      imgUrl: generateImgLocation(
-        "Homepage/home/BrowseInteriorProjects/Commercial/index"
-      ).imgUrl,
-      placeholderUrl: generateImgLocation(
-        "Homepage/home/BrowseInteriorProjects/Commercial/index"
-      ).imgPlaceholderUrl,
-      description: "",
-      orderIdx: 0,
     },
   },
   {
@@ -70,20 +74,22 @@ export const projectsClickableData: ProjectButtonItem[] = [
       orderIdx: 2,
     },
     images: {
-      pk: {
-        itemType: "project-button-item",
+      [uuid()]: {
+        pk: {
+          itemType: "project-button-item",
+          orderIdx: 0,
+        },
+        id: uuid(),
+        timestamp: Date.now(),
+        imgUrl: generateImgLocation(
+          "Homepage/home/BrowseInteriorProjects/FurnitureManufacturing /index"
+        ).imgUrl,
+        placeholderUrl: generateImgLocation(
+          "Homepage/home/BrowseInteriorProjects/FurnitureManufacturing /index"
+        ).imgPlaceholderUrl,
+        description: "",
         orderIdx: 0,
       },
-      id: uuid(),
-      timestamp: Date.now(),
-      imgUrl: generateImgLocation(
-        "Homepage/home/BrowseInteriorProjects/FurnitureManufacturing /index"
-      ).imgUrl,
-      placeholderUrl: generateImgLocation(
-        "Homepage/home/BrowseInteriorProjects/FurnitureManufacturing /index"
-      ).imgPlaceholderUrl,
-      description: "",
-      orderIdx: 0,
     },
   },
   {
@@ -98,20 +104,22 @@ export const projectsClickableData: ProjectButtonItem[] = [
       orderIdx: 3,
     },
     images: {
-      pk: {
-        itemType: "project-button-item",
+      [uuid()]: {
+        pk: {
+          itemType: "project-button-item",
+          orderIdx: 0,
+        },
+        id: uuid(),
+        timestamp: Date.now(),
+        imgUrl: generateImgLocation(
+          "Homepage/home/BrowseInteriorProjects/Hospitality/index"
+        ).imgUrl,
+        placeholderUrl: generateImgLocation(
+          "Homepage/home/BrowseInteriorProjects/Hospitality/index"
+        ).imgPlaceholderUrl,
+        description: "",
         orderIdx: 0,
       },
-      id: uuid(),
-      timestamp: Date.now(),
-      imgUrl: generateImgLocation(
-        "Homepage/home/BrowseInteriorProjects/Hospitality/index"
-      ).imgUrl,
-      placeholderUrl: generateImgLocation(
-        "Homepage/home/BrowseInteriorProjects/Hospitality/index"
-      ).imgPlaceholderUrl,
-      description: "",
-      orderIdx: 0,
     },
   },
 ];

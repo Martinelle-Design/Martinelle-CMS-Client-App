@@ -4,10 +4,13 @@ import { ServiceRow } from "./ServicesPage";
 import getUnixTime from "date-fns/getUnixTime";
 import { generateSingleImg } from "../utilities/helpers/generateImgDoc";
 import { v4 as uuid } from "uuid";
+import { MediaFile, MediaLink } from "../utilities/formInputs/Thumbnails";
+import { SortableListProps } from "../hooks/use-sortable-list";
+import { submitClientAppItemsFormFunc } from "../utilities/helpers/submitClientAppItemsFormFunc";
 export const serviceItemsElements = ({ items }: { items: ServiceItem[] }) => {
   return items.map((service) => {
     const { id, images, subCategories, title } = service;
-    const imgEntries = Object.entries(images);
+    const imgEntries = images ? Object.entries(images) : [];
     const imgOrder = imgEntries.sort((a, b) =>
       a[1].orderIdx > b[1].orderIdx ? 1 : -1
     );
@@ -83,4 +86,24 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
     itemIdx: idx,
     item: newDoc,
   };
+};
+export const submitFormFunc = async ({
+  e,
+  updateItem,
+  newImages,
+  storedImages,
+}: {
+  e: React.FormEvent<HTMLFormElement>;
+  updateItem?: SortableListProps<ServiceItem>["updateItem"];
+  newImages: MediaFile[];
+  storedImages: MediaLink[];
+}) => {
+  return await submitClientAppItemsFormFunc({
+    e,
+    token: "",
+    updateItem,
+    newImages,
+    storedImages,
+    itemType: "service-pg-item-img",
+  });
 };

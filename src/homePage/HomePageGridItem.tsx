@@ -32,9 +32,11 @@ export const HomePageGridItem = ({
   const [openModal, setOpenModal] = useState(false);
   const [data, setData] = useState(item.data);
   if (!data) return <></>;
-  const imgsData = Object.entries(data.images as HomePageItems["images"]).map(
-    ([id, value]) => value
-  );
+    const imgsObj = data.images as HomePageItems["images"];
+    const imgsData = imgsObj
+      ? Object.entries(imgsObj).map(([id, value]) => value)
+      : [];
+
   const imgData: MediaLink | undefined =
     imgsData.length > 0
       ? {

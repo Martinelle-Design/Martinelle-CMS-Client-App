@@ -1,11 +1,8 @@
 import PageTitle from "../utilities/pageTitle/PageTitle";
 import homePageData from "./homePageData";
 import { HomePageItems } from "../utilities/types/types";
-import { DndContext, DragOverlay } from "@dnd-kit/core";
-import { SortableContext } from "@dnd-kit/sortable";
 import useSortableList, { SortableListProps } from "../hooks/use-sortable-list";
-import { useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { useRef } from "react";
 import {
   homePageItemElements,
   updateItemFunc,
@@ -107,40 +104,3 @@ const HomePage = () => {
   );
 };
 export default HomePage;
-// import { WidthProvider, Responsive } from "react-grid-layout";
-// import { Size } from "../hooks/use-element-size";
-// const ResponsiveReactGridLayout = WidthProvider(Responsive);
-// const GridItem: React.FC<{
-//   idx: number;
-//   children: JSX.Element | JSX.Element[] | string;
-//   id: string;
-//   // "data-grid"?: {
-//   //   x: number;
-//   //   y: number;
-//   //   w: number;
-//   //   h: number;
-//   //   isBounded: boolean;
-//   // };
-//   ref?: React.Ref<HTMLDivElement>;
-// }> = forwardRef(({ children, id, idx, ...props }, ref) => {
-//   const [] = useElementSize();
-//   return (
-//     <div ref={ref} key={id} {...props}>
-//       {children}
-//     </div>
-//   );
-// });
-// <ResponsiveReactGridLayout
-//   cols={{
-//     lg: 12,
-//     md: 12,
-//     sm: 12,
-//     xs: 12,
-//     xxs: 12,
-//   }}
-//   margin={[0, 10]}
-//   autoSize={true}
-//   compactType={"vertical"}
-//   resizeHandle={false}
-//   isResizable={false}
-// >
