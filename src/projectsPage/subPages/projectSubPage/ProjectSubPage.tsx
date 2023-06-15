@@ -1,15 +1,15 @@
 import React from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import PageTitle from "../../utilities/pageTitle/PageTitle";
-import { ImageProps } from "../../utilities/imageSlide/ImageSlide";
+import PageTitle from "../../../utilities/pageTitle/PageTitle";
+import { ImageProps } from "../../../utilities/imageSlide/ImageSlide";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import useWindowResize from "../../hooks/use-window-resize";
+import useWindowResize from "../../../hooks/use-window-resize";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { ReactComponent as ResetZoom } from "./ResetZoom.svg";
-import { ProjectItem } from "../../utilities/types/types";
+import { ProjectItem } from "../../../utilities/types/types";
 type RecentCoordinates = {
   x1: number;
   y1: number;

@@ -1,6 +1,6 @@
-import { generateImgLocation } from "../../utilities/helpers/generateImgLocation";
+import { generateImgLocation } from "../../../utilities/helpers/generateImgLocation";
 import { v4 as uuid } from "uuid";
-import { ProjectItem } from "../../utilities/types/types";
+import { ProjectItem } from "../../../utilities/types/types";
 import { getUnixTime } from "date-fns";
 export const generateProjectImagesLocation = ({
   folderName,

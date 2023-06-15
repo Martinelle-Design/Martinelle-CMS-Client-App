@@ -1,5 +1,5 @@
-import ProjectSubPage from "./ProjectSubPage";
-import { generateProjectImagesLocation } from "./generateProjectImageLocation";
+import ProjectSubPage from "./projectSubPage/ProjectSubPage";
+import { generateProjectImagesLocation } from "./projectSubPage/generateProjectImageLocation";
 const imageArr = generateProjectImagesLocation({
   folderName: "HospitalityPage",
   number: 15,

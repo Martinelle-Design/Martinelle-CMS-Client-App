@@ -1,11 +1,13 @@
-import ProjectSubPage from "./ProjectSubPage";
-import { generateProjectImagesLocation } from "./generateProjectImageLocation";
+import ProjectSubPage from "./projectSubPage/ProjectSubPage";
+import { generateProjectImagesLocation } from "./projectSubPage/generateProjectImageLocation";
 const imageArr = generateProjectImagesLocation({
-  folderName: "CommercialPage", 
+  folderName: "CommercialPage",
   number: 18,
   subType: "commercial",
 });
 const Commercial = () => {
-  return <ProjectSubPage title="Featured Commercial" projectItemArr={imageArr} />;
+  return (
+    <ProjectSubPage title="Featured Commercial" projectItemArr={imageArr} />
+  );
 };
 export default Commercial;

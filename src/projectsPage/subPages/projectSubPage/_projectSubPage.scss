@@ -1,4 +1,4 @@
-@use "../../../public/variables" as v;
+@use "../../../../public/variables" as v;
 @use "sass:math";
 $namespace: "project-subpage-pg";
 .#{$namespace} {

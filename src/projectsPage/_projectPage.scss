@@ -1,5 +1,5 @@
-@use "./subPages/projectSubPage" as subPage;
-@import "./subPages/projectSubPage";
+@use "./subPages/projectSubPage/projectSubPage" as subPage;
+@import "./subPages/projectSubPage/projectSubPage";
 $namespace: "project-page";
 .#{$namespace} {
   padding: 0 5%;
