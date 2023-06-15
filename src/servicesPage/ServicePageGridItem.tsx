@@ -126,7 +126,12 @@ const ServicePageGridItemCategoriesInput = ({
   });
   return (
     <>
-      <input readOnly value={JSON.stringify(items)} style={inputHiddenStyles} />
+      <input
+        readOnly
+        value={JSON.stringify(items)}
+        style={inputHiddenStyles}
+        name={"subCategories"}
+      />
       <Button onClick={addItem} fullWidth variant="contained">
         <FontAwesomeIcon icon={faPlus} />
         Add

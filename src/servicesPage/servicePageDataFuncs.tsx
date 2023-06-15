@@ -63,7 +63,6 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
       orderIdx: idx,
     },
     title: e.title ? e.title.toString() : "",
-    //we need to add a subcategory logic here...
     subCategories: subCategories,
   };
   const img = generateSingleImg({
