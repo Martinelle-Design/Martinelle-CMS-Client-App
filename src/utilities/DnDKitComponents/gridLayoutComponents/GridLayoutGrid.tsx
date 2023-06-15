@@ -28,7 +28,12 @@ const GridLayoutGrid = <T,>({
   useEffect(() => {
     setColArr((state) => {
       if (state.length < columns) {
-        return [...state, { id: uuid() }];
+        return [
+          ...state,
+          ...Array(columns - state.length)
+            .fill(0)
+            .map((_) => ({ id: uuid() })),
+        ];
       }
       if (state.length > columns) {
         return state.slice(0, columns);
@@ -44,10 +49,7 @@ const GridLayoutGrid = <T,>({
   const childrenArr = splitArray(children, columns);
   return (
     <div className={`${namespace}-grid-layout-grid`}>
-      <div
-        ref={(ref) => setContainerRef(ref)}
-        //className="sortable-list-column"
-      ></div>
+      <div ref={(ref) => setContainerRef(ref)}></div>
       <DndContext
         onDragStart={onDragStart}
         onDragOver={onDragOver}
@@ -76,7 +78,7 @@ const GridLayoutGrid = <T,>({
                   : childrenArr[idx].map((el) => {
                       const colIdx = idx;
                       return cloneElement(el, {
-                        colIdx,
+                        colIdx: colIdx,
                         totalColumns: columns,
                       });
                     })}
