@@ -21,6 +21,7 @@ export function SortableItem({
     transition,
     cursor: isDragging ? "grabbing" : "grab",
     position: "relative",
+    boxSizing: "border-box",
   };
   return (
     <div
@@ -39,6 +40,7 @@ export function SortableItem({
           width: "100%",
           height: "100%",
           zIndex: 3,
+          boxSizing: "border-box",
         }}
         {...listeners}
       />

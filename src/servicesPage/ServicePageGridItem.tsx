@@ -3,7 +3,7 @@ import useSortableList, { SortableListProps } from "../hooks/use-sortable-list";
 import { SortableFormWrapper } from "../utilities/formInputs/SortableFormWrapper";
 import { MediaLink } from "../utilities/formInputs/Thumbnails";
 import { ServiceItem } from "../utilities/types/types";
-import { useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import BannerSortableDndItem from "../utilities/DnDKitComponents/bannerSortableDndList/BannerSortableDndItem";
 import FormDropZone from "../utilities/formInputs/FormDropZone/FormDropZone";
 import { CategoryFormControl } from "../utilities/formInputs/CategoryFormControl";
@@ -12,6 +12,8 @@ import GridLayoutGrid from "../utilities/DnDKitComponents/gridLayoutComponents/G
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { gridOnDragOver } from "../utilities/DnDKitComponents/gridLayoutComponents/gridOnDragOver";
+import { useOnClickOutside } from "usehooks-ts";
+import { unstable_batchedUpdates } from "react-dom";
 const namespace = "services-pg";
 const inputHiddenStyles: React.CSSProperties = {
   opacity: 0,
@@ -26,7 +28,7 @@ const submitFormFunc = async () => {};
 const addItemFunc = () => {
   return {
     id: uuid(),
-    content: "",
+    content: "Placeholder",
   };
 };
 type CategoryInput = {
@@ -37,23 +39,64 @@ const ServicePageGridItemCategoryItem = ({
   item,
   idx,
   deleteItem,
+  setItems,
 }: {
   item: CategoryInput;
   idx: number;
 } & Partial<SortableListProps<CategoryInput>>) => {
+  const [openModal, setOpenModal] = useState(false);
+  const [value, setValue] = useState(item.content);
+  const ref = useRef(null);
+  const handleClickOutside = () => {
+    if (!setItems) return;
+    unstable_batchedUpdates(() => {
+      setOpenModal(false);
+      setItems((state) => {
+        const newState = [...state];
+        const idx = newState.findIndex((el) => el.id === item.id);
+        const el = newState[idx];
+        if (el?.content !== value) {
+          newState[idx] = {
+            ...newState[idx],
+            content: value,
+          };
+          return newState;
+        }
+        return state;
+      });
+    });
+  };
+  useOnClickOutside(ref, handleClickOutside);
+  useEffect(() => {
+    setValue(item.content);
+  }, [item.content]);
   const el = <div key={item.id}>{item.content}</div>;
   const itemData = {
     el: el,
     data: item,
   };
   return (
-    <BannerSortableDndItem
-      item={itemData}
-      idx={idx}
-      deleteItem={deleteItem}
-      hideEditBtn
-      fontSize="0.5rem"
-    />
+    <>
+      {!openModal && (
+        <BannerSortableDndItem
+          item={itemData}
+          idx={idx}
+          deleteItem={deleteItem}
+          setOpenModal={setOpenModal}
+          fontSize="0.4rem"
+        />
+      )}
+      {openModal && (
+        <div ref={ref}>
+          <TextField
+            variant="standard"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            multiline
+          />
+        </div>
+      )}
+    </>
   );
 };
 const ServicePageGridItemCategoriesInput = ({
@@ -95,6 +138,7 @@ const ServicePageGridItemCategoriesInput = ({
             item={item}
             idx={idx}
             deleteItem={deleteItem}
+            setItems={setItems}
           />
         ))}
       </GridLayoutGrid>
@@ -114,7 +158,8 @@ export const ServicePageGridItem = ({
   };
   idx: number;
 } & Partial<SortableListProps<ServiceItem>>) => {
-  const [openModal, setOpenModal] = useState(false);
+  //const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState(true);
   const [data, setData] = useState<
     Omit<ServiceItem, "subCategories"> & {
       subCategories: CategoryInput[];
@@ -158,7 +203,11 @@ export const ServicePageGridItem = ({
               variant="standard"
             />
           </FormControl>
-          <ServicePageGridItemCategoriesInput defaultArr={data.subCategories} />
+          <CategoryFormControl heading="Service Categories">
+            <ServicePageGridItemCategoriesInput
+              defaultArr={data.subCategories}
+            />
+          </CategoryFormControl>
           <CategoryFormControl heading="Service Banner Image">
             <FormDropZone
               defaultFiles={imgData ? [imgData] : undefined}

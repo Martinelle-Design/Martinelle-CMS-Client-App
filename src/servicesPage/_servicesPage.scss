@@ -35,7 +35,7 @@ $margin: 1rem;
   justify-content: center;
 }
 .#{$namespace}-row-img {
-  display:flex;
+  display: flex;
   width: 40%;
   flex-grow: 1;
   aspect-ratio: 16/9;
@@ -73,7 +73,7 @@ $margin: 1rem;
   margin: 2em 0;
   padding: 5%;
   & > * {
-        background-color: $white;
+    background-color: $white;
     margin: 5% 0;
     padding: 5%;
     &:first-child {
@@ -88,4 +88,36 @@ $margin: 1rem;
     }
   }
 }
-
+.#{$namespace}-grid-layout-grid {
+  display: flex;
+  width: 100%;
+  background-color: gray;
+  box-sizing: border-box;
+  .sortable-list-column {
+    box-sizing: border-box;
+    width: 100%;
+    & > * {
+      box-sizing: border-box;
+      //width: 100%;
+      &:first-child {
+        margin-top: 10%;
+      }
+      &:last-child {
+        margin-bottom: 10%;
+      }
+      background-color: $white;
+      margin: 5%;
+      padding: 10%;
+    }
+    &:nth-child(2) {
+      & > * {
+        margin-left: 10%;
+      }
+    }
+    &:nth-last-child(3) {
+      & > * {
+        margin-right: 10%;
+      }
+    }
+  }
+}

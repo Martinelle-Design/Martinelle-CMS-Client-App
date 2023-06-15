@@ -57,17 +57,21 @@ const GridLayoutGrid = <T,>({
             </DragOverlay>,
             containerRef
           )}
-        {colsArr.map((e, idx) => (
-          <SortableContext
-            key={e.id}
-            items={itemsArr[idx]}
-            strategy={() => {
-              return null;
-            }}
-          >
-            <div className="sortable-list-column">{childrenArr[idx]}</div>
-          </SortableContext>
-        ))}
+        {colsArr.map((e, idx) => {
+          return (
+            <SortableContext
+              key={e.id}
+              items={idx >= itemsArr.length ? [] : itemsArr[idx]}
+              strategy={() => {
+                return null;
+              }}
+            >
+              <div className="sortable-list-column">
+                {idx >= childrenArr.length ? [] : childrenArr[idx]}
+              </div>
+            </SortableContext>
+          );
+        })}
       </DndContext>
     </div>
   );

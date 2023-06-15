@@ -47,6 +47,15 @@ export const addItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
 export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   if (!e) return;
   const idx = e.idx ? parseInt(e.idx.toString()) : 0;
+  //we extract sub category arr here
+  let subCategories: string[];
+  try {
+    const parsedArr = JSON.parse(e.subCategories.toString());
+    if (!Array.isArray(parsedArr)) throw new Error();
+    subCategories = parsedArr.map((subCategory) => subCategory.content);
+  } catch (err) {
+    subCategories = [];
+  }
   const newDoc: Partial<ServiceItem> = {
     orderIdx: idx,
     pk: {
@@ -55,7 +64,7 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
     },
     title: e.title ? e.title.toString() : "",
     //we need to add a subcategory logic here...
-    subCategories: [],
+    subCategories: subCategories,
   };
   const img = generateSingleImg({
     imgUrl: e.imgUrl?.toString(),
