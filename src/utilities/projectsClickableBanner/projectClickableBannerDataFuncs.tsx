@@ -79,7 +79,7 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
     placeholderUrl: e.imgPlaceholderUrl?.toString(),
     description: e.imgDescription?.toString(),
     pk: {
-      itemType: "home-pg-item-img",
+      itemType: "project-button-item-img",
       orderIdx: 0,
     },
   });

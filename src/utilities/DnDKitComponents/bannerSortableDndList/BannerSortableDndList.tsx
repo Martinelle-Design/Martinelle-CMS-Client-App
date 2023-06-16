@@ -11,9 +11,11 @@ export const BannerSortableDnDList = <T,>({
   onDragStart,
   namespace,
   children,
+  itemWrapper,
 }: Partial<SortableListProps<T & { id: string }>> & {
   namespace: string;
   children: JSX.Element[];
+  itemWrapper?: boolean;
 }) => {
   const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
   if (!items) return <></>;
@@ -37,7 +39,11 @@ export const BannerSortableDnDList = <T,>({
             return null;
           }}
         >
-          {children}
+          {itemWrapper ? (
+            <div className="dnd-items-wrapper">{children}</div>
+          ) : (
+            children
+          )}
         </SortableContext>
         {containerRef &&
           createPortal(

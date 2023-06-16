@@ -72,7 +72,7 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
     placeholderUrl: e.imgPlaceholderUrl?.toString(),
     description: e.imgDescription?.toString(),
     pk: {
-      itemType: "home-pg-item-img",
+      itemType: "service-item-img",
       orderIdx: 0,
     },
   });
@@ -103,6 +103,6 @@ export const submitFormFunc = async ({
     updateItem,
     newImages,
     storedImages,
-    itemType: "service-pg-item-img",
+    itemType: "service-item-img",
   });
 };

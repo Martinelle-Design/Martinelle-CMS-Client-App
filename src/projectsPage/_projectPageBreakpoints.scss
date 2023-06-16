@@ -1,5 +1,4 @@
 @import "./subPages/projectSubPage/projectSubPageBreakpoints";
-
 @mixin project-pg-md {
   $namespace: "project-page";
 
@@ -16,7 +15,6 @@
 }
 @mixin project-pg-sm {
   $namespace: "project-page";
-
   .#{$namespace}-text-content {
     $fontSize: 1.2rem;
     h2 {

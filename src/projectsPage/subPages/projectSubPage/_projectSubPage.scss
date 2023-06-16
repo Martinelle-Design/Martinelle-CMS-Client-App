@@ -18,7 +18,7 @@ $spacing: 3rem;
 .#{$namespace}-media-container-img {
   @include v.remove-btn-default;
   font-size: $spacing;
-  background-color: black;
+  background-color: gray;
   aspect-ratio: 1;
   .lazy-load-image-background {
     width: 100%;
@@ -86,5 +86,30 @@ $spacing: 3rem;
         fill: darken(v.$white, 40%);
       }
     }
+  }
+}
+.#{$namespace}-grid-list {
+  padding: 2.5%;
+  background-color: gray;
+  margin-bottom: 8%;
+  .#{$namespace}-media-container-img {
+    background-color: white;
+  }
+  .sortable-item {
+    background-color: v.$white;
+    box-sizing: border-box;
+    aspect-ratio: 1;
+    .#{$namespace}-media-container-img {
+      width: 100%;
+    }
+  }
+  .dnd-items-wrapper {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
+    grid-gap: math.div($spacing, 2) math.div($spacing, 2);
   }
 }

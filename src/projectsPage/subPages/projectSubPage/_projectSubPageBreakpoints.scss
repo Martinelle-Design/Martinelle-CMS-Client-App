@@ -1,12 +1,17 @@
+@use "sass:math";
 @mixin scale-to-spacing-project-sub-page($spacing: 3rem) {
   $namespace: "project-subpage-pg";
-
   .#{$namespace}-media-container {
     padding: $spacing 0;
     grid-gap: $spacing $spacing;
   }
   .#{$namespace}-media-container-img {
     font-size: $spacing;
+  }
+  .#{$namespace}-grid-list {
+    .dnd-items-wrapper {
+      grid-gap: math.div($spacing, 2) math.div($spacing, 2);
+    }
   }
 }
 @mixin project-sub-page-md {
