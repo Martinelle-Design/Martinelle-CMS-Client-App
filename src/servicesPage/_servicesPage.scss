@@ -88,9 +88,10 @@ $margin: 1rem;
   }
 }
 .#{$namespace}-grid-list {
+  margin-bottom: 8%;
   .sortable-item {
     background-color: $white;
-    padding: 10%;
+    padding: 4%;
     box-sizing: border-box;
   }
 }
