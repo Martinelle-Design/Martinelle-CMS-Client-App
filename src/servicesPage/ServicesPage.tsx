@@ -70,7 +70,6 @@ const ServicePageGridList = ({
         item={item}
         deleteItem={deleteItem}
         updateItem={updateItem}
-        addItem={addItem}
       />
     </DropZoneProvider>
   ));

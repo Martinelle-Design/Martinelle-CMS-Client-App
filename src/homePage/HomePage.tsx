@@ -32,7 +32,6 @@ const HomePageGridList = ({
         item={item}
         deleteItem={deleteItem}
         updateItem={updateItem}
-        addItem={addItem}
       />
     </DropZoneProvider>
   ));

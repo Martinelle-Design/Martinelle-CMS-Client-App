@@ -51,7 +51,6 @@ const ProjectButtonsGridItemData = ({
         item={item}
         deleteItem={deleteItem}
         updateItem={updateItem}
-        addItem={addItem}
         colIdx={colIdx}
         totalColumns={totalColumns}
       />
