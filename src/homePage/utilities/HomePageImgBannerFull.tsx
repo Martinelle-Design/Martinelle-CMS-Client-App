@@ -15,7 +15,7 @@ const HomePageImageBannerFull = ({
   children,
   btnData,
   intersectionAnimation = true,
-}: { customClass: string; intersectionAnimation?: boolean } & ImageProps &
+}: { customClass: string; intersectionAnimation?: boolean } & Partial<ImageProps> &
   Omit<HomePageImageBannerContentProps, "title">) => {
   const titleRef = useRef<HTMLHeadingElement | null>(null);
   const titleEntry = useIntersectionObserver(titleRef, {});

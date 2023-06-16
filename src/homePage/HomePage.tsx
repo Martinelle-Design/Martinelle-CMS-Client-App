@@ -12,6 +12,7 @@ import { DropZoneProvider } from "../utilities/formInputs/FormDropZone/FormDropZ
 import { HomePageGridItem } from "./HomePageGridItem";
 import useEditLogic from "../hooks/use-edit-logic";
 import { BannerSortableDnDList } from "../utilities/DnDKitComponents/bannerSortableDndList/BannerSortableDndList";
+import { AddItemButton } from "../utilities/formInputs/AddItemButton";
 const namespace = "home-pg";
 const HomePageGridList = ({
   items,
@@ -36,16 +37,19 @@ const HomePageGridList = ({
     </DropZoneProvider>
   ));
   return (
-    <BannerSortableDnDList
-      items={items}
-      activeId={activeId}
-      onDragEnd={onDragEnd}
-      onDragOver={onDragOver}
-      onDragStart={onDragStart}
-      namespace={namespace}
-    >
-      {itemElements}
-    </BannerSortableDnDList>
+    <>
+      <AddItemButton onClickFunc={addItem}/>
+      <BannerSortableDnDList
+        items={items}
+        activeId={activeId}
+        onDragEnd={onDragEnd}
+        onDragOver={onDragOver}
+        onDragStart={onDragStart}
+        namespace={namespace}
+      >
+        {itemElements}
+      </BannerSortableDnDList>
+    </>
   );
 };
 const HomePage = () => {

@@ -3,14 +3,9 @@ import HomePageImageBannerFull from "./utilities/HomePageImgBannerFull";
 import { HomePageItems } from "../utilities/types/types";
 import { v4 as uuid } from "uuid";
 import getUnixTime from "date-fns/getUnixTime";
-import {
-  MediaFile,
-  MediaLink,
-} from "../utilities/formInputs/Thumbnails";
+import { MediaFile, MediaLink } from "../utilities/formInputs/Thumbnails";
 import { SortableListProps } from "../hooks/use-sortable-list";
-import {
-  generateSingleImg,
-} from "../utilities/helpers/generateImgDoc";
+import { generateSingleImg } from "../utilities/helpers/generateImgDoc";
 import { submitClientAppItemsFormFunc } from "../utilities/helpers/submitClientAppItemsFormFunc";
 const namespace = "home-pg";
 export const submitFormFunc = async ({
@@ -49,9 +44,9 @@ export const homePageItemElements = (items: HomePageItems[]) =>
         <HomePageImageBannerFull
           key={id}
           customClass={`${namespace}-intro-banner`}
-          imgUrl={imgOrder[0][1].imgUrl}
-          imgPlaceholderUrl={imgOrder[0][1].placeholderUrl}
-          imgDescription={imgOrder[0][1].description}
+          imgUrl={imgOrder?.[0]?.[1]?.imgUrl}
+          imgPlaceholderUrl={imgOrder?.[0]?.[1]?.placeholderUrl}
+          imgDescription={imgOrder?.[0]?.[1]?.description}
           intersectionAnimation={false}
           btnData={{
             text: actionBtnData.text.toUpperCase(),
@@ -90,8 +85,7 @@ export const homePageItemElements = (items: HomePageItems[]) =>
     );
     return newItem;
   });
-export const addItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
-  if (!e) return;
+export const addItemFunc = () => {
   const newDoc: HomePageItems = {
     itemType: "home-page-item",
     pk: {
@@ -99,17 +93,15 @@ export const addItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
       itemType: "home-page-item",
     },
     id: uuid(),
-    subType: e.subType as HomePageItems["subType"],
+    subType: "full-banner",
     images: {},
     orderIdx: 0,
     timestamp: getUnixTime(new Date()),
-    textDescription: e.textDescription
-      ? e.textDescription.toString()
-      : undefined,
-    title: e.title ? e.title.toString() : "",
+    textDescription: "",
+    title: "Placeholder Title",
     actionBtnData: {
-      text: e.actionBtnText ? e.actionBtnText.toString() : "",
-      url: e.actionBtnUrl ? e.actionBtnUrl.toString() : "",
+      text: "Learn More",
+      url: "/home",
     },
   };
   return newDoc;
@@ -120,7 +112,7 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   const newDoc: Partial<HomePageItems> = {
     orderIdx: idx,
     pk: {
-      itemType: "service-item",
+      itemType: "home-pg-item",
       orderIdx: idx,
     },
     subType: e.subType as HomePageItems["subType"],
