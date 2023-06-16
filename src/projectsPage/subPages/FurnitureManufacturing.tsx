@@ -10,6 +10,7 @@ const FurnitureManufacturing = () => {
     <ProjectSubPage
       title="Featured Furniture Manufacturing"
       projectItemArr={imageArr}
+      subType="furniture-manufacturing"
     />
   );
 };

@@ -7,7 +7,11 @@ const imageArr = generateProjectImagesLocation({
 });
 const Commercial = () => {
   return (
-    <ProjectSubPage title="Featured Commercial" projectItemArr={imageArr} />
+    <ProjectSubPage
+      title="Featured Commercial"
+      projectItemArr={imageArr}
+      subType="commercial"
+    />
   );
 };
 export default Commercial;

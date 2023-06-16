@@ -13,6 +13,7 @@ import useSortableList, {
 import { BannerSortableDnDList } from "../../../utilities/DnDKitComponents/bannerSortableDndList/BannerSortableDndList";
 import { DropZoneProvider } from "../../../utilities/formInputs/FormDropZone/FormDropZoneContext";
 import { ProjectItemsGridItem } from "./ProjectItemsGridItem";
+import { AddItemButton } from "../../../utilities/formInputs/AddItemButton";
 const namespace = "project-subpage-pg";
 const ProjectButtonsGridItemData = ({
   idx,
@@ -68,7 +69,9 @@ const ProjectItemsGridList = ({
   ));
   return (
     <>
-      
+      <AddItemButton
+        onClickFunc={addItem}
+      />
       <BannerSortableDnDList
         items={items}
         onDragEnd={onDragEnd}
@@ -87,10 +90,12 @@ const ProjectSubPage = ({
   className,
   title,
   projectItemArr,
+  subType
 }: {
   className?: string;
   title: string;
-  projectItemArr: ProjectItem[];
+    projectItemArr: ProjectItem[];
+    subType: string;
 }) => {
   const orderedProjectItems = projectItemArr.sort(
     (a, b) => a.orderIdx - b.orderIdx
@@ -107,7 +112,7 @@ const ProjectSubPage = ({
     deleteItem,
   } = useSortableList<ProjectItem>({
     defaultArr: orderedProjectItems,
-    addItemFunc,
+    addItemFunc: addItemFunc(subType),
     updateItemFunc,
   });
   const defaultItems = useRef<ProjectItem[]>([]);
@@ -126,7 +131,6 @@ const ProjectSubPage = ({
       defaultItems.current = items;
     },
   });
-  console.log(edit)
   return (
     <div className={`${namespace} ${className ? className : ""}`}>
       <PageTitle text={title.toUpperCase()} />

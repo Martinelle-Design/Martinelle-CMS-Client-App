@@ -11,6 +11,7 @@ const Hospitality = () => {
       title="Featured Hospitality"
       projectItemArr={imageArr}
       className="hospitality-pg"
+      subType="hospitality"
     />
   );
 };

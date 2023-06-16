@@ -7,7 +7,7 @@ const imageArr = generateProjectImagesLocation({
 });
 const PrivateResidental = () => {
   return (
-    <ProjectSubPage title="Featured Residental" projectItemArr={imageArr} />
+    <ProjectSubPage title="Featured Residental" projectItemArr={imageArr} subType="residential"/>
   );
 };
 export default PrivateResidental;

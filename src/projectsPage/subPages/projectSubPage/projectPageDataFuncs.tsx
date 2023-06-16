@@ -23,36 +23,28 @@ export const projectItemsElements = ({ items }: { items: ProjectItem[] }) => {
     el: <ProjectSubPageImage img={img} key={img.id} />,
   }));
 };
-export const addItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
-  if (!e) return;
-  const subType = e.subType.toString();
-  const newDoc: ProjectItem = {
-    itemType: "project-item",
-    subType,
-    pk: {
-      orderIdx: 0,
+export const addItemFunc = (subType: string) => {
+  if (!subType) return;
+  return () => {
+    const newDoc: ProjectItem = {
       itemType: "project-item",
-    },
-    id: uuid(),
-    images: {},
-    orderIdx: 0,
-    timestamp: getUnixTime(new Date()),
-    caption: "placeholder",
+      subType,
+      pk: {
+        orderIdx: 0,
+        itemType: "project-item",
+      },
+      id: uuid(),
+      images: {},
+      orderIdx: 0,
+      timestamp: getUnixTime(new Date()),
+      caption: "placeholder",
+    };
+    return newDoc;
   };
-  return newDoc;
 };
 export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   if (!e) return;
   const idx = e.idx ? parseInt(e.idx.toString()) : 0;
-  //we extract sub category arr here
-  let subCategories: string[];
-  try {
-    const parsedArr = JSON.parse(e.subCategories.toString());
-    if (!Array.isArray(parsedArr)) throw new Error();
-    subCategories = parsedArr.map((subCategory) => subCategory.content);
-  } catch (err) {
-    subCategories = [];
-  }
   const newDoc: Partial<ProjectItem> = {
     orderIdx: idx,
     pk: {
