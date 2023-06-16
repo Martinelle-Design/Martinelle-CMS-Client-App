@@ -1,7 +1,7 @@
 import { Button, Stack } from "@mui/material";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faSave } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRef, useState } from "react";
+import { useState } from "react";
 type UseEditLogicProps = {
   onEdit?: () => void | Promise<void>;
   onSave?: () => void | Promise<void>;
@@ -46,7 +46,8 @@ const EditButtons = ({
               if (onSave) onSave();
             }}
           >
-            Save
+            <FontAwesomeIcon icon={faSave} />
+            <span style={{ marginLeft: "0.5em" }}> Save</span>
           </Button>
           <Button
             variant="contained"
@@ -63,7 +64,7 @@ const EditButtons = ({
     </Stack>
   );
 };
-const useEditLogic = <T,>({ onEdit, onSave, onCancel }: UseEditLogicProps) => {
+const useEditLogic = ({ onEdit, onSave, onCancel }: UseEditLogicProps) => {
   const [edit, setEdit] = useState(false);
   const editButtons = (
     <EditButtons

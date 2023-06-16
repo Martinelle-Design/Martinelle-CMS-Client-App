@@ -118,7 +118,7 @@ const ProjectsClickableBanner = ({ noEdit }: { noEdit?: boolean }) => {
   const projectButtonItems = projectButtonItemsElements({
     items: orderedProjectButtonItems,
   });
-  const { edit, editButtons } = useEditLogic<ProjectButtonItem>({
+  const { edit, editButtons } = useEditLogic({
     onCancel: () => {
       setItems(defaultItems.current);
       defaultItems.current = [];

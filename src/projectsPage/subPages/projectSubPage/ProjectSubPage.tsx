@@ -119,7 +119,7 @@ const ProjectSubPage = ({
   const projectItems = projectItemsElements({
     items: orderedProjectItems,
   });
-  const { edit, editButtons } = useEditLogic<ProjectItem>({
+  const { edit, editButtons } = useEditLogic({
     onCancel: () => {
       setItems(defaultItems.current);
       defaultItems.current = [];

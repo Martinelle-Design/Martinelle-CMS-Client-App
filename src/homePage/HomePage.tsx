@@ -72,7 +72,7 @@ const HomePage = () => {
     updateItemFunc,
   });
   const defaultItems = useRef<HomePageItems[]>([]);
-  const { edit, editButtons } = useEditLogic<HomePageItems>({
+  const { edit, editButtons } = useEditLogic({
     onCancel: () => {
       setItems(defaultItems.current);
       defaultItems.current = [];

@@ -112,7 +112,7 @@ const ServicesPage = () => {
   });
   const defaultItems = useRef<ServiceItem[]>([]);
   const serviceItems = serviceItemsElements({ items: orderedServicePageItems });
-  const { edit, editButtons } = useEditLogic<ServiceItem>({
+  const { edit, editButtons } = useEditLogic({
     onCancel: () => {
       setItems(defaultItems.current);
       defaultItems.current = [];
