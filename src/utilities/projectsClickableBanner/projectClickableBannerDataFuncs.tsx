@@ -16,12 +16,12 @@ export const projectButtonItemsElements = ({
     const image = imageArr && imageArr.length > 0 ? imageArr[0][1] : undefined;
     const el = url ? (
       <Link key={id} to={url} className={`${namespace}-bottom-banner-link`}>
-        {image && (
+        { (
           <ImageSlide
             name={title}
-            imgUrl={image.imgUrl}
-            imgDescription={image.description}
-            imgPlaceholderUrl={image.placeholderUrl}
+            imgUrl={image?.imgUrl}
+            imgDescription={image?.description}
+            imgPlaceholderUrl={image?.placeholderUrl}
           />
         )}
       </Link>
@@ -31,12 +31,12 @@ export const projectButtonItemsElements = ({
         // onClick={category.onClick}
         className={`${namespace}-bottom-banner-link`}
       >
-        {image && (
+        { (
           <ImageSlide
             name={title}
-            imgUrl={image.imgUrl}
-            imgDescription={image.description}
-            imgPlaceholderUrl={image.placeholderUrl}
+            imgUrl={image?.imgUrl}
+            imgDescription={image?.description}
+            imgPlaceholderUrl={image?.placeholderUrl}
           />
         )}
       </button>
@@ -56,8 +56,8 @@ export const addItemFunc = () => {
       orderIdx: 0,
     },
     orderIdx: 0,
-    title: "Placeholder Caption",
-    url: "",
+    title: "Placeholder Caption".toUpperCase(),
+    url: "/projects",
     images: {},
   };
   return newDoc;

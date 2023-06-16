@@ -14,6 +14,7 @@ import {
 import { DropZoneProvider } from "../formInputs/FormDropZone/FormDropZoneContext";
 import { ProjectButtonsGridItem } from "./ProjectsButtonGridItem";
 import { BannerSortableDnDList } from "../DnDKitComponents/bannerSortableDndList/BannerSortableDndList";
+import { AddItemButton } from "../formInputs/AddItemButton";
 const namespace = "projects-clickable-banner";
 export const ProjectClickableBannerEditable = () => {
   const namespace = "project-page";
@@ -29,7 +30,6 @@ export const ProjectClickableBannerEditable = () => {
 const ProjectButtonsGridItemData = ({
   idx,
   item,
-  addItem,
   updateItem,
   deleteItem,
   colIdx,
@@ -74,30 +74,28 @@ const ProjectButtonsGridList = ({
         key={item.el.key}
         item={item}
         idx={idx}
-        addItem={addItem}
         updateItem={updateItem}
         deleteItem={deleteItem}
       />
     )
   );
   return (
-    <BannerSortableDnDList
-      items={items}
-      onDragEnd={onDragEnd}
-      onDragOver={onDragOver}
-      onDragStart={onDragStart}
-      namespace={namespace}
-      activeId={activeId}
-    >
-      {itemElements}
-    </BannerSortableDnDList>
+    <>
+      <AddItemButton onClickFunc={addItem} />
+      <BannerSortableDnDList
+        items={items}
+        onDragEnd={onDragEnd}
+        onDragOver={onDragOver}
+        onDragStart={onDragStart}
+        namespace={namespace}
+        activeId={activeId}
+      >
+        {itemElements}
+      </BannerSortableDnDList>
+    </>
   );
 };
-const ProjectsClickableBanner = ({
-  noEdit
-}: {
-  noEdit?: boolean;
-}) => {
+const ProjectsClickableBanner = ({ noEdit }: { noEdit?: boolean }) => {
   const orderedProjectButtonItems = projectsClickableData.sort(
     (a, b) => a.orderIdx - b.orderIdx
   );
@@ -120,10 +118,7 @@ const ProjectsClickableBanner = ({
   const projectButtonItems = projectButtonItemsElements({
     items: orderedProjectButtonItems,
   });
-  const {
-    edit,
-    editButtons,
-  } = useEditLogic<ProjectButtonItem>({
+  const { edit, editButtons } = useEditLogic<ProjectButtonItem>({
     onCancel: () => {
       setItems(defaultItems.current);
       defaultItems.current = [];
@@ -138,21 +133,23 @@ const ProjectsClickableBanner = ({
   return (
     <>
       {!noEdit && editButtons}
-      <div className={`${namespace}-bottom-banner`}>
-        {(noEdit || !edit) && projectButtonItems.map((item) => item.el)}
-        {!noEdit && edit && (
-          <ProjectButtonsGridList
-            items={items}
-            activeId={activeId}
-            onDragEnd={onDragEnd}
-            onDragOver={onDragOver}
-            onDragStart={onDragStart}
-            addItem={addItem}
-            updateItem={updateItem}
-            deleteItem={deleteItem}
-          />
-        )}
-      </div>
+      {(noEdit || !edit) && (
+        <div className={`${namespace}-bottom-banner`}>
+          {projectButtonItems.map((item) => item.el)}
+        </div>
+      )}
+      {!noEdit && edit && (
+        <ProjectButtonsGridList
+          items={items}
+          activeId={activeId}
+          onDragEnd={onDragEnd}
+          onDragOver={onDragOver}
+          onDragStart={onDragStart}
+          addItem={addItem}
+          updateItem={updateItem}
+          deleteItem={deleteItem}
+        />
+      )}
     </>
   );
 };

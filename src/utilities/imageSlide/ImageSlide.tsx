@@ -13,7 +13,7 @@ export const ImageSlide = ({
   imgPlaceholderUrl,
 }: {
   name?: string;
-} & ImageProps) => (
+} & Partial<ImageProps>) => (
   <div className={`${namespace}-img-slide`}>
     <div className={`${namespace}-img-container`}>
       <LazyLoadImage

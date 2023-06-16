@@ -9,7 +9,7 @@ export const AddItemButton = ({
   ) => any | Promise<any> | void;
 }) => {
   return (
-    <Stack direction="row" spacing={2}>
+    <Stack direction="row" spacing={2} style={{ width: "100%" }}>
       <Button variant="contained" onClick={onClickFunc} fullWidth>
         <FontAwesomeIcon icon={faPlus} />{" "}
         <span style={{ marginLeft: "0.5em" }}>Add Item</span>
