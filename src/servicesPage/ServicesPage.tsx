@@ -13,6 +13,7 @@ import useEditLogic from "../hooks/use-edit-logic";
 import { BannerSortableDnDList } from "../utilities/DnDKitComponents/bannerSortableDndList/BannerSortableDndList";
 import { DropZoneProvider } from "../utilities/formInputs/FormDropZone/FormDropZoneContext";
 import { ServicePageGridItem } from "./ServicePageGridItem";
+import { AddItemButton } from "../utilities/formInputs/AddItemButton";
 const namespace = "services-pg";
 type ServiceRowProps = {
   title: string;
@@ -63,27 +64,31 @@ const ServicePageGridList = ({
 }: Partial<SortableListProps<ServiceItem>>) => {
   if (!items) return <></>;
   const itemElements = serviceItemsElements({ items }).map((item, idx) => (
-    <DropZoneProvider key={item.el.key}>
-      <ServicePageGridItem
-        key={item.el.key}
-        idx={idx}
-        item={item}
-        deleteItem={deleteItem}
-        updateItem={updateItem}
-      />
-    </DropZoneProvider>
+   
+      <DropZoneProvider key={item.el.key}>
+        <ServicePageGridItem
+          key={item.el.key}
+          idx={idx}
+          item={item}
+          deleteItem={deleteItem}
+          updateItem={updateItem}
+        />
+      </DropZoneProvider>
   ));
   return (
-    <BannerSortableDnDList
-      items={items}
-      activeId={activeId}
-      onDragEnd={onDragEnd}
-      onDragOver={onDragOver}
-      onDragStart={onDragStart}
-      namespace={namespace}
-    >
-      {itemElements}
-    </BannerSortableDnDList>
+    <>
+      <AddItemButton onClickFunc={addItem} />
+      <BannerSortableDnDList
+        items={items}
+        activeId={activeId}
+        onDragEnd={onDragEnd}
+        onDragOver={onDragOver}
+        onDragStart={onDragStart}
+        namespace={namespace}
+      >
+        {itemElements}
+      </BannerSortableDnDList>
+    </>
   );
 };
 const ServicesPage = () => {

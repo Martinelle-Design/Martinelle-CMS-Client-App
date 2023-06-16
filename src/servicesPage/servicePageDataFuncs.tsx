@@ -22,9 +22,9 @@ export const serviceItemsElements = ({ items }: { items: ServiceItem[] }) => {
           items={subCategories}
           title={newTitle}
           key={id}
-          imgUrl={imgOrder[0][1].imgUrl}
-          imgDescription={imgOrder[0][1].description}
-          imgPlaceholderUrl={imgOrder[0][1].placeholderUrl}
+          imgUrl={imgOrder?.[0]?.[1].imgUrl}
+          imgDescription={imgOrder?.[0]?.[1].description}
+          imgPlaceholderUrl={imgOrder?.[0]?.[1].placeholderUrl}
         />
       ),
     };

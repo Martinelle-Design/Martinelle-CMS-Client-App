@@ -70,7 +70,6 @@ $margin: 1rem;
 .#{$namespace}-grid-list {
   box-sizing: border-box;
   background-color: gray;
-  margin: 2em 0;
   padding: 5%;
   & > * {
     background-color: $white;
