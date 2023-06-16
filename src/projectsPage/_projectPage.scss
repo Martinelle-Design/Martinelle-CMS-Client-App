@@ -52,4 +52,9 @@ $namespace: "project-page";
       aspect-ratio: 1.5/1;
     }
   }
+  .#{subPage.$namespace}-grid-list {
+    .dnd-items-wrapper {
+      grid-template-columns: 1fr 1fr 1.5fr;
+    }
+  }
 }

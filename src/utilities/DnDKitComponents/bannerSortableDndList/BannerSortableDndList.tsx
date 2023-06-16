@@ -27,7 +27,9 @@ export const BannerSortableDnDList = <T,>({
       <div
         ref={(ref) => setContainerRef(ref)}
         className="dnd-overlay-container"
-      ></div>
+      >
+        <div />
+      </div>
       <DndContext
         onDragStart={onDragStart}
         onDragOver={onDragOver}

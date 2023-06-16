@@ -92,18 +92,18 @@ $spacing: 3rem;
   padding: 2.5%;
   background-color: gray;
   margin-bottom: 8%;
+
   .#{$namespace}-media-container-img {
     background-color: white;
   }
   .sortable-item {
     background-color: v.$white;
     box-sizing: border-box;
-    aspect-ratio: 1;
-    
     .#{$namespace}-media-container-img {
       width: 100%;
     }
   }
+
   .dnd-items-wrapper {
     display: grid;
     width: 100%;
@@ -112,5 +112,11 @@ $spacing: 3rem;
     grid-template-columns: repeat(3, 1fr);
     grid-auto-rows: 1fr;
     grid-gap: math.div($spacing, 2) math.div($spacing, 2);
+  }
+  .dnd-overlay-container {
+    .sortable-item{
+      width: 100%;
+      height: 100%;
+    }
   }
 }
