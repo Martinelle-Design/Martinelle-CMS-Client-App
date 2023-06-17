@@ -27,9 +27,11 @@ export type CognitioLoginProps = {
   code_challenge?: string;
 };
 export type CognitoAuthenticationProps = {
+  popUpWindow?: boolean;
   userPoolId?: string;
   clientId?: string;
   customHostedUIDomain?: string;
+  callbackUrl?: string;
 };
 function changeurl(url: string, title: string) {
   var new_url = url;
@@ -43,35 +45,41 @@ function delayAsyncFunc(delay: number, promiseFunc: () => Promise<any>) {
     }, delay);
   });
 }
-
 export default class CognitoAuthentication {
   public userPoolId: string;
   public clientId: string;
   public customHostedUIDomain?: string;
   public code?: string;
   public credentials?: CognitioCredentials;
+  public callbackUrl: string;
+  public popUpWindow?: boolean;
   private isLoggingIn?: boolean;
   constructor(props: CognitoAuthenticationProps) {
     this.userPoolId = props.userPoolId ? props.userPoolId : "";
     this.clientId = props.clientId ? props.clientId : "";
     this.customHostedUIDomain = props.customHostedUIDomain;
+    this.popUpWindow = props.popUpWindow ? props.popUpWindow : false;
+    this.callbackUrl = props.callbackUrl
+      ? props.callbackUrl
+      : window.location.origin;
   }
   login = async () => {
     if (this.isLoggingIn) return null;
     this.isLoggingIn = true;
-    const credentialsFromCode = await this.handleCode();
+    const credentialsFromCode = await this.handleCode(window);
     if (credentialsFromCode) {
       this.isLoggingIn = false;
       return credentialsFromCode;
     }
-    const storedCredentials =
-      getLocalStorage<CognitioCredentials>(`${this.customHostedUIDomain}.credentials`);
+    const storedCredentials = getLocalStorage<CognitioCredentials>(
+      `${this.customHostedUIDomain}.credentials`
+    );
     const credentials = storedCredentials
       ? storedCredentials
       : this.credentials;
     if (!credentials) {
       this.isLoggingIn = false;
-      return this.navigateToHostedUI();
+      return await this.navigateToHostedUI();
     }
     const result = await this.refreshAccessToken(credentials);
     this.isLoggingIn = false;
@@ -91,7 +99,7 @@ export default class CognitoAuthentication {
     //revoke session
     this.revokeSession(e);
   };
-  handleCode = async () => {
+  handleCode = async (window: Window) => {
     const query = new URLSearchParams(window.location.search);
     const code = query.get("code");
     if (!code) return null;
@@ -107,23 +115,26 @@ export default class CognitoAuthentication {
             grant_type: "authorization_code",
             client_id: this.clientId,
             code: code,
-            redirect_uri: window.location.origin,
+            redirect_uri: this.callbackUrl,
           },
         });
         this.credentials = data;
-        storeInLocalStorage(`${this.customHostedUIDomain}.credentials`, this.credentials);
+        storeInLocalStorage(
+          `${this.customHostedUIDomain}.credentials`,
+          this.credentials
+        );
         query.delete("code");
-        changeurl(window.location.origin, document.title);
+        changeurl(this.callbackUrl, document.title);
         return data as CognitioCredentials;
       } catch (err) {
         console.log(query.toString());
         query.delete("code");
-        changeurl(window.location.origin, document.title);
+        changeurl(this.callbackUrl, document.title);
         console.log(err, "could not fetch creds from code");
         return null;
       }
     };
-    const result = await delayAsyncFunc(100, exchangeCodeForCreds);
+    const result = await delayAsyncFunc(500, exchangeCodeForCreds);
     return result as CognitioCredentials | null;
   };
   revokeSession = (
@@ -138,7 +149,7 @@ export default class CognitoAuthentication {
       params: {
         response_type: "code",
         client_id: this.clientId,
-        redirect_uri: window.location.origin,
+        redirect_uri: this.callbackUrl,
         ...e,
       },
     });
@@ -165,18 +176,42 @@ export default class CognitoAuthentication {
       return;
     }
   };
-  navigateToHostedUI = (e?: CognitoAuthenticationProps) => {
+  navigateToHostedUI = async (e?: CognitoAuthenticationProps) => {
     const request = axios.getUri({
       url: `https://${this.customHostedUIDomain}/login`,
       method: "GET",
       params: {
         response_type: "code",
         client_id: this.clientId,
-        redirect_uri: window.location.origin,
+        redirect_uri: this.callbackUrl,
         ...e,
       },
     });
-    window.location.href = request;
+    if (!this.popUpWindow) {
+      window.location.href = request;
+      return null;
+    }
+    const promise = this.handlePopUpLogin(request);
+    return await promise;
+  };
+  handlePopUpLogin = (request: string) => {
+    const promise = new Promise(async (resolve, reject) => {
+      const hostedUIWindow = window.open(request, "", "width=500,height=650");
+      if (!hostedUIWindow) return resolve(null);
+      hostedUIWindow.addEventListener("locationchange", async () => {
+        if (!hostedUIWindow) return;
+        const query = new URLSearchParams(hostedUIWindow.location.search);
+        const code = query.get("code");
+        if (!code) return;
+        const newCreds = await this.handleCode(hostedUIWindow);
+        resolve(newCreds);
+        hostedUIWindow.close();
+      });
+      hostedUIWindow.addEventListener("close", () => {
+        resolve(null);
+      });
+    }) as Promise<CognitioCredentials | null>;
+    return promise;
   };
   refreshAccessToken = async (credentials: CognitioCredentials) => {
     const refreshToken = credentials.refresh_token;
@@ -195,14 +230,17 @@ export default class CognitoAuthentication {
         refresh_token: refreshToken,
         ...data,
       };
-      storeInLocalStorage(`${this.customHostedUIDomain}.credentials`, this.credentials);
+      storeInLocalStorage(
+        `${this.customHostedUIDomain}.credentials`,
+        this.credentials
+      );
       return this.credentials;
     } catch (err) {
       console.log(err);
       //this means token is invalid or corrupted
       //so we need to re-login
       deleteFromLocalStorage(`${this.customHostedUIDomain}.credentials`);
-      this.navigateToHostedUI();
+      return await this.navigateToHostedUI();
     }
   };
   isAuthenticated = () => {
