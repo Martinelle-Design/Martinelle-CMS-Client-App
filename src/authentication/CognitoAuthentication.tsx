@@ -65,7 +65,7 @@ export default class CognitoAuthentication {
       return credentialsFromCode;
     }
     const storedCredentials =
-      getLocalStorage<CognitioCredentials>("credentials");
+      getLocalStorage<CognitioCredentials>(`${this.customHostedUIDomain}.credentials`);
     const credentials = storedCredentials
       ? storedCredentials
       : this.credentials;
@@ -84,7 +84,7 @@ export default class CognitoAuthentication {
     >
   ) => {
     //delete stored credentials
-    deleteFromLocalStorage("credentials");
+    deleteFromLocalStorage(`${this.customHostedUIDomain}.credentials`);
     //revoke token
     await this.revokeCurrentTokens();
     this.credentials = undefined;
@@ -111,7 +111,7 @@ export default class CognitoAuthentication {
           },
         });
         this.credentials = data;
-        storeInLocalStorage("credentials", this.credentials);
+        storeInLocalStorage(`${this.customHostedUIDomain}.credentials`, this.credentials);
         query.delete("code");
         changeurl(window.location.origin, document.title);
         return data as CognitioCredentials;
@@ -195,13 +195,13 @@ export default class CognitoAuthentication {
         refresh_token: refreshToken,
         ...data,
       };
-      storeInLocalStorage("credentials", this.credentials);
+      storeInLocalStorage(`${this.customHostedUIDomain}.credentials`, this.credentials);
       return this.credentials;
     } catch (err) {
       console.log(err);
       //this means token is invalid or corrupted
       //so we need to re-login
-      deleteFromLocalStorage("credentials");
+      deleteFromLocalStorage(`${this.customHostedUIDomain}.credentials`);
       this.navigateToHostedUI();
     }
   };
