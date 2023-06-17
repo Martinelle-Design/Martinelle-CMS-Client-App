@@ -31,27 +31,50 @@ export type CognitoAuthenticationProps = {
   clientId?: string;
   customHostedUIDomain?: string;
 };
+function changeurl(url: string, title: string) {
+  var new_url = url;
+  window.history.pushState("data", title, new_url);
+}
+function delayAsyncFunc(delay: number, promiseFunc: () => Promise<any>) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(async function () {
+      const result = await promiseFunc();
+      resolve(result);
+    }, delay);
+  });
+}
+
 export default class CognitoAuthentication {
   public userPoolId: string;
   public clientId: string;
   public customHostedUIDomain?: string;
   public code?: string;
   public credentials?: CognitioCredentials;
+  private isLoggingIn?: boolean;
   constructor(props: CognitoAuthenticationProps) {
     this.userPoolId = props.userPoolId ? props.userPoolId : "";
     this.clientId = props.clientId ? props.clientId : "";
     this.customHostedUIDomain = props.customHostedUIDomain;
   }
   login = async () => {
+    if (this.isLoggingIn) return null;
+    this.isLoggingIn = true;
     const credentialsFromCode = await this.handleCode();
-    if (credentialsFromCode) return credentialsFromCode;
+    if (credentialsFromCode) {
+      this.isLoggingIn = false;
+      return credentialsFromCode;
+    }
     const storedCredentials =
       getLocalStorage<CognitioCredentials>("credentials");
-    if (!storedCredentials) {
-      this.navigateToHostedUI();
-      return null;
+    const credentials = storedCredentials
+      ? storedCredentials
+      : this.credentials;
+    if (!credentials) {
+      this.isLoggingIn = false;
+      return this.navigateToHostedUI();
     }
-    const result = await this.refreshAccessToken(storedCredentials);
+    const result = await this.refreshAccessToken(credentials);
+    this.isLoggingIn = false;
     return result;
   };
   logout = async (
@@ -72,28 +95,36 @@ export default class CognitoAuthentication {
     const query = new URLSearchParams(window.location.search);
     const code = query.get("code");
     if (!code) return null;
-    try {
-      const { data } = await axios({
-        url: `https://${this.customHostedUIDomain}/oauth2/token`,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        data: {
-          grant_type: "authorization_code",
-          client_id: this.clientId,
-          code: code,
-          redirect_uri: window.location.origin,
-        },
-      });
-      this.credentials = data;
-      storeInLocalStorage("credentials", this.credentials);
-      query.delete("code");
-      return data as CognitioCredentials;
-    } catch (err) {
-      console.log(err);
-      this.navigateToHostedUI();
-      return null;
-    }
+    const exchangeCodeForCreds = async () => {
+      try {
+        const { data } = await axios({
+          url: `https://${this.customHostedUIDomain}/oauth2/token`,
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          data: {
+            grant_type: "authorization_code",
+            client_id: this.clientId,
+            code: code,
+            redirect_uri: window.location.origin,
+          },
+        });
+        this.credentials = data;
+        storeInLocalStorage("credentials", this.credentials);
+        query.delete("code");
+        changeurl(window.location.origin, document.title);
+        return data as CognitioCredentials;
+      } catch (err) {
+        console.log(query.toString());
+        query.delete("code");
+        changeurl(window.location.origin, document.title);
+        console.log(err, "could not fetch creds from code");
+        return null;
+      }
+    };
+    const result = await delayAsyncFunc(100, exchangeCodeForCreds);
+    return result as CognitioCredentials | null;
   };
   revokeSession = (
     e?: Omit<
@@ -167,6 +198,7 @@ export default class CognitoAuthentication {
       storeInLocalStorage("credentials", this.credentials);
       return this.credentials;
     } catch (err) {
+      console.log(err);
       //this means token is invalid or corrupted
       //so we need to re-login
       deleteFromLocalStorage("credentials");

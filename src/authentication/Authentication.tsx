@@ -10,19 +10,13 @@ type CredentialsContextType = {
 export const CredentialsContext = createContext<CredentialsContextType | null>(
   null
 );
-const cmsAppAuthUserDomain = process.env.REACT_APP_CMS_AUTH_DOMAIN;
-const userPoolId = process.env.REACT_APP_AWS_USER_POOL_ID;
-const clientId = process.env.REACT_APP_AWS_USER_POOL_CLIENT_ID;
-const cognitoClient = new CognitoAuthentication({
-  userPoolId: userPoolId,
-  clientId,
-  customHostedUIDomain: cmsAppAuthUserDomain,
-});
 export const useAuthProvider = () => useContext(CredentialsContext);
 export const Authentication = ({
   children,
+  cognitoClient,
 }: {
   children: JSX.Element | JSX.Element[] | string;
+  cognitoClient: CognitoAuthentication;
 }) => {
   const [credentials, setCredentials] = useState<null | CognitioCredentials>(
     null
@@ -40,7 +34,7 @@ export const Authentication = ({
     return () => {
       mounted = true;
     };
-  }, []);
+  }, [cognitoClient]);
   const logout = () => cognitoClient.logout();
   const refreshAccessToken = async () => {
     if (!credentials) return;

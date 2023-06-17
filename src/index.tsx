@@ -10,6 +10,7 @@ import {
 import LoadingIcon from "./utilities/loadingIcon/LoadingIcon";
 import { Authentication } from "./authentication/Authentication";
 import Root from "./root";
+import CognitoAuthentication from "./authentication/CognitoAuthentication";
 const HomePage = lazy(() => import("./homePage/HomePage"));
 const ServicesPage = lazy(() => import("./servicesPage/ServicesPage"));
 const ProjectsPage = lazy(() => import("./projectsPage/ProjectsPage"));
@@ -18,7 +19,14 @@ const ProjectsClickableBannerEditable = lazy(() =>
     (module) => ({ default: module.ProjectClickableBannerEditable })
   )
 );
-
+const cmsAppAuthUserDomain = process.env.REACT_APP_CMS_AUTH_DOMAIN;
+const userPoolId = process.env.REACT_APP_AWS_USER_POOL_ID;
+const clientId = process.env.REACT_APP_AWS_USER_POOL_CLIENT_ID;
+const cognitoClient = new CognitoAuthentication({
+  userPoolId: userPoolId,
+  clientId,
+  customHostedUIDomain: cmsAppAuthUserDomain,
+});
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />}>
@@ -47,7 +55,7 @@ root.render(
         />
       }
     >
-      <Authentication>
+      <Authentication cognitoClient={cognitoClient}>
         <RouterProvider router={router} />
       </Authentication>
     </Suspense>
