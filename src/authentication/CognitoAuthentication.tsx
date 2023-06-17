@@ -27,10 +27,10 @@ export type CognitioLoginProps = {
   code_challenge?: string;
 };
 export type CognitoAuthenticationProps = {
-  userPoolId: string;
-  clientId: string;
+  userPoolId?: string;
+  clientId?: string;
   customHostedUIDomain?: string;
-} & Either<{ code: string }, { credentials: CognitioCredentials }>;
+};
 export default class CognitoAuthentication {
   public userPoolId: string;
   public clientId: string;
@@ -38,18 +38,19 @@ export default class CognitoAuthentication {
   public code?: string;
   public credentials?: CognitioCredentials;
   constructor(props: CognitoAuthenticationProps) {
-    this.userPoolId = props.userPoolId;
-    this.clientId = props.clientId;
+    this.userPoolId = props.userPoolId ? props.userPoolId : "";
+    this.clientId = props.clientId ? props.clientId : "";
     this.customHostedUIDomain = props.customHostedUIDomain;
-    this.code = props.code;
-    this.credentials = props.credentials;
   }
   login = async () => {
     const credentialsFromCode = await this.handleCode();
-    if (credentialsFromCode) return;
+    if (credentialsFromCode) return credentialsFromCode;
     const storedCredentials =
       getLocalStorage<CognitioCredentials>("credentials");
-    if (!storedCredentials) return this.navigateToHostedUI();
+    if (!storedCredentials) {
+      this.navigateToHostedUI();
+      return null;
+    }
     const result = await this.refreshAccessToken(storedCredentials);
     return result;
   };
@@ -87,10 +88,11 @@ export default class CognitoAuthentication {
       this.credentials = data;
       storeInLocalStorage("credentials", this.credentials);
       query.delete("code");
-      return data;
+      return data as CognitioCredentials;
     } catch (err) {
       console.log(err);
       this.navigateToHostedUI();
+      return null;
     }
   };
   revokeSession = (
@@ -170,5 +172,8 @@ export default class CognitoAuthentication {
       deleteFromLocalStorage("credentials");
       this.navigateToHostedUI();
     }
+  };
+  isAuthenticated = () => {
+    return !!this.credentials;
   };
 }
