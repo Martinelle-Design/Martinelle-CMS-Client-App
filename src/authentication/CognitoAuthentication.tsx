@@ -45,11 +45,13 @@ export default class CognitoAuthentication {
     this.credentials = props.credentials;
   }
   login = async () => {
+    const credentialsFromCode = await this.handleCode();
+    if (credentialsFromCode) return;
     const storedCredentials =
       getLocalStorage<CognitioCredentials>("credentials");
     if (!storedCredentials) return this.navigateToHostedUI();
-    this.refreshAccessToken(storedCredentials);
-    return storedCredentials;
+    const result = await this.refreshAccessToken(storedCredentials);
+    return result;
   };
   logout = async (
     e?: Omit<
@@ -64,6 +66,32 @@ export default class CognitoAuthentication {
     this.credentials = undefined;
     //revoke session
     this.revokeSession(e);
+  };
+  handleCode = async () => {
+    const query = new URLSearchParams(window.location.search);
+    const code = query.get("code");
+    if (!code) return null;
+    try {
+      const { data } = await axios({
+        url: `https://${this.customHostedUIDomain}/oauth2/token`,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        data: {
+          grant_type: "authorization_code",
+          client_id: this.clientId,
+          code: code,
+          redirect_uri: window.location.origin,
+        },
+      });
+      this.credentials = data;
+      storeInLocalStorage("credentials", this.credentials);
+      query.delete("code");
+      return data;
+    } catch (err) {
+      console.log(err);
+      this.navigateToHostedUI();
+    }
   };
   revokeSession = (
     e?: Omit<

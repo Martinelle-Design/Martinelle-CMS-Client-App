@@ -4,14 +4,6 @@ export const CredentialsContext = createContext(null);
 const cmsAppAuthUserDomain = process.env.REACT_APP_CMS_AUTH_DOMAIN;
 const userPoolId = process.env.REACT_APP_AWS_USER_POOL_ID;
 const clientId = process.env.REACT_APP_AWS_USER_POOL_CLIENT_ID;
-// const storedCredentials = getLocalStorage<Credentials>("credentials");
-const onLogin = () => {
-  const loginLink = `https://${cmsAppAuthUserDomain}/login?response_type=code&client_id=${clientId}&redirect_uri=${window.location.origin}`;
-  window.location.href = loginLink;
-};
-const validateToken = async() => {
-
-}
 const Authentication = ({
   children,
 }: {
