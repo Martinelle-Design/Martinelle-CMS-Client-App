@@ -8,6 +8,7 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import LoadingIcon from "./utilities/loadingIcon/LoadingIcon";
+import { Authentication } from "./authentication/Authentication";
 import Root from "./root";
 const HomePage = lazy(() => import("./homePage/HomePage"));
 const ServicesPage = lazy(() => import("./servicesPage/ServicesPage"));
@@ -46,7 +47,9 @@ root.render(
         />
       }
     >
-      <RouterProvider router={router} />
+      <Authentication>
+        <RouterProvider router={router} />
+      </Authentication>
     </Suspense>
   </React.StrictMode>
 );
