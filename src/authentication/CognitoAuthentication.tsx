@@ -198,16 +198,31 @@ export default class CognitoAuthentication {
     const promise = new Promise(async (resolve, reject) => {
       const hostedUIWindow = window.open(request, "", "width=500,height=650");
       if (!hostedUIWindow) return resolve(null);
-      hostedUIWindow.addEventListener("locationchange", async () => {
+      let processCode = false;
+      const interval = setInterval(async () => {
         if (!hostedUIWindow) return;
-        const query = new URLSearchParams(hostedUIWindow.location.search);
-        const code = query.get("code");
-        if (!code) return;
+        try {
+          const query = new URLSearchParams(hostedUIWindow.location.search);
+          const code = query.get("code");
+          if (!code) return;
+          if (processCode) return;
+          processCode = true;
+        } catch (err) {
+          //we will trigger a cross-origin error
+          //when trying to read the url of the hosted ui page
+          //however, this is necessary because we need to detect
+          //when the page redirects back to our origin
+          //so that we can grab the authorization code from the search params
+          //in the redirected url
+          return;
+        }
         const newCreds = await this.handleCode(hostedUIWindow);
-        resolve(newCreds);
         hostedUIWindow.close();
-      });
+        clearInterval(interval);
+        resolve(newCreds);
+      }, 100);
       hostedUIWindow.addEventListener("close", () => {
+        clearInterval(interval);
         resolve(null);
       });
     }) as Promise<CognitioCredentials | null>;
