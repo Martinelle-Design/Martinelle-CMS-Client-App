@@ -71,17 +71,7 @@ export default class CognitoAuthentication {
       this.isLoggingIn = false;
       return credentialsFromCode;
     }
-    const storedCredentials = getLocalStorage<CognitioCredentials>(
-      `${this.customHostedUIDomain}.credentials`
-    );
-    const credentials = storedCredentials
-      ? storedCredentials
-      : this.credentials;
-    if (!credentials) {
-      this.isLoggingIn = false;
-      return await this.navigateToHostedUI();
-    }
-    const result = await this.refreshAccessToken(credentials);
+    const result = await this.usedStoredCredentials();
     this.isLoggingIn = false;
     return result;
   };
@@ -98,6 +88,20 @@ export default class CognitoAuthentication {
     this.credentials = undefined;
     //revoke session
     this.revokeSession(e);
+  };
+  usedStoredCredentials = async (preventAutoNavigation?: boolean) => {
+    const storedCredentials = getLocalStorage<CognitioCredentials>(
+      `${this.customHostedUIDomain}.credentials`
+    );
+    const credentials = storedCredentials
+      ? storedCredentials
+      : this.credentials;
+    if (!credentials) {
+      this.isLoggingIn = false;
+      return preventAutoNavigation ? null : await this.navigateToHostedUI();
+    }
+    const result = await this.refreshAccessToken(credentials);
+    return result;
   };
   handleCode = async (window: Window) => {
     const query = new URLSearchParams(window.location.search);
@@ -127,10 +131,8 @@ export default class CognitoAuthentication {
         changeurl(this.callbackUrl, document.title);
         return data as CognitioCredentials;
       } catch (err) {
-        console.log(query.toString());
         query.delete("code");
         changeurl(this.callbackUrl, document.title);
-        console.log(err, "could not fetch creds from code");
         return null;
       }
     };
@@ -234,6 +236,9 @@ export default class CognitoAuthentication {
       const { data } = await axios({
         url: `https://${this.customHostedUIDomain}/oauth2/token`,
         method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
         data: {
           grant_type: "refresh_token",
           client_id: this.clientId,
@@ -254,8 +259,9 @@ export default class CognitoAuthentication {
       console.log(err);
       //this means token is invalid or corrupted
       //so we need to re-login
-      deleteFromLocalStorage(`${this.customHostedUIDomain}.credentials`);
-      return await this.navigateToHostedUI();
+      //deleteFromLocalStorage(`${this.customHostedUIDomain}.credentials`);
+      return null
+      //return await this.navigateToHostedUI();
     }
   };
   isAuthenticated = () => {
