@@ -36,15 +36,6 @@ export const Authentication = ({
       mounted = true;
     };
   }, [cognitoClient]);
-  // const login = async () => {
-  //   const result = await cognitoClient.login();
-  //   if (!result) {
-  //     setCredentials(null);
-  //     return null;
-  //   }
-  //   setCredentials(result);
-  //   return result;
-  // };
   const logout = () => cognitoClient.logout();
   const refreshAccessToken = async () => {
     if (!credentials) return;
