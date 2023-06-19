@@ -10,7 +10,7 @@ import {
 import LoadingIcon from "./utilities/loadingIcon/LoadingIcon";
 import { Authentication } from "./authentication/Authentication";
 import Root from "./root";
-import CognitoAuthentication from "./authentication/CognitoAuthentication";
+import { CognitoAuthentication } from "aws-cognito-hosted-ui-provider";
 const HomePage = lazy(() => import("./homePage/HomePage"));
 const ServicesPage = lazy(() => import("./servicesPage/ServicesPage"));
 const ProjectsPage = lazy(() => import("./projectsPage/ProjectsPage"));

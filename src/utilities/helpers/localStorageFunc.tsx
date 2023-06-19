@@ -1,6 +1,6 @@
-export const storeInLocalStorage = (key: string, item: any) =>
+export const setFromLocalStorage = (key: string, item: any) =>
   localStorage.setItem(key, JSON.stringify(item));
-export const getLocalStorage = <T,>(key: string): T | null => {
+export const getFromLocalStorage = <T,>(key: string): T | null => {
   try {
     const item = localStorage.getItem(key);
     if (!item) return null;
@@ -9,7 +9,7 @@ export const getLocalStorage = <T,>(key: string): T | null => {
     return null;
   }
 };
-export const deleteFromLocalStorage = (key: string) => {
+export const removeFromLocalStorage = (key: string) => {
   try {
     localStorage.removeItem(key);
   } catch (err) {

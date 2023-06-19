@@ -18,7 +18,7 @@ const Root = () => {
           onClick={auth.logout}
           style={{ marginTop: "2em", marginLeft: "2em", marginRight: "2em", width: "calc(100% - 4em)" }}
         >
-          Logout
+          Log out
         </Button>
       )}
 

@@ -1,7 +1,8 @@
 import { createContext, useState, useEffect, useContext } from "react";
-import CognitoAuthentication, {
+import {
+  CognitoAuthentication,
   CognitioCredentials,
-} from "./CognitoAuthentication";
+} from "aws-cognito-hosted-ui-provider";
 type CredentialsContextType = {
   credentials: CognitioCredentials | null;
   logout: () => Promise<void>;
