@@ -16,12 +16,16 @@ const Root = () => {
         <Button
           variant="contained"
           onClick={auth.logout}
-          style={{ marginTop: "2em", marginLeft: "2em", marginRight: "2em", width: "calc(100% - 4em)" }}
+          style={{
+            marginTop: "2em",
+            marginLeft: "2em",
+            marginRight: "2em",
+            width: "calc(100% - 4em)",
+          }}
         >
           Log out
         </Button>
       )}
-
       <Navbar />
     </>
   );
