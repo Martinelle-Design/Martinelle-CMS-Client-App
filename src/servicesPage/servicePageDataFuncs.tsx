@@ -31,10 +31,11 @@ export const serviceItemsElements = ({ items }: { items: ServiceItem[] }) => {
   });
 };
 export const addItemFunc = () => {
+  const timestamp = getUnixTime(new Date());
   const newDoc: ServiceItem = {
     itemType: "service-item",
     pk: {
-      orderIdx: 0,
+      timestamp,
       itemType: "service-item",
     },
     id: uuid(),
@@ -48,6 +49,7 @@ export const addItemFunc = () => {
 };
 export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   if (!e) return;
+  const timestamp = getUnixTime(new Date());
   const idx = e.idx ? parseInt(e.idx.toString()) : 0;
   //we extract sub category arr here
   let subCategories: string[];
@@ -62,7 +64,7 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
     orderIdx: idx,
     pk: {
       itemType: "service-item",
-      orderIdx: idx,
+      timestamp,
     },
     title: e.title ? e.title.toString() : "",
     subCategories: subCategories,
@@ -73,7 +75,7 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
     description: e.imgDescription?.toString(),
     pk: {
       itemType: "service-item-img",
-      orderIdx: 0,
+      timestamp,
     },
   });
   if (img)

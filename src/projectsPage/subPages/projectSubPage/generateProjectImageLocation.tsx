@@ -16,23 +16,24 @@ export const generateProjectImagesLocation = ({
     .map((_, idx) => {
       const imgId = uuid();
       const imgData = generateImgLocation(`${folderName}/${idx + 1}/index`);
+      const timestamp = getUnixTime(new Date());
       const data: ProjectItem = {
         itemType: "project-item",
         subType,
         id: uuid(),
         caption: "",
         orderIdx: idx,
-        timestamp: getUnixTime(new Date()),
+        timestamp,
         pk: {
           itemType: "project-item",
-          orderIdx: idx,
+          timestamp,
         },
         images: {
           [imgId]: {
             orderIdx: 0,
             pk: {
               itemType: "project-item-img",
-              orderIdx: 0,
+              timestamp,
             },
             timestamp: getUnixTime(new Date()),
             id: imgId,

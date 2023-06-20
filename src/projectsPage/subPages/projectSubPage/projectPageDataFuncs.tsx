@@ -25,18 +25,20 @@ export const projectItemsElements = ({ items }: { items: ProjectItem[] }) => {
 };
 export const addItemFunc = (subType: string) => {
   if (!subType) return;
+    const timestamp = getUnixTime(new Date());
+
   return () => {
     const newDoc: ProjectItem = {
       itemType: "project-item",
       subType,
       pk: {
-        orderIdx: 0,
+        timestamp,
         itemType: "project-item",
       },
       id: uuid(),
       images: {},
       orderIdx: 0,
-      timestamp: getUnixTime(new Date()),
+      timestamp,
       caption: "placeholder",
     };
     return newDoc;
@@ -44,12 +46,13 @@ export const addItemFunc = (subType: string) => {
 };
 export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   if (!e) return;
+  const timestamp = getUnixTime(new Date());
   const idx = e.idx ? parseInt(e.idx.toString()) : 0;
   const newDoc: Partial<ProjectItem> = {
     orderIdx: idx,
     pk: {
       itemType: "project-item",
-      orderIdx: idx,
+      timestamp,
     },
     caption: e.caption ? e.caption.toString() : "",
   };
@@ -59,7 +62,7 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
     description: e.imgDescription?.toString(),
     pk: {
       itemType: "project-item-img",
-      orderIdx: 0,
+      timestamp,
     },
   });
   if (img)
