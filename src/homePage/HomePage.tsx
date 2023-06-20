@@ -13,7 +13,7 @@ import { HomePageGridItem } from "./HomePageGridItem";
 import useEditLogic from "../hooks/use-edit-logic";
 import { BannerSortableDnDList } from "../utilities/DnDKitComponents/bannerSortableDndList/BannerSortableDndList";
 import { AddItemButton } from "../utilities/formInputs/AddItemButton";
-import useClientAppItems from "../hooks/use-client-app-items";
+//import useClientAppItems from "../hooks/use-client-app-items";
 const namespace = "home-pg";
 const HomePageGridList = ({
   items,
@@ -57,13 +57,13 @@ const HomePage = () => {
   const orderedHomePageItems = homePageData.sort(
     (a, b) => a.orderIdx - b.orderIdx
   );
-  const {
-    items: databaseItems,
-    setItems: setDatabaseItems,
-    status,
-  } = useClientAppItems<HomePageItems>({
-    itemType: "homePage",
-  });
+  // const {
+  //   items: databaseItems,
+  //   setItems: setDatabaseItems,
+  //   status,
+  // } = useClientAppItems<HomePageItems>({
+  //   itemType: "homePage",
+  // });
   const {
     items,
     activeId,
