@@ -32,6 +32,9 @@ const useClientAppItems = <T,>({ itemType }: { itemType: string }) => {
   const [items, setItems] = useState<(T & { itemType: string; id: string })[]>(
     []
   );
+  const [lastEvalKey, setLastEvalKey] = useState<undefined | null | string>(
+    null
+  );
   const auth = useAuthProvider();
   const { status, result, callFunction } = useLoadingState<
     (T & { itemType: string; id: string })[],
@@ -41,7 +44,7 @@ const useClientAppItems = <T,>({ itemType }: { itemType: string }) => {
   });
   //fetch items on mount
   useEffect(() => {
-    if (items) return;
+    if (items && items.length > 0) return;
     if (!auth) return;
     if (!auth.credentials) return;
     if (!auth.credentials.access_token) return;
@@ -55,6 +58,7 @@ const useClientAppItems = <T,>({ itemType }: { itemType: string }) => {
       const newArr = [...state, ...result];
       return removeDuplicates(newArr);
     });
+    setLastEvalKey(result[result.length - 1]?.id);
   }, [result]);
   return {
     status,
