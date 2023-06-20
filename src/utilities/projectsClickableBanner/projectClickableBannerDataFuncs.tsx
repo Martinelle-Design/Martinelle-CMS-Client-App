@@ -16,14 +16,14 @@ export const projectButtonItemsElements = ({
     const image = imageArr && imageArr.length > 0 ? imageArr[0][1] : undefined;
     const el = url ? (
       <Link key={id} to={url} className={`${namespace}-bottom-banner-link`}>
-        { (
+        {
           <ImageSlide
             name={title}
             imgUrl={image?.imgUrl}
             imgDescription={image?.description}
             imgPlaceholderUrl={image?.placeholderUrl}
           />
-        )}
+        }
       </Link>
     ) : (
       <button
@@ -31,14 +31,14 @@ export const projectButtonItemsElements = ({
         // onClick={category.onClick}
         className={`${namespace}-bottom-banner-link`}
       >
-        { (
+        {
           <ImageSlide
             name={title}
             imgUrl={image?.imgUrl}
             imgDescription={image?.description}
             imgPlaceholderUrl={image?.placeholderUrl}
           />
-        )}
+        }
       </button>
     );
     return {
@@ -47,13 +47,14 @@ export const projectButtonItemsElements = ({
     };
   });
 export const addItemFunc = () => {
+  const timestamp = getUnixTime(new Date());
   const newDoc: ProjectButtonItem = {
     itemType: "project-button-item",
     id: uuid(),
-    timestamp: getUnixTime(new Date()),
+    timestamp,
     pk: {
       itemType: "project-button-item",
-      orderIdx: 0,
+      timestamp,
     },
     orderIdx: 0,
     title: "Placeholder Caption".toUpperCase(),
@@ -64,11 +65,12 @@ export const addItemFunc = () => {
 };
 export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   if (!e) return;
+  const timestamp = getUnixTime(new Date());
   const idx = e.idx ? parseInt(e.idx.toString()) : 0;
   const newDoc: Partial<ProjectButtonItem> = {
     pk: {
       itemType: "project-button-item",
-      orderIdx: idx,
+      timestamp,
     },
     orderIdx: idx,
     title: e.title ? e.title.toString() : "",
@@ -80,7 +82,7 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
     description: e.imgDescription?.toString(),
     pk: {
       itemType: "project-button-item-img",
-      orderIdx: 0,
+      timestamp,
     },
   });
   if (img)

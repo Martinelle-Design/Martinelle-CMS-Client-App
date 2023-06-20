@@ -1,6 +1,8 @@
 import { v4 as uuid } from "uuid";
 import { ProjectButtonItem } from "../types/types";
 import { generateImgLocation } from "../helpers/generateImgLocation";
+import { getUnixTime } from "date-fns";
+const timestamp = getUnixTime(new Date());
 export const projectsClickableData: ProjectButtonItem[] = [
   {
     title: "PRIVATE RESIDENTIAL",
@@ -11,13 +13,13 @@ export const projectsClickableData: ProjectButtonItem[] = [
     timestamp: Date.now(),
     pk: {
       itemType: "project-button-item",
-      orderIdx: 0,
+      timestamp,
     },
     images: {
       [uuid()]: {
         pk: {
           itemType: "project-button-item",
-          orderIdx: 0,
+          timestamp,
         },
         id: uuid(),
         timestamp: Date.now(),
@@ -41,13 +43,13 @@ export const projectsClickableData: ProjectButtonItem[] = [
     timestamp: Date.now(),
     pk: {
       itemType: "project-button-item",
-      orderIdx: 1,
+      timestamp,
     },
     images: {
       [uuid()]: {
         pk: {
           itemType: "project-button-item",
-          orderIdx: 0,
+          timestamp,
         },
         id: uuid(),
         timestamp: Date.now(),
@@ -71,13 +73,13 @@ export const projectsClickableData: ProjectButtonItem[] = [
     timestamp: Date.now(),
     pk: {
       itemType: "project-button-item",
-      orderIdx: 2,
+      timestamp,
     },
     images: {
       [uuid()]: {
         pk: {
           itemType: "project-button-item",
-          orderIdx: 0,
+          timestamp,
         },
         id: uuid(),
         timestamp: Date.now(),
@@ -101,13 +103,13 @@ export const projectsClickableData: ProjectButtonItem[] = [
     timestamp: Date.now(),
     pk: {
       itemType: "project-button-item",
-      orderIdx: 3,
+      timestamp,
     },
     images: {
       [uuid()]: {
         pk: {
           itemType: "project-button-item",
-          orderIdx: 0,
+          timestamp,
         },
         id: uuid(),
         timestamp: Date.now(),

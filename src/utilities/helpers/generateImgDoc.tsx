@@ -64,19 +64,20 @@ export const uploadImgToS3 = async ({
 };
 
 export const generateSingleImg = (e: Partial<Image>): Image => {
-  const { imgUrl, placeholderUrl, description, pk, id } = e;
+  const { imgUrl, placeholderUrl, description, pk, id, orderIdx } = e;
   const imageId = id ? id : uuid();
+  const timestamp = pk?.timestamp ? pk.timestamp : getUnixTime(new Date());
   if (
     !imgUrl ||
     !placeholderUrl ||
     !pk?.itemType ||
-    (!pk?.orderIdx && pk.orderIdx !== 0)
+    (!orderIdx && orderIdx !== 0)
   )
     return {
-      timestamp: getUnixTime(new Date()),
+      timestamp,
       pk: {
         itemType: "",
-        orderIdx: 0,
+        timestamp,
       },
       id: imageId,
       orderIdx: 0,
@@ -85,13 +86,13 @@ export const generateSingleImg = (e: Partial<Image>): Image => {
       description: description,
     };
   return {
-    timestamp: getUnixTime(new Date()),
+    timestamp,
     pk: {
       itemType: pk?.itemType,
-      orderIdx: pk?.orderIdx,
+      timestamp,
     },
     id: imageId,
-    orderIdx: 0,
+    orderIdx,
     imgUrl: imgUrl.toString(),
     placeholderUrl: placeholderUrl.toString(),
     description: description?.toString(),

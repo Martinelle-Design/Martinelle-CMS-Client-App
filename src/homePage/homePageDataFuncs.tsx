@@ -86,10 +86,11 @@ export const homePageItemElements = (items: HomePageItems[]) =>
     return newItem;
   });
 export const addItemFunc = () => {
+  const timestamp = getUnixTime(new Date())
   const newDoc: HomePageItems = {
     itemType: "home-page-item",
     pk: {
-      orderIdx: 0,
+      timestamp,
       itemType: "home-page-item",
     },
     id: uuid(),
@@ -109,11 +110,12 @@ export const addItemFunc = () => {
 export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   if (!e) return;
   const idx = e.idx ? parseInt(e.idx.toString()) : 0;
+  const timestamp = getUnixTime(new Date())
   const newDoc: Partial<HomePageItems> = {
     orderIdx: idx,
     pk: {
       itemType: "home-pg-item",
-      orderIdx: idx,
+      timestamp,
     },
     subType: e.subType as HomePageItems["subType"],
     textDescription: e.textDescription
@@ -131,7 +133,7 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
     description: e.imgDescription?.toString(),
     pk: {
       itemType: "home-pg-item-img",
-      orderIdx: 0,
+      timestamp,
     },
   });
   if (img)

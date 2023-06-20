@@ -1,6 +1,8 @@
 import { ServiceItem } from "../utilities/types/types";
 import { v4 as uuid } from "uuid";
 import { generateImgLocation } from "../utilities/helpers/generateImgLocation";
+import { getUnixTime } from "date-fns";
+const timestamp = getUnixTime(new Date());
 export const servicesData: ServiceItem[] = [
   {
     title: "markets",
@@ -10,13 +12,13 @@ export const servicesData: ServiceItem[] = [
     timestamp: Date.now(),
     pk: {
       itemType: "service-item",
-      orderIdx: 0,
+      timestamp,
     },
     images: {
       [uuid()]: {
         pk: {
           itemType: "service-item",
-          orderIdx: 0,
+          timestamp,
         },
         id: uuid(),
         timestamp: Date.now(),
@@ -54,13 +56,13 @@ export const servicesData: ServiceItem[] = [
     timestamp: Date.now(),
     pk: {
       itemType: "service-item",
-      orderIdx: 1,
+      timestamp,
     },
     images: {
       [uuid()]: {
         pk: {
           itemType: "service-item",
-          orderIdx: 0,
+          timestamp,
         },
         id: uuid(),
         timestamp: Date.now(),
@@ -98,13 +100,13 @@ export const servicesData: ServiceItem[] = [
     timestamp: Date.now(),
     pk: {
       itemType: "service-item",
-      orderIdx: 2,
+      timestamp,
     },
     images: {
       [uuid()]: {
         pk: {
           itemType: "service-item",
-          orderIdx: 0,
+          timestamp,
         },
         id: uuid(),
         timestamp: Date.now(),
@@ -140,13 +142,13 @@ export const servicesData: ServiceItem[] = [
     timestamp: Date.now(),
     pk: {
       itemType: "service-item",
-      orderIdx: 3,
+      timestamp,
     },
     images: {
       [uuid()]: {
         pk: {
           itemType: "service-item",
-          orderIdx: 0,
+          timestamp,
         },
         id: uuid(),
         timestamp: Date.now(),

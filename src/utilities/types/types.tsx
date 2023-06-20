@@ -16,7 +16,7 @@ export type GeneralProps = {
   timestamp: number;
   pk: {
     itemType: string;
-    orderIdx: number;
+    timestamp: number;
   };
   images?: {
     [key: string]: Image;
