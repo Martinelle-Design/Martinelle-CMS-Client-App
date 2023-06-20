@@ -3,12 +3,12 @@ import { unstable_batchedUpdates } from "react-dom";
 const useLoadingState = <T, K>({
   asyncFunc,
 }: {
-  asyncFunc: (e?: K) => Promise<T>;
+  asyncFunc: (e?: K) => Promise<T | null>;
 }) => {
   const [status, setStatus] = useState<"loading" | "error" | "success">(
     "success"
   );
-  const [result, setResult] = useState<T>();
+  const [result, setResult] = useState<T | null>(null);
   const callbackFunction: (e?: K) => Promise<void> = async (e) => {
     setStatus("loading");
     try {
