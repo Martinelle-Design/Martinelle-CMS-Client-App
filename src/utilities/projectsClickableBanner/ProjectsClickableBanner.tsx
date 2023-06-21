@@ -1,7 +1,5 @@
-import { projectsClickableData } from "./projectsClickableData";
 import PageTitle from "../pageTitle/PageTitle";
 import useEditLogic from "../../hooks/use-edit-logic";
-import { useRef } from "react";
 import useSortableList, {
   SortableListProps,
 } from "../../hooks/use-sortable-list";
@@ -15,6 +13,8 @@ import { DropZoneProvider } from "../formInputs/FormDropZone/FormDropZoneContext
 import { ProjectButtonsGridItem } from "./ProjectsButtonGridItem";
 import { BannerSortableDnDList } from "../DnDKitComponents/bannerSortableDndList/BannerSortableDndList";
 import { AddItemButton } from "../formInputs/AddItemButton";
+import useClientAppItems from "../../hooks/use-client-app-items";
+import LoadingIcon from "../loadingIcon/LoadingIcon";
 const namespace = "projects-clickable-banner";
 export const ProjectClickableBannerEditable = () => {
   const namespace = "project-page";
@@ -96,9 +96,13 @@ const ProjectButtonsGridList = ({
   );
 };
 const ProjectsClickableBanner = ({ noEdit }: { noEdit?: boolean }) => {
-  const orderedProjectButtonItems = projectsClickableData.sort(
-    (a, b) => a.orderIdx - b.orderIdx
-  );
+  const {
+    items: databaseItems,
+    updateItems: updateDatabaseItems,
+    status,
+  } = useClientAppItems<ProjectButtonItem>({
+    itemType: "projectButtonsPage",
+  });
   const {
     items,
     activeId,
@@ -110,28 +114,34 @@ const ProjectsClickableBanner = ({ noEdit }: { noEdit?: boolean }) => {
     updateItem,
     deleteItem,
   } = useSortableList<ProjectButtonItem>({
-    defaultArr: orderedProjectButtonItems,
+    defaultArr: databaseItems,
     addItemFunc,
     updateItemFunc,
   });
-  const defaultItems = useRef<ProjectButtonItem[]>([]);
   const projectButtonItems = projectButtonItemsElements({
-    items: orderedProjectButtonItems,
+    items,
   });
   const { edit, editButtons } = useEditLogic({
     onCancel: () => {
-      setItems(defaultItems.current);
-      defaultItems.current = [];
+      setItems(databaseItems);
     },
     onSave: () => {
-      defaultItems.current = [];
+      updateDatabaseItems(items);
     },
     onEdit: () => {
-      defaultItems.current = items;
+      setItems(databaseItems);
     },
   });
   return (
     <>
+      {status === "loading" && (
+        <LoadingIcon
+          entireViewPort
+          width={50}
+          height={"100%"}
+          backgroundColor="white"
+        />
+      )}
       {!noEdit && editButtons}
       {(noEdit || !edit) && (
         <div className={`${namespace}-bottom-banner`}>

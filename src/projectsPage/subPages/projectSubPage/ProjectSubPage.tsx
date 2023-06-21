@@ -1,5 +1,4 @@
 import PageTitle from "../../../utilities/pageTitle/PageTitle";
-import { useRef } from "react";
 import { ProjectItem } from "../../../utilities/types/types";
 import useEditLogic from "../../../hooks/use-edit-logic";
 import {
@@ -14,6 +13,8 @@ import { BannerSortableDnDList } from "../../../utilities/DnDKitComponents/banne
 import { DropZoneProvider } from "../../../utilities/formInputs/FormDropZone/FormDropZoneContext";
 import { ProjectItemsGridItem } from "./ProjectItemsGridItem";
 import { AddItemButton } from "../../../utilities/formInputs/AddItemButton";
+import useClientAppItems from "../../../hooks/use-client-app-items";
+import LoadingIcon from "../../../utilities/loadingIcon/LoadingIcon";
 const namespace = "project-subpage-pg";
 const ProjectButtonsGridItemData = ({
   idx,
@@ -69,9 +70,7 @@ const ProjectItemsGridList = ({
   ));
   return (
     <>
-      <AddItemButton
-        onClickFunc={addItem}
-      />
+      <AddItemButton onClickFunc={addItem} />
       <BannerSortableDnDList
         items={items}
         onDragEnd={onDragEnd}
@@ -89,17 +88,24 @@ const ProjectItemsGridList = ({
 const ProjectSubPage = ({
   className,
   title,
-  projectItemArr,
-  subType
+  //projectItemArr,
+  subType,
 }: {
   className?: string;
   title: string;
-    projectItemArr: ProjectItem[];
-    subType: string;
+  projectItemArr: ProjectItem[];
+  subType: string;
 }) => {
-  const orderedProjectItems = projectItemArr.sort(
-    (a, b) => a.orderIdx - b.orderIdx
-  );
+  // const orderedProjectItems = projectItemArr.sort(
+  //   (a, b) => a.orderIdx - b.orderIdx
+  // );
+  const {
+    items: databaseItems,
+    updateItems: updateDatabaseItems,
+    status,
+  } = useClientAppItems<ProjectItem>({
+    itemType: "projectsPage",
+  });
   const {
     items,
     activeId,
@@ -111,28 +117,34 @@ const ProjectSubPage = ({
     updateItem,
     deleteItem,
   } = useSortableList<ProjectItem>({
-    defaultArr: orderedProjectItems,
+    defaultArr: databaseItems,
     addItemFunc: addItemFunc(subType),
     updateItemFunc,
   });
-  const defaultItems = useRef<ProjectItem[]>([]);
-  const projectItems = projectItemsElements({
-    items: orderedProjectItems,
-  });
   const { edit, editButtons } = useEditLogic({
     onCancel: () => {
-      setItems(defaultItems.current);
-      defaultItems.current = [];
+      setItems(databaseItems);
     },
     onSave: () => {
-      defaultItems.current = [];
+      updateDatabaseItems(items);
     },
     onEdit: () => {
-      defaultItems.current = items;
+      setItems(databaseItems);
     },
+  });
+  const projectItems = projectItemsElements({
+    items,
   });
   return (
     <div className={`${namespace} ${className ? className : ""}`}>
+      {status === "loading" && (
+        <LoadingIcon
+          entireViewPort
+          width={50}
+          height={"100%"}
+          backgroundColor="white"
+        />
+      )}
       <PageTitle text={title.toUpperCase()} />
       {editButtons}
       {!edit && (

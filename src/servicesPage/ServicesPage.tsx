@@ -1,8 +1,6 @@
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import PageTitle from "../utilities/pageTitle/PageTitle";
-import { servicesData } from "./servicesData";
 import { ServiceItem } from "../utilities/types/types";
-import { useRef } from "react";
 import useSortableList, { SortableListProps } from "../hooks/use-sortable-list";
 import {
   serviceItemsElements,
@@ -14,6 +12,8 @@ import { BannerSortableDnDList } from "../utilities/DnDKitComponents/bannerSorta
 import { DropZoneProvider } from "../utilities/formInputs/FormDropZone/FormDropZoneContext";
 import { ServicePageGridItem } from "./ServicePageGridItem";
 import { AddItemButton } from "../utilities/formInputs/AddItemButton";
+import useClientAppItems from "../hooks/use-client-app-items";
+import LoadingIcon from "../utilities/loadingIcon/LoadingIcon";
 const namespace = "services-pg";
 type ServiceRowProps = {
   title: string;
@@ -64,16 +64,15 @@ const ServicePageGridList = ({
 }: Partial<SortableListProps<ServiceItem>>) => {
   if (!items) return <></>;
   const itemElements = serviceItemsElements({ items }).map((item, idx) => (
-   
-      <DropZoneProvider key={item.el.key}>
-        <ServicePageGridItem
-          key={item.el.key}
-          idx={idx}
-          item={item}
-          deleteItem={deleteItem}
-          updateItem={updateItem}
-        />
-      </DropZoneProvider>
+    <DropZoneProvider key={item.el.key}>
+      <ServicePageGridItem
+        key={item.el.key}
+        idx={idx}
+        item={item}
+        deleteItem={deleteItem}
+        updateItem={updateItem}
+      />
+    </DropZoneProvider>
   ));
   return (
     <>
@@ -92,9 +91,16 @@ const ServicePageGridList = ({
   );
 };
 const ServicesPage = () => {
-  const orderedServicePageItems = servicesData.sort(
-    (a, b) => a.orderIdx - b.orderIdx
-  );
+  // const orderedServicePageItems = servicesData.sort(
+  //   (a, b) => a.orderIdx - b.orderIdx
+  // );
+  const {
+    items: databaseItems,
+    updateItems: updateDatabaseItems,
+    status,
+  } = useClientAppItems<ServiceItem>({
+    itemType: "servicesPage",
+  });
   const {
     items,
     activeId,
@@ -106,26 +112,34 @@ const ServicesPage = () => {
     updateItem,
     deleteItem,
   } = useSortableList<ServiceItem>({
-    defaultArr: orderedServicePageItems,
+    defaultArr: databaseItems,
     addItemFunc,
     updateItemFunc,
   });
-  const defaultItems = useRef<ServiceItem[]>([]);
-  const serviceItems = serviceItemsElements({ items: orderedServicePageItems });
   const { edit, editButtons } = useEditLogic({
     onCancel: () => {
-      setItems(defaultItems.current);
-      defaultItems.current = [];
+      setItems(databaseItems);
     },
     onSave: () => {
-      defaultItems.current = [];
+      updateDatabaseItems(items);
     },
     onEdit: () => {
-      defaultItems.current = items;
+      setItems(databaseItems);
     },
+  });
+  const serviceItems = serviceItemsElements({
+    items,
   });
   return (
     <div className={namespace}>
+      {status === "loading" && (
+        <LoadingIcon
+          entireViewPort
+          width={50}
+          height={"100%"}
+          backgroundColor="white"
+        />
+      )}
       <PageTitle text={"Services".toUpperCase()} />
       {editButtons}
       <div className={`${namespace}-rows`}>

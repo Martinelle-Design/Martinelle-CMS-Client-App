@@ -22,7 +22,7 @@ const useClientAppItems = <T,>({ itemType }: { itemType: string }) => {
     null
   );
   const auth = useAuthProvider();
-  const { status, result, callFunction } = useLoadingState<
+  const { status, result, callFunction, setStatus } = useLoadingState<
     ClientAppItemData<ClientAppItemProps<T>>,
     FetchClientItemsProps
   >({
@@ -54,12 +54,13 @@ const useClientAppItems = <T,>({ itemType }: { itemType: string }) => {
     });
   }, [result]);
   const updateItems = async (newItems: ClientAppItemProps<T>[]) => {
+    setStatus("loading");
     const { addedItems, removedItems, updatedItems } = await compareHistory(
       items,
       newItems
     );
     const credentials = await auth?.refreshAccessToken();
-    if (!credentials) return;
+    if (!credentials) return setStatus("success");
     const token = credentials.access_token;
     const addItemPromises = addedItems.map((item) => {
       return addClientItems({
@@ -88,8 +89,13 @@ const useClientAppItems = <T,>({ itemType }: { itemType: string }) => {
         ...removeItemPromises,
         ...updateItemPromises,
       ]);
+      unstable_batchedUpdates(() => {
+        setItems(newItems);
+        setStatus("success");
+      });
       return result;
     } catch (err) {
+      setStatus("error");
       console.error(err);
       return null;
     }

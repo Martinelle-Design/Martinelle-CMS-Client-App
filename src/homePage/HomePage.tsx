@@ -1,8 +1,6 @@
 import PageTitle from "../utilities/pageTitle/PageTitle";
-import homePageData from "./homePageData";
 import { HomePageItems } from "../utilities/types/types";
 import useSortableList, { SortableListProps } from "../hooks/use-sortable-list";
-import { useRef } from "react";
 import {
   homePageItemElements,
   updateItemFunc,
@@ -13,7 +11,8 @@ import { HomePageGridItem } from "./HomePageGridItem";
 import useEditLogic from "../hooks/use-edit-logic";
 import { BannerSortableDnDList } from "../utilities/DnDKitComponents/bannerSortableDndList/BannerSortableDndList";
 import { AddItemButton } from "../utilities/formInputs/AddItemButton";
-//import useClientAppItems from "../hooks/use-client-app-items";
+import useClientAppItems from "../hooks/use-client-app-items";
+import LoadingIcon from "../utilities/loadingIcon/LoadingIcon";
 const namespace = "home-pg";
 const HomePageGridList = ({
   items,
@@ -54,16 +53,16 @@ const HomePageGridList = ({
   );
 };
 const HomePage = () => {
-  const orderedHomePageItems = homePageData.sort(
-    (a, b) => a.orderIdx - b.orderIdx
-  );
-  // const {
-  //   items: databaseItems,
-  //   setItems: setDatabaseItems,
-  //   status,
-  // } = useClientAppItems<HomePageItems>({
-  //   itemType: "homePage",
-  // });
+  // const orderedHomePageItems = homePageData.sort(
+  //   (a, b) => a.orderIdx - b.orderIdx
+  // );
+  const {
+    items: databaseItems,
+    updateItems: updateDatabaseItems,
+    status,
+  } = useClientAppItems<HomePageItems>({
+    itemType: "homePage",
+  });
   const {
     items,
     activeId,
@@ -75,25 +74,31 @@ const HomePage = () => {
     updateItem,
     deleteItem,
   } = useSortableList<HomePageItems>({
-    defaultArr: orderedHomePageItems,
+    defaultArr: databaseItems,
     addItemFunc,
     updateItemFunc,
   });
-  const defaultItems = useRef<HomePageItems[]>([]);
   const { edit, editButtons } = useEditLogic({
     onCancel: () => {
-      setItems(defaultItems.current);
-      defaultItems.current = [];
+      setItems(databaseItems);
     },
     onSave: () => {
-      defaultItems.current = [];
+      updateDatabaseItems(items);
     },
     onEdit: () => {
-      defaultItems.current = items;
+      setItems(databaseItems);
     },
   });
   return (
     <div className={`${namespace}-container`}>
+      {status === "loading" && (
+        <LoadingIcon
+          entireViewPort
+          width={50}
+          height={"100%"}
+          backgroundColor="white"
+        />
+      )}
       <div className={`${namespace}-inner-container`}>
         <PageTitle text={"Home Page".toUpperCase()} />
         {editButtons}
