@@ -31,10 +31,9 @@ const fetchClientAppItems = async <T extends { itemType: string }>(
         max: 1000,
       },
     });
-    console.log(data);
     return data as ClientAppItemData<T>;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return null;
   }
 };

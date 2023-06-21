@@ -28,7 +28,7 @@ const deleteClientItems = async <T,>({
     });
     return result.data;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return;
   }
 };
