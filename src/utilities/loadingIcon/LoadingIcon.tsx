@@ -7,7 +7,13 @@ const ViewPortWrapper = ({
   backgroundColor?: string;
   height?: string | number;
 }) => {
-  const styles = { backgroundColor: backgroundColor, height: height };
+  const styles = {
+    backgroundColor: backgroundColor,
+    height: height,
+    top: 0,
+    left: 0,
+    zIndex: 10,
+  };
   return (
     <div className="loading-icon-entire-viewport" style={styles}>
       {children}

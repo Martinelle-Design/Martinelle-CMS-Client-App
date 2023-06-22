@@ -38,7 +38,7 @@ const useClientAppItems = <T,>({
   //fetch items on mount
   useEffect(() => {
     callFunction({ itemType, subType });
-  }, [callFunction, itemType]);
+  }, [callFunction, itemType, subType]);
   //update items on result
   useEffect(() => {
     if (!result) return;

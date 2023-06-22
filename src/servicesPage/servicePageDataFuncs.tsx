@@ -4,8 +4,6 @@ import { ServiceRow } from "./ServicesPage";
 import getUnixTime from "date-fns/getUnixTime";
 import { generateSingleImg } from "../utilities/helpers/generateImgDoc";
 import { v4 as uuid } from "uuid";
-import { MediaFile, MediaLink } from "../utilities/formInputs/Thumbnails";
-import { SortableListProps } from "../hooks/use-sortable-list";
 import { submitClientAppItemsFormFunc } from "../utilities/helpers/submitClientAppItemsFormFunc";
 import { SubmitFormFuncEventBody } from "../utilities/formInputs/SortableFormWrapper";
 export const serviceItemsElements = ({ items }: { items: ServiceItem[] }) => {

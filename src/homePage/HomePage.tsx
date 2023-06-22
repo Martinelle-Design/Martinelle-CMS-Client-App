@@ -13,6 +13,7 @@ import { BannerSortableDnDList } from "../utilities/DnDKitComponents/bannerSorta
 import { AddItemButton } from "../utilities/formInputs/AddItemButton";
 import useClientAppItems from "../hooks/use-client-app-items";
 import LoadingIcon from "../utilities/loadingIcon/LoadingIcon";
+import { createPortal } from "react-dom";
 const namespace = "home-pg";
 const HomePageGridList = ({
   items,
@@ -89,14 +90,17 @@ const HomePage = () => {
   });
   return (
     <div className={`${namespace}-container`}>
-      {status === "loading" && (
-        <LoadingIcon
-          entireViewPort
-          width={50}
-          height={"100%"}
-          backgroundColor="white"
-        />
-      )}
+      {status === "loading" &&
+        createPortal(
+          <LoadingIcon
+            entireViewPort
+            width={50}
+            height={"100%"}
+            backgroundColor="white"
+            strokeColor="#154e1e"
+          />,
+          document.body
+        )}
       <div className={`${namespace}-inner-container`}>
         <PageTitle text={"Home Page".toUpperCase()} />
         {editButtons}

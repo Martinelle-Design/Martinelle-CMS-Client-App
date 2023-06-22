@@ -1,4 +1,4 @@
-import { ProjectItem, ServiceItem } from "../../../utilities/types/types";
+import { ProjectItem } from "../../../utilities/types/types";
 import getUnixTime from "date-fns/getUnixTime";
 import { generateSingleImg } from "../../../utilities/helpers/generateImgDoc";
 import { v4 as uuid } from "uuid";
@@ -16,6 +16,7 @@ export const projectItemsElements = ({ items }: { items: ProjectItem[] }) => {
       imgUrl: image ? image.imgUrl : "",
       imgDescription: image ? image.description : "",
     };
+    
   });
   return imgArr.map((img, i) => ({
     data: items[i], //this is the data that is passed to the SortableItem
