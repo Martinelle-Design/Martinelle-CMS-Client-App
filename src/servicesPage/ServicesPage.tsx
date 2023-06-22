@@ -14,6 +14,7 @@ import { ServicePageGridItem } from "./ServicePageGridItem";
 import { AddItemButton } from "../utilities/formInputs/AddItemButton";
 import useClientAppItems from "../hooks/use-client-app-items";
 import LoadingIcon from "../utilities/loadingIcon/LoadingIcon";
+import { createPortal } from "react-dom";
 const namespace = "services-pg";
 type ServiceRowProps = {
   title: string;
@@ -133,14 +134,17 @@ const ServicesPage = () => {
   });
   return (
     <div className={namespace}>
-      {status === "loading" && (
-        <LoadingIcon
-          entireViewPort
-          width={50}
-          height={"100%"}
-          backgroundColor="white"
-        />
-      )}
+      {status === "loading" &&
+        createPortal(
+          <LoadingIcon
+            entireViewPort
+            width={50}
+            height={"100%"}
+            backgroundColor="white"
+            strokeColor="#154e1e"
+          />,
+          document.body
+        )}
       <PageTitle text={"Services".toUpperCase()} />
       {editButtons}
       <div className={`${namespace}-rows`}>

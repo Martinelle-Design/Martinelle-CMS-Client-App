@@ -15,6 +15,7 @@ import { BannerSortableDnDList } from "../DnDKitComponents/bannerSortableDndList
 import { AddItemButton } from "../formInputs/AddItemButton";
 import useClientAppItems from "../../hooks/use-client-app-items";
 import LoadingIcon from "../loadingIcon/LoadingIcon";
+import { createPortal } from "react-dom";
 const namespace = "projects-clickable-banner";
 export const ProjectClickableBannerEditable = () => {
   const namespace = "project-page";
@@ -117,7 +118,7 @@ const ProjectsClickableBanner = ({ noEdit }: { noEdit?: boolean }) => {
     defaultArr: databaseItems,
     addItemFunc,
     updateItemFunc,
-    updateDatabaseItems
+    updateDatabaseItems,
   });
   const projectButtonItems = projectButtonItemsElements({
     items,
@@ -135,14 +136,17 @@ const ProjectsClickableBanner = ({ noEdit }: { noEdit?: boolean }) => {
   });
   return (
     <>
-      {status === "loading" && (
-        <LoadingIcon
-          entireViewPort
-          width={50}
-          height={"100%"}
-          backgroundColor="white"
-        />
-      )}
+      {status === "loading" &&
+        createPortal(
+          <LoadingIcon
+            entireViewPort
+            width={50}
+            height={"100%"}
+            backgroundColor="white"
+            strokeColor="#154e1e"
+          />,
+          document.body
+        )}
       {!noEdit && editButtons}
       {(noEdit || !edit) && (
         <div className={`${namespace}-bottom-banner`}>

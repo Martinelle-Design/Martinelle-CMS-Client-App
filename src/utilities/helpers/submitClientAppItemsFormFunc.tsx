@@ -5,7 +5,7 @@ import { generateSingleImg, uploadImgToS3 } from "./generateImgDoc";
 import { GeneralProps } from "../types/types";
 export const submitClientAppItemsFormFunc = async <T,>({
   e,
-  updateItem,
+  updateItem, 
   newImages,
   storedImages,
   itemType,

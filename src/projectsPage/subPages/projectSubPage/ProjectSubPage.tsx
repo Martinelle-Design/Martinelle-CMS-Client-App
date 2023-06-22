@@ -15,6 +15,7 @@ import { ProjectItemsGridItem } from "./ProjectItemsGridItem";
 import { AddItemButton } from "../../../utilities/formInputs/AddItemButton";
 import useClientAppItems from "../../../hooks/use-client-app-items";
 import LoadingIcon from "../../../utilities/loadingIcon/LoadingIcon";
+import { createPortal } from "react-dom";
 const namespace = "project-subpage-pg";
 const ProjectButtonsGridItemData = ({
   idx,
@@ -135,14 +136,17 @@ const ProjectSubPage = ({
   });
   return (
     <div className={`${namespace} ${className ? className : ""}`}>
-      {status === "loading" && (
-        <LoadingIcon
-          entireViewPort
-          width={50}
-          height={"100%"}
-          backgroundColor="white"
-        />
-      )}
+      {status === "loading" &&
+        createPortal(
+          <LoadingIcon
+            entireViewPort
+            width={50}
+            height={"100%"}
+            backgroundColor="white"
+            strokeColor="#154e1e"
+          />,
+          document.body
+        )}
       <PageTitle text={title.toUpperCase()} />
       {editButtons}
       {!edit && (
