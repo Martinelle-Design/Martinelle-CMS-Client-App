@@ -17,8 +17,8 @@ const useLoadingState = <T, K>({
         setResult(result);
         setStatus("success");
       });
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(err);
       setStatus("error");
     }
   };

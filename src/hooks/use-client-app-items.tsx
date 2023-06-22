@@ -16,11 +16,17 @@ type ClientAppItemProps<T> = T & {
   id: string;
   pk: { timestamp: number; itemType: string };
 };
-const useClientAppItems = <T,>({ itemType }: { itemType: string }) => {
+const useClientAppItems = <T,>({
+  itemType,
+  subType,
+}: {
+  itemType: string;
+  subType?: string;
+}) => {
   const [items, setItems] = useState<ClientAppItemProps<T>[]>([]);
-  const [lastEvalKey, setLastEvalKey] = useState<undefined | null | string>(
-    null
-  );
+  // const [lastEvalKey, setLastEvalKey] = useState<undefined | null | string>(
+  //   null
+  // );
   const auth = useAuthProvider();
   const { status, result, callFunction, setStatus } = useLoadingState<
     ClientAppItemData<ClientAppItemProps<T>>,
@@ -30,27 +36,21 @@ const useClientAppItems = <T,>({ itemType }: { itemType: string }) => {
   });
   //fetch items on mount
   useEffect(() => {
-    if (status === "loading") return;
-    if (items && items.length > 0) return;
-    if (lastEvalKey === undefined) return;
-    if (!auth) return;
-    if (!auth.credentials) return;
-    if (!auth.credentials.access_token) return;
-    callFunction({ token: auth.credentials.access_token, itemType });
-  }, [auth, items, status, callFunction, lastEvalKey, itemType]);
+    callFunction({ itemType, subType });
+  }, [callFunction, itemType]);
   //update items on result
   useEffect(() => {
     if (!result) return;
     const resultItems = result.result.Items as ClientAppItemProps<T>[];
-    const lastEvalKey = result.result.LastEvaluatedKey;
+    //const lastEvalKey = result.result.LastEvaluatedKey;
     unstable_batchedUpdates(() => {
       setItems((state) => {
         if (!state) return resultItems;
         const newArr = [...state, ...resultItems];
         return removeDuplicates(newArr);
       });
-      if (lastEvalKey) setLastEvalKey(JSON.stringify(lastEvalKey));
-      else setLastEvalKey(undefined);
+      // if (lastEvalKey) setLastEvalKey(JSON.stringify(lastEvalKey));
+      // else setLastEvalKey(undefined);
     });
   }, [result]);
   const updateItems = async (newItems: ClientAppItemProps<T>[]) => {

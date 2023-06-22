@@ -1,8 +1,9 @@
 import { QueryCommandOutput } from "@aws-sdk/client-dynamodb";
 import axios from "axios";
 export type FetchClientItemsProps = {
-  token: string;
+  token?: string;
   itemType: string;
+  subType?: string;
 };
 export type GeneralFetchData = {
   message: string;
@@ -18,16 +19,13 @@ const fetchClientAppItems = async <T extends { itemType: string }>(
   props?: FetchClientItemsProps
 ) => {
   if (!props) return null;
-  const { itemType, token } = props;
-  if (!token) return null;
+  const { itemType, subType } = props;
   try {
     const { data } = await axios({
       method: "GET",
       url: `${restApiUrl}${itemType}`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       params: {
+        subType,
         max: 1000,
       },
     });

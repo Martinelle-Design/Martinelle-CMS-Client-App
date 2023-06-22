@@ -88,7 +88,6 @@ const ProjectItemsGridList = ({
 const ProjectSubPage = ({
   className,
   title,
-  //projectItemArr,
   subType,
 }: {
   className?: string;
@@ -96,15 +95,13 @@ const ProjectSubPage = ({
   projectItemArr: ProjectItem[];
   subType: string;
 }) => {
-  // const orderedProjectItems = projectItemArr.sort(
-  //   (a, b) => a.orderIdx - b.orderIdx
-  // );
   const {
     items: databaseItems,
     updateItems: updateDatabaseItems,
     status,
   } = useClientAppItems<ProjectItem>({
     itemType: "projectsPage",
+    subType: subType,
   });
   const {
     items,
