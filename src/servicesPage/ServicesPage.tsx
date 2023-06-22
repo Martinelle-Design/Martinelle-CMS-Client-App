@@ -115,6 +115,7 @@ const ServicesPage = () => {
     defaultArr: databaseItems,
     addItemFunc,
     updateItemFunc,
+    updateDatabaseItems
   });
   const { edit, editButtons } = useEditLogic({
     onCancel: () => {

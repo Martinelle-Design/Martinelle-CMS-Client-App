@@ -116,6 +116,7 @@ const ProjectSubPage = ({
   } = useSortableList<ProjectItem>({
     defaultArr: databaseItems,
     addItemFunc: addItemFunc(subType),
+    updateDatabaseItems,
     updateItemFunc,
   });
   const { edit, editButtons } = useEditLogic({

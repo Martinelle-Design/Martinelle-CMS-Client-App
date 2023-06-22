@@ -117,6 +117,7 @@ const ProjectsClickableBanner = ({ noEdit }: { noEdit?: boolean }) => {
     defaultArr: databaseItems,
     addItemFunc,
     updateItemFunc,
+    updateDatabaseItems
   });
   const projectButtonItems = projectButtonItemsElements({
     items,
