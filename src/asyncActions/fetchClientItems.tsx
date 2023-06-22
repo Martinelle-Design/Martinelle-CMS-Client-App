@@ -25,7 +25,9 @@ const fetchClientAppItems = async <T extends { itemType: string }>(
       method: "GET",
       url: `${restApiUrl}${itemType}`,
       params: {
-        subType,
+        query: JSON.stringify({
+          subType,
+        }),
         max: 1000,
       },
     });
