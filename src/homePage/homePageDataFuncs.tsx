@@ -3,29 +3,23 @@ import HomePageImageBannerFull from "./utilities/HomePageImgBannerFull";
 import { HomePageItems } from "../utilities/types/types";
 import { v4 as uuid } from "uuid";
 import getUnixTime from "date-fns/getUnixTime";
-import { MediaFile, MediaLink } from "../utilities/formInputs/Thumbnails";
-import { SortableListProps } from "../hooks/use-sortable-list";
 import { generateSingleImg } from "../utilities/helpers/generateImgDoc";
 import { submitClientAppItemsFormFunc } from "../utilities/helpers/submitClientAppItemsFormFunc";
+import { SubmitFormFuncEventBody } from "../utilities/formInputs/SortableFormWrapper";
 const namespace = "home-pg";
-export const submitFormFunc = async ({
-  e,
-  updateItem,
-  newImages,
-  storedImages,
-}: {
-  e: React.FormEvent<HTMLFormElement>;
-  updateItem?: SortableListProps<HomePageItems>["updateItem"];
-  newImages: MediaFile[];
-  storedImages: MediaLink[];
-}) => {
+export const submitFormFunc = async (
+  event?: SubmitFormFuncEventBody<HomePageItems>
+) => {
+  if (!event) return;
+  const { e, updateItem, newImages, storedImages, token } = event;
+  if (!token) return;
   return await submitClientAppItemsFormFunc({
     e,
+    token: token.access_token,
     updateItem,
     newImages,
     storedImages,
-    token: "",
-    itemType: "home-pg-item-img",
+    itemType: "home-page-img",
   });
 };
 export const homePageItemElements = (items: HomePageItems[]) =>

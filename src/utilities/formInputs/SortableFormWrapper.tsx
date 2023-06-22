@@ -1,31 +1,44 @@
+import { CognitioCredentials } from "aws-cognito-hosted-ui-provider";
+import { useAuthProvider } from "../../authentication/Authentication";
 import useLoadingState from "../../hooks/use-loading-state";
 import { SortableListProps } from "../../hooks/use-sortable-list";
 import LoadingIcon from "../loadingIcon/LoadingIcon";
 import PopUpModal from "../popUpModal/PopUpModal";
 import { useDropZoneProvider } from "./FormDropZone/FormDropZoneContext";
+import { MediaFile, MediaLink } from "./Thumbnails";
+export type SubmitFormFuncEventBody<T> = {
+  e: React.FormEvent<HTMLFormElement>;
+  updateItem?: SortableListProps<T>["updateItem"];
+  newImages: MediaFile[];
+  storedImages: MediaLink[];
+  token: CognitioCredentials | null;
+};
 export const SortableFormWrapper = <T,>({
   updateItem,
   setOpenModal,
   children,
-  submitFormFunc
+  submitFormFunc,
 }: {
   updateItem?: SortableListProps<T>["updateItem"];
   setOpenModal: (open: boolean) => void;
-    children?: JSX.Element | JSX.Element[] | string;
-  submitFormFunc: (e?: any) => | Promise<void>;
+  children?: JSX.Element | JSX.Element[] | string;
+  submitFormFunc: (e?: SubmitFormFuncEventBody<T>) => Promise<void>;
 }) => {
   const { newImages, storedImages, setNewImages, setStoredImages } =
     useDropZoneProvider();
   const { status, callFunction } = useLoadingState({
     asyncFunc: submitFormFunc,
   });
+  const auth = useAuthProvider();
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     //insert any images uploaded here
+    const token = await auth?.refreshAccessToken();
     callFunction({
       e,
       updateItem,
-      newImages,
+      newImages: newImages as MediaFile[],
       storedImages,
+      token: token ? token : null,
     });
   };
   return (

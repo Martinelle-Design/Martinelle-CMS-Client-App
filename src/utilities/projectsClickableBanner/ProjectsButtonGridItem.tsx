@@ -7,7 +7,7 @@ import { useState } from "react";
 import { CategoryFormControl } from "../formInputs/CategoryFormControl";
 import FormDropZone from "../formInputs/FormDropZone/FormDropZone";
 import BannerSortableDndItem from "../DnDKitComponents/bannerSortableDndList/BannerSortableDndItem";
-import { submitClientAppItemsFormFunc } from "../helpers/submitClientAppItemsFormFunc";
+import { submitFormFunc } from "./projectClickableBannerDataFuncs";
 const inputHiddenStyles: React.CSSProperties = {
   opacity: 0,
   visibility: "hidden",
@@ -35,9 +35,6 @@ export const ProjectButtonsGridItem = ({
 } & Partial<SortableListProps<ProjectButtonItem>>) => {
   const [openModal, setOpenModal] = useState(false);
   const data = item.data;
-  //   const [data, setData] = useState<
-  //     ProjectButtonItem
-  //   >(item.data);
   const imgsObj = data.images as ProjectButtonItem["images"];
   const imgsData = imgsObj
     ? Object.entries(imgsObj).map(([id, value]) => value)
@@ -56,7 +53,7 @@ export const ProjectButtonsGridItem = ({
     <>
       {openModal && (
         <SortableFormWrapper
-          submitFormFunc={submitClientAppItemsFormFunc}
+          submitFormFunc={submitFormFunc}
           updateItem={updateItem}
           setOpenModal={setOpenModal}
         >

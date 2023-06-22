@@ -6,9 +6,9 @@ import { useState } from "react";
 import { CategoryFormControl } from "../../../utilities/formInputs/CategoryFormControl";
 import FormDropZone from "../../../utilities/formInputs/FormDropZone/FormDropZone";
 import BannerSortableDndItem from "../../../utilities/DnDKitComponents/bannerSortableDndList/BannerSortableDndItem";
-import { submitClientAppItemsFormFunc } from "../../../utilities/helpers/submitClientAppItemsFormFunc";
 import { ProjectItem } from "../../../utilities/types/types";
 import useWindowWidth from "../../../hooks/use-window-width";
+import { submitFormFunc } from "./projectPageDataFuncs";
 const inputHiddenStyles: React.CSSProperties = {
   opacity: 0,
   visibility: "hidden",
@@ -55,7 +55,7 @@ export const ProjectItemsGridItem = ({
     <>
       {openModal && (
         <SortableFormWrapper
-          submitFormFunc={submitClientAppItemsFormFunc}
+          submitFormFunc={submitFormFunc}
           updateItem={updateItem}
           setOpenModal={setOpenModal}
         >

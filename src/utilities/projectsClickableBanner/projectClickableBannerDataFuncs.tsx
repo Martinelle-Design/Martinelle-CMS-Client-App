@@ -4,6 +4,8 @@ import { ProjectButtonItem } from "../types/types";
 import { v4 as uuid } from "uuid";
 import getUnixTime from "date-fns/getUnixTime";
 import { generateSingleImg } from "../helpers/generateImgDoc";
+import { SubmitFormFuncEventBody } from "../formInputs/SortableFormWrapper";
+import { submitClientAppItemsFormFunc } from "../helpers/submitClientAppItemsFormFunc";
 const namespace = "projects-clickable-banner";
 export const projectButtonItemsElements = ({
   items,
@@ -93,4 +95,19 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
     itemIdx: idx,
     item: newDoc,
   };
+};
+export const submitFormFunc = async (
+  event?: SubmitFormFuncEventBody<ProjectButtonItem>
+) => {
+  if (!event) return;
+  const { e, updateItem, newImages, storedImages, token } = event;
+  if (!token) return;
+  return await submitClientAppItemsFormFunc({
+    e,
+    token: token.access_token,
+    updateItem,
+    newImages,
+    storedImages,
+    itemType: "project-button-img",
+  });
 };

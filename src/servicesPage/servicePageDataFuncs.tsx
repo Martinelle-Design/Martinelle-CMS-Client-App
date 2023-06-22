@@ -7,6 +7,7 @@ import { v4 as uuid } from "uuid";
 import { MediaFile, MediaLink } from "../utilities/formInputs/Thumbnails";
 import { SortableListProps } from "../hooks/use-sortable-list";
 import { submitClientAppItemsFormFunc } from "../utilities/helpers/submitClientAppItemsFormFunc";
+import { SubmitFormFuncEventBody } from "../utilities/formInputs/SortableFormWrapper";
 export const serviceItemsElements = ({ items }: { items: ServiceItem[] }) => {
   return items.map((service) => {
     const { id, images, subCategories, title } = service;
@@ -88,20 +89,15 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
     item: newDoc,
   };
 };
-export const submitFormFunc = async ({
-  e,
-  updateItem,
-  newImages,
-  storedImages,
-}: {
-  e: React.FormEvent<HTMLFormElement>;
-  updateItem?: SortableListProps<ServiceItem>["updateItem"];
-  newImages: MediaFile[];
-  storedImages: MediaLink[];
-}) => {
+export const submitFormFunc = async (
+  event?: SubmitFormFuncEventBody<ServiceItem>
+) => {
+  if (!event) return;
+  const { e, updateItem, newImages, storedImages, token } = event;
+  if (!token) return;
   return await submitClientAppItemsFormFunc({
     e,
-    token: "",
+    token: token.access_token,
     updateItem,
     newImages,
     storedImages,

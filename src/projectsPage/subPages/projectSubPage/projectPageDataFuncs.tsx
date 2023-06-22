@@ -1,11 +1,10 @@
-import { ProjectItem } from "../../../utilities/types/types";
+import { ProjectItem, ServiceItem } from "../../../utilities/types/types";
 import getUnixTime from "date-fns/getUnixTime";
 import { generateSingleImg } from "../../../utilities/helpers/generateImgDoc";
 import { v4 as uuid } from "uuid";
-import { MediaFile, MediaLink } from "../../../utilities/formInputs/Thumbnails";
-import { SortableListProps } from "../../../hooks/use-sortable-list";
 import { submitClientAppItemsFormFunc } from "../../../utilities/helpers/submitClientAppItemsFormFunc";
 import { ProjectSubPageImage } from "./ProjectSubPageImage";
+import { SubmitFormFuncEventBody } from "../../../utilities/formInputs/SortableFormWrapper";
 export const projectItemsElements = ({ items }: { items: ProjectItem[] }) => {
   const imgArr = items.map((item) => {
     const imgsObj = item.images;
@@ -25,7 +24,7 @@ export const projectItemsElements = ({ items }: { items: ProjectItem[] }) => {
 };
 export const addItemFunc = (subType: string) => {
   if (!subType) return;
-    const timestamp = getUnixTime(new Date());
+  const timestamp = getUnixTime(new Date());
 
   return () => {
     const newDoc: ProjectItem = {
@@ -75,23 +74,18 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
     item: newDoc,
   };
 };
-export const submitFormFunc = async ({
-  e,
-  updateItem,
-  newImages,
-  storedImages,
-}: {
-  e: React.FormEvent<HTMLFormElement>;
-  updateItem?: SortableListProps<ProjectItem>["updateItem"];
-  newImages: MediaFile[];
-  storedImages: MediaLink[];
-}) => {
+export const submitFormFunc = async (
+  event?: SubmitFormFuncEventBody<ProjectItem>
+) => {
+  if (!event) return;
+  const { e, updateItem, newImages, storedImages, token } = event;
+  if (!token) return;
   return await submitClientAppItemsFormFunc({
     e,
-    token: "",
+    token: token.access_token,
     updateItem,
     newImages,
     storedImages,
-    itemType: "service-item-img",
+    itemType: "project-item-img",
   });
 };

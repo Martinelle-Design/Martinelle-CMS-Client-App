@@ -101,7 +101,7 @@ const ProjectsClickableBanner = ({ noEdit }: { noEdit?: boolean }) => {
     updateItems: updateDatabaseItems,
     status,
   } = useClientAppItems<ProjectButtonItem>({
-    itemType: "projectButtonsPage",
+    itemType: "projectButtons",
   });
   const {
     items,
