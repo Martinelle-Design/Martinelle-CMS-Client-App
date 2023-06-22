@@ -53,9 +53,6 @@ const HomePageGridList = ({
   );
 };
 const HomePage = () => {
-  // const orderedHomePageItems = homePageData.sort(
-  //   (a, b) => a.orderIdx - b.orderIdx
-  // );
   const {
     items: databaseItems,
     updateItems: updateDatabaseItems,
@@ -77,6 +74,7 @@ const HomePage = () => {
     defaultArr: databaseItems,
     addItemFunc,
     updateItemFunc,
+    updateDatabaseItems,
   });
   const { edit, editButtons } = useEditLogic({
     onCancel: () => {

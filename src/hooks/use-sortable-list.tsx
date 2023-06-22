@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { DragEndEvent, DragOverEvent, DragStartEvent } from "@dnd-kit/core";
 import { v4 as uuid } from "uuid";
+import { ClientAppItemProps } from "./use-client-app-items";
 export type SortableListProps<T> = {
   items: T[];
   activeId: string | number | null;
@@ -13,8 +14,15 @@ export type SortableListProps<T> = {
   updateItem?: (
     e: React.FormEvent<HTMLFormElement>,
     update?: boolean
-  ) =>
+  ) => Promise<
     | {
+        itemIdx: number;
+        updateDatabaseItems?: (
+          newItems: ClientAppItemProps<T>[]
+        ) => Promise<void | PromiseSettledResult<any>[] | null>;
+        data: {
+          [k: string]: FormDataEntryValue;
+        };
         setItems: React.Dispatch<
           React.SetStateAction<
             (T & {
@@ -25,12 +33,9 @@ export type SortableListProps<T> = {
         newItems: (T & {
           id: string;
         })[];
-        itemIdx: number;
-        data: {
-          [k: string]: FormDataEntryValue;
-        };
       }
-    | undefined;
+    | undefined
+  >;
   setItems: React.Dispatch<
     React.SetStateAction<
       (T & {
@@ -44,15 +49,19 @@ const useSortableList = <T,>({
   addItemFunc,
   updateItemFunc,
   customOnDragOver,
+  updateDatabaseItems,
 }: {
+  defaultArr: (T & { id: string })[];
   addItemFunc?: (e?: { [k: string]: FormDataEntryValue }) => T | undefined;
+  updateDatabaseItems?: (
+    newItems: ClientAppItemProps<T>[]
+  ) => Promise<void | PromiseSettledResult<any>[] | null>;
   updateItemFunc?: (e?: { [k: string]: FormDataEntryValue }) =>
     | {
         itemIdx: number;
         item: Partial<T>;
       }
     | undefined;
-  defaultArr: (T & { id: string })[];
   customOnDragOver?: ({
     e,
     items,
@@ -89,7 +98,7 @@ const useSortableList = <T,>({
       setItems([newItem as T & { id: string }, ...items]);
     else setItems([{ ...newItem, id: uuid() }, ...items]);
   };
-  const updateItem = (
+  const updateItem = async (
     e: React.FormEvent<HTMLFormElement>,
     update?: boolean
   ) => {
@@ -104,11 +113,15 @@ const useSortableList = <T,>({
     const newItems = [...items];
     const oldItem = newItems[itemIdx];
     newItems[itemIdx] = { ...oldItem, ...item, id: oldItem.id };
-    if (update) setItems(newItems);
-    else
+    if (update) {
+      setItems(newItems);
+      if (updateDatabaseItems)
+        updateDatabaseItems(newItems as ClientAppItemProps<T>[]);
+    } else
       return {
         setItems,
         newItems,
+        updateDatabaseItems,
         itemIdx,
         data,
       };
@@ -134,7 +147,10 @@ const useSortableList = <T,>({
       newActiveItemIdx === null
     )
       return;
-    const newItem = items.find((item) => item.id === activeId);
+    const newItem = items.find(
+      (item) => item.id === activeId
+    ) as ClientAppItemProps<T>;
+    newItem.orderIdx = newActiveItemIdx;
     if (!newItem) return;
     newItems.splice(activeItemIdx, 1);
     newItems.splice(newActiveItemIdx, 0, newItem);

@@ -24,13 +24,13 @@ export const submitClientAppItemsFormFunc = async <T,>({
   //this means there's no images to upload, so we can immeaditely update
   const images = [...newImages, ...storedImages];
   if (images.length <= 0) {
-    updateItem(e);
+    await updateItem(e);
     return;
   }
   //we continue since we need to upload images
-  const result = updateItem(e, false);
+  const result = await updateItem(e, false);
   if (!result) return;
-  const { setItems, newItems, itemIdx, data } = result;
+  const { setItems, newItems, itemIdx, data, updateDatabaseItems } = result;
   const currItemData = newItems[itemIdx];
   const createSingleDoc = generateSingleImg({});
   //upload content to s3 bucket
@@ -53,6 +53,7 @@ export const submitClientAppItemsFormFunc = async <T,>({
     unstable_batchedUpdates(() => {
       setItems(newItems);
     });
+    if (updateDatabaseItems) await updateDatabaseItems(newItems);
     return;
   }
   const fileData = images[0];
@@ -82,5 +83,6 @@ export const submitClientAppItemsFormFunc = async <T,>({
   unstable_batchedUpdates(() => {
     setItems(newItems);
   });
+  if (updateDatabaseItems) await updateDatabaseItems(newItems);
   return;
 };

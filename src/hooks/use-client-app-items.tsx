@@ -11,10 +11,11 @@ import compareHistory from "../asyncActions/compareHistory";
 import addClientItems from "../asyncActions/addClientItems";
 import deleteClientItems from "../asyncActions/deleteClientItems";
 import updateClientItems from "../asyncActions/updateClientItems";
-type ClientAppItemProps<T> = T & {
+export type ClientAppItemProps<T> = T & {
   itemType: string;
   id: string;
   pk: { timestamp: number; itemType: string };
+  orderIdx: number;
 };
 const useClientAppItems = <T,>({
   itemType,
