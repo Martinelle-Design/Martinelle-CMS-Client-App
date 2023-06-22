@@ -31,6 +31,7 @@ export const SortableFormWrapper = <T,>({
   });
   const auth = useAuthProvider();
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     //insert any images uploaded here
     const token = await auth?.refreshAccessToken();
     callFunction({

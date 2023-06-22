@@ -103,7 +103,9 @@ const useSortableList = <T,>({
     update?: boolean
   ) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData(
+      e.currentTarget ? e.currentTarget : (e.target as HTMLFormElement)
+    );
     const data = Object.fromEntries(formData.entries());
     if (!updateItemFunc) return;
     const result = updateItemFunc(data);
@@ -117,7 +119,7 @@ const useSortableList = <T,>({
       setItems(newItems);
       if (updateDatabaseItems)
         updateDatabaseItems(newItems as ClientAppItemProps<T>[]);
-    } else
+    } else {
       return {
         setItems,
         newItems,
@@ -125,6 +127,7 @@ const useSortableList = <T,>({
         itemIdx,
         data,
       };
+    }
   };
 
   const deleteItem = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

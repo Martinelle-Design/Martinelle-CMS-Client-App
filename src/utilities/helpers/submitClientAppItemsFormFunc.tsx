@@ -5,7 +5,7 @@ import { generateSingleImg, uploadImgToS3 } from "./generateImgDoc";
 import { GeneralProps } from "../types/types";
 export const submitClientAppItemsFormFunc = async <T,>({
   e,
-  updateItem, 
+  updateItem,
   newImages,
   storedImages,
   itemType,
@@ -24,11 +24,12 @@ export const submitClientAppItemsFormFunc = async <T,>({
   //this means there's no images to upload, so we can immeaditely update
   const images = [...newImages, ...storedImages];
   if (images.length <= 0) {
-    await updateItem(e);
+    await updateItem(e, true);
     return;
   }
   //we continue since we need to upload images
   const result = await updateItem(e, false);
+  console.log(result);
   if (!result) return;
   const { setItems, newItems, itemIdx, data, updateDatabaseItems } = result;
   const currItemData = newItems[itemIdx];
