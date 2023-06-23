@@ -1,4 +1,4 @@
-import * as Jimp from "jimp";
+import * as Jimp from "jimp/browser/lib/jimp";
 export type ResizeProps = {
   mimeType?: string | null;
   fileBuffer?: Buffer | null;
@@ -10,7 +10,7 @@ export const resizeImg = async ({
   width,
 }: ResizeProps) => {
   if (!fileBuffer || !mimeType) return null;
-  const img = await Jimp.read(fileBuffer);
+  const img = await Jimp.default.read(fileBuffer);
   const newImg = img.resize(width, Jimp.AUTO);
   const [buffer, base64] = await Promise.all([
     newImg.getBufferAsync(mimeType),

@@ -3,6 +3,7 @@ import { v4 as uuid } from "uuid";
 import getUnixTime from "date-fns/getUnixTime";
 import { ResizeProps, resizeImg } from "./resizeImg";
 import axios from "axios";
+const restApiUrl = `https://${process.env.REACT_APP_API_ENDPOINT}/manage-content`;
 export const uploadImgToS3 = async ({
   token,
   itemType,
@@ -20,7 +21,7 @@ export const uploadImgToS3 = async ({
       Authorization: `Bearer ${token}`,
     },
     method: "POST",
-    url: `${process.env.REACT_APP_API_URL}/presignImgUrls`,
+    url: `${restApiUrl}/presignImgUrls`,
     data: {
       itemType,
       id,
@@ -58,8 +59,8 @@ export const uploadImgToS3 = async ({
   });
   await Promise.all([originalImgResult, placeholderImgResult]);
   return {
-    imgUrl: `${process.env.REACT_APP_MEDIA_FILES_URL}/${imgKey}`,
-    imgPlaceholderUrl: `${process.env.REACT_APP_MEDIA_FILES_URL}/${placeholderKey}`,
+    imgUrl: `https://${process.env.REACT_APP_MEDIA_FILES_URL}/${imgKey}`,
+    imgPlaceholderUrl: `Https://${process.env.REACT_APP_MEDIA_FILES_URL}/${placeholderKey}`,
   };
 };
 

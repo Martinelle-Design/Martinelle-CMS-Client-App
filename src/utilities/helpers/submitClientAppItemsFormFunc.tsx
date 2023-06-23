@@ -4,7 +4,9 @@ import { unstable_batchedUpdates } from "react-dom";
 import { generateSingleImg, uploadImgToS3 } from "./generateImgDoc";
 import { GeneralProps, Image } from "../types/types";
 import { getUnixTime } from "date-fns";
+import { Buffer } from "buffer";
 import _ from "lodash";
+window.Buffer = window.Buffer || Buffer;
 const removeUndefinedVals = <T,>({
   newItems,
   itemIdx,
