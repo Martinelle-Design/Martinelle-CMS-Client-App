@@ -15,7 +15,7 @@ export const submitFormFunc = async (
   if (!token) return;
   return await submitClientAppItemsFormFunc({
     e,
-    token: token.access_token,
+    token: token.id_token,
     updateItem,
     newImages,
     storedImages,
@@ -80,7 +80,7 @@ export const homePageItemElements = (items: HomePageItems[]) =>
     return newItem;
   });
 export const addItemFunc = () => {
-  const timestamp = getUnixTime(new Date())
+  const timestamp = getUnixTime(new Date());
   const newDoc: HomePageItems = {
     itemType: "home-page-item",
     pk: {
@@ -104,7 +104,7 @@ export const addItemFunc = () => {
 export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   if (!e) return;
   const idx = e.idx ? parseInt(e.idx.toString()) : 0;
-  const timestamp = getUnixTime(new Date())
+  const timestamp = getUnixTime(new Date());
   const newDoc: Partial<HomePageItems> = {
     orderIdx: idx,
     pk: {

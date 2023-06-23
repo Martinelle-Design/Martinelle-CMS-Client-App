@@ -13,10 +13,10 @@ export const serviceSubType = [
 export type GeneralProps = {
   id: string;
   orderIdx: number;
-  timestamp: number;
+  timestamp: number | string;
   pk: {
     itemType: string;
-    timestamp: number;
+    timestamp: number | string;
   };
   images?: {
     [key: string]: Image;

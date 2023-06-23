@@ -14,7 +14,7 @@ import updateClientItems from "../asyncActions/updateClientItems";
 export type ClientAppItemProps<T> = T & {
   itemType: string;
   id: string;
-  pk: { timestamp: number; itemType: string };
+  pk: { timestamp: number | string; itemType: string };
   orderIdx: number;
 };
 const useClientAppItems = <T,>({
@@ -62,7 +62,7 @@ const useClientAppItems = <T,>({
     );
     const credentials = await auth?.refreshAccessToken();
     if (!credentials) return setStatus("success");
-    const token = credentials.access_token;
+    const token = credentials.id_token;
     const addItemPromises = addedItems.map((item) => {
       return addClientItems({
         token,

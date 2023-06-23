@@ -16,7 +16,6 @@ export const projectItemsElements = ({ items }: { items: ProjectItem[] }) => {
       imgUrl: image ? image.imgUrl : "",
       imgDescription: image ? image.description : "",
     };
-    
   });
   return imgArr.map((img, i) => ({
     data: items[i], //this is the data that is passed to the SortableItem
@@ -83,7 +82,7 @@ export const submitFormFunc = async (
   if (!token) return;
   return await submitClientAppItemsFormFunc({
     e,
-    token: token.access_token,
+    token: token.id_token,
     updateItem,
     newImages,
     storedImages,

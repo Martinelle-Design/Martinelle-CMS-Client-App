@@ -104,7 +104,7 @@ export const submitFormFunc = async (
   if (!token) return;
   return await submitClientAppItemsFormFunc({
     e,
-    token: token.access_token,
+    token: token.id_token,
     updateItem,
     newImages,
     storedImages,

@@ -8,7 +8,7 @@ const deleteClientItems = async <T,>({
   itemType: string;
   data: T & {
     pk: {
-      timestamp: number;
+      timestamp: number | string;
       itemType: string;
     };
   };
