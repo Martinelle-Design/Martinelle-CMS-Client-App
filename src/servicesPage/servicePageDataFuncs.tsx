@@ -2,7 +2,6 @@ import seperateToWords from "../utilities/helpers/seperateToWords";
 import { ServiceItem } from "../utilities/types/types";
 import { ServiceRow } from "./ServicesPage";
 import getUnixTime from "date-fns/getUnixTime";
-import { generateSingleImg } from "../utilities/helpers/generateImgDoc";
 import { v4 as uuid } from "uuid";
 import { submitClientAppItemsFormFunc } from "../utilities/helpers/submitClientAppItemsFormFunc";
 import { SubmitFormFuncEventBody } from "../utilities/formInputs/SortableFormWrapper";
@@ -48,7 +47,6 @@ export const addItemFunc = () => {
 };
 export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   if (!e) return;
-  const timestamp = getUnixTime(new Date());
   const idx = e.idx ? parseInt(e.idx.toString()) : 0;
   //we extract sub category arr here
   let subCategories: string[];
@@ -64,20 +62,6 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
     title: e.title ? e.title.toString() : "",
     subCategories: subCategories,
   };
-  const img = generateSingleImg({
-    imgUrl: e.imgUrl?.toString(),
-    placeholderUrl: e.imgPlaceholderUrl?.toString(),
-    description: e.imgDescription?.toString(),
-    pk: {
-      itemType: "service-item-img",
-      timestamp,
-    },
-  });
-  if (img)
-    newDoc.images = {
-      [img.id]: img,
-    };
-
   return {
     itemIdx: idx,
     item: newDoc,

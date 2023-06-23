@@ -3,7 +3,6 @@ import ImageSlide from "../imageSlide/ImageSlide";
 import { ProjectButtonItem } from "../types/types";
 import { v4 as uuid } from "uuid";
 import getUnixTime from "date-fns/getUnixTime";
-import { generateSingleImg } from "../helpers/generateImgDoc";
 import { SubmitFormFuncEventBody } from "../formInputs/SortableFormWrapper";
 import { submitClientAppItemsFormFunc } from "../helpers/submitClientAppItemsFormFunc";
 const namespace = "projects-clickable-banner";
@@ -67,26 +66,12 @@ export const addItemFunc = () => {
 };
 export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   if (!e) return;
-  const timestamp = getUnixTime(new Date());
   const idx = e.idx ? parseInt(e.idx.toString()) : 0;
   const newDoc: Partial<ProjectButtonItem> = {
     orderIdx: idx,
     title: e.title ? e.title.toString() : "",
     url: e.url ? e.url.toString() : "",
   };
-  const img = generateSingleImg({
-    imgUrl: e.imgUrl?.toString(),
-    placeholderUrl: e.imgPlaceholderUrl?.toString(),
-    description: e.imgDescription?.toString(),
-    pk: {
-      itemType: "project-button-item-img",
-      timestamp,
-    },
-  });
-  if (img)
-    newDoc.images = {
-      [img.id]: img,
-    };
   return {
     itemIdx: idx,
     item: newDoc,

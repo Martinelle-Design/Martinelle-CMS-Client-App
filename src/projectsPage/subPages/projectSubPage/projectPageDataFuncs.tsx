@@ -1,6 +1,5 @@
 import { ProjectItem } from "../../../utilities/types/types";
 import getUnixTime from "date-fns/getUnixTime";
-import { generateSingleImg } from "../../../utilities/helpers/generateImgDoc";
 import { v4 as uuid } from "uuid";
 import { submitClientAppItemsFormFunc } from "../../../utilities/helpers/submitClientAppItemsFormFunc";
 import { ProjectSubPageImage } from "./ProjectSubPageImage";
@@ -25,7 +24,6 @@ export const projectItemsElements = ({ items }: { items: ProjectItem[] }) => {
 export const addItemFunc = (subType: string) => {
   if (!subType) return;
   const timestamp = getUnixTime(new Date());
-
   return () => {
     const newDoc: ProjectItem = {
       itemType: "project-item",
@@ -45,26 +43,11 @@ export const addItemFunc = (subType: string) => {
 };
 export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   if (!e) return;
-  const timestamp = getUnixTime(new Date());
   const idx = e.idx ? parseInt(e.idx.toString()) : 0;
   const newDoc: Partial<ProjectItem> = {
     orderIdx: idx,
     caption: e.caption ? e.caption.toString() : "",
   };
-  const img = generateSingleImg({
-    imgUrl: e.imgUrl?.toString(),
-    placeholderUrl: e.imgPlaceholderUrl?.toString(),
-    description: e.imgDescription?.toString(),
-    pk: {
-      itemType: "project-item-img",
-      timestamp,
-    },
-  });
-  if (img)
-    newDoc.images = {
-      [img.id]: img,
-    };
-
   return {
     itemIdx: idx,
     item: newDoc,

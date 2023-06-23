@@ -3,7 +3,6 @@ import HomePageImageBannerFull from "./utilities/HomePageImgBannerFull";
 import { HomePageItems } from "../utilities/types/types";
 import { v4 as uuid } from "uuid";
 import getUnixTime from "date-fns/getUnixTime";
-import { generateSingleImg } from "../utilities/helpers/generateImgDoc";
 import { submitClientAppItemsFormFunc } from "../utilities/helpers/submitClientAppItemsFormFunc";
 import { SubmitFormFuncEventBody } from "../utilities/formInputs/SortableFormWrapper";
 const namespace = "home-pg";
@@ -104,7 +103,6 @@ export const addItemFunc = () => {
 export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   if (!e) return;
   const idx = e.idx ? parseInt(e.idx.toString()) : 0;
-  const timestamp = getUnixTime(new Date());
   const newDoc: Partial<HomePageItems> = {
     orderIdx: idx,
     subType: e.subType as HomePageItems["subType"],
@@ -117,20 +115,6 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
       url: e.actionBtnUrl ? e.actionBtnUrl.toString() : "",
     },
   };
-  const img = generateSingleImg({
-    imgUrl: e.imgUrl?.toString(),
-    placeholderUrl: e.imgPlaceholderUrl?.toString(),
-    description: e.imgDescription?.toString(),
-    pk: {
-      itemType: "home-pg-item-img",
-      timestamp,
-    },
-  });
-  if (img)
-    newDoc.images = {
-      [img.id]: img,
-    };
-
   return {
     itemIdx: idx,
     item: newDoc,

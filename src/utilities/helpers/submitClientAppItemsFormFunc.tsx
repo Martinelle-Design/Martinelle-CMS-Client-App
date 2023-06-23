@@ -2,8 +2,44 @@ import { SortableListProps } from "../../hooks/use-sortable-list";
 import { MediaFile, MediaLink, isMediaLink } from "../formInputs/Thumbnails";
 import { unstable_batchedUpdates } from "react-dom";
 import { generateSingleImg, uploadImgToS3 } from "./generateImgDoc";
-import { GeneralProps } from "../types/types";
+import { GeneralProps, Image } from "../types/types";
 import { getUnixTime } from "date-fns";
+import _ from "lodash";
+const removeUndefinedVals = <T,>({
+  newItems,
+  itemIdx,
+  newImgObj,
+  imgId,
+}: {
+  newItems: (T &
+    GeneralProps & {
+      itemType: string;
+    } & {
+      id: string;
+    })[];
+  itemIdx: number;
+  imgId: string;
+  newImgObj: {
+    [key: string]: Image;
+  };
+}) => {
+  const imgDataObj = _(newImgObj[imgId]).omitBy(_.isUndefined).value() as Image;
+  newImgObj[imgId] = imgDataObj;
+  newItems[itemIdx].images = _(newImgObj).omitBy(_.isUndefined).value() as
+    | {
+        [key: string]: Image;
+      }
+    | undefined;
+  const newItemsWithoutEmpty = _(newItems[itemIdx])
+    .omitBy(_.isUndefined)
+    .value() as T &
+    GeneralProps & {
+      itemType: string;
+    } & {
+      id: string;
+    };
+  return newItemsWithoutEmpty;
+};
 export const submitClientAppItemsFormFunc = async <T,>({
   e,
   updateItem,
@@ -34,6 +70,20 @@ export const submitClientAppItemsFormFunc = async <T,>({
   const { setItems, newItems, itemIdx, data, updateDatabaseItems } = result;
   const currItemData = newItems[itemIdx];
   const createSingleDoc = generateSingleImg({});
+  //update the items in the database
+  const updateResources = async (
+    newItems: (T &
+      GeneralProps & {
+        itemType: string;
+      } & {
+        id: string;
+      })[]
+  ) => {
+    unstable_batchedUpdates(() => {
+      setItems(newItems);
+    });
+    if (updateDatabaseItems) await updateDatabaseItems(newItems);
+  };
   //upload content to s3 bucket
   if (isMediaLink(images[0])) {
     const {
@@ -43,36 +93,31 @@ export const submitClientAppItemsFormFunc = async <T,>({
       id,
       timestamp: imgTimestamp,
     } = images[0];
-    if (!placeholderUrl || !url) {
-      unstable_batchedUpdates(() => {
-        setItems(newItems);
-      });
-      if (updateDatabaseItems) await updateDatabaseItems(newItems);
-      return;
-    }
     const timestamp = imgTimestamp
       ? imgTimestamp.toString()
       : getUnixTime(new Date());
-    newItems[itemIdx].images = {
-      ...currItemData.images,
+    const newImgObj = {
       [id]: {
         ...createSingleDoc,
+        id: id,
         pk: {
           ...createSingleDoc.pk,
           timestamp,
           itemType: itemType,
         },
         timestamp,
-        imgUrl: url,
-        placeholderUrl: placeholderUrl,
+        imgUrl: url ? url : "",
+        placeholderUrl: placeholderUrl ? placeholderUrl : "",
         description: description ? description : undefined,
       },
     };
-    unstable_batchedUpdates(() => {
-      setItems(newItems);
+    newItems[itemIdx] = removeUndefinedVals({
+      itemIdx,
+      newImgObj,
+      newItems,
+      imgId: id,
     });
-    if (updateDatabaseItems) await updateDatabaseItems(newItems);
-    return;
+    return await updateResources(newItems);
   }
   const fileData = images[0];
   const arrayBuffer = await fileData.file.arrayBuffer();
@@ -85,7 +130,7 @@ export const submitClientAppItemsFormFunc = async <T,>({
       fileBuffer: Buffer.from(arrayBuffer),
     },
   });
-  newItems[itemIdx].images = {
+  const newImgObj = {
     ...currItemData.images,
     [createSingleDoc.id]: {
       ...createSingleDoc,
@@ -98,9 +143,11 @@ export const submitClientAppItemsFormFunc = async <T,>({
       description: data.imgDescription.toString(),
     },
   };
-  unstable_batchedUpdates(() => {
-    setItems(newItems);
+  newItems[itemIdx] = removeUndefinedVals({
+    itemIdx,
+    newImgObj,
+    newItems,
+    imgId: createSingleDoc.id,
   });
-  if (updateDatabaseItems) await updateDatabaseItems(newItems);
-  return;
+  return await updateResources(newItems);
 };
