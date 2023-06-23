@@ -30,13 +30,20 @@ export const submitClientAppItemsFormFunc = async <T,>({
   //we continue since we need to upload images
   const result = await updateItem(e, false);
   if (!result) return;
+  console.log(result);
   const { setItems, newItems, itemIdx, data, updateDatabaseItems } = result;
   const currItemData = newItems[itemIdx];
   const createSingleDoc = generateSingleImg({});
   //upload content to s3 bucket
   if (isMediaLink(images[0])) {
     const { placeholderUrl, url, description } = images[0];
-    if (!placeholderUrl || !url) return;
+    if (!placeholderUrl || !url) {
+      unstable_batchedUpdates(() => {
+        setItems(newItems);
+      });
+      if (updateDatabaseItems) await updateDatabaseItems(newItems);
+      return;
+    }
     newItems[itemIdx].images = {
       ...currItemData.images,
       [createSingleDoc.id]: {

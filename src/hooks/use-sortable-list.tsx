@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DragEndEvent, DragOverEvent, DragStartEvent } from "@dnd-kit/core";
 import { v4 as uuid } from "uuid";
 import { ClientAppItemProps } from "./use-client-app-items";
@@ -82,6 +82,9 @@ const useSortableList = <T,>({
 }): SortableListProps<T> => {
   const [items, setItems] = useState(defaultArr ? defaultArr : []);
   const [activeId, setActiveId] = useState<null | string | number>(null);
+  useEffect(() => {
+    setItems(defaultArr ? defaultArr : []);
+  }, [defaultArr]);
   const addItem = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     if (!addItemFunc) return;

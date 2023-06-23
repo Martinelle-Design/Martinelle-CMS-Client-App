@@ -28,6 +28,7 @@ const useClientAppItems = <T,>({
   // const [lastEvalKey, setLastEvalKey] = useState<undefined | null | string>(
   //   null
   // );
+  console.log(items, "use client items");
   const auth = useAuthProvider();
   const { status, result, callFunction, setStatus } = useLoadingState<
     ClientAppItemData<ClientAppItemProps<T>>,
