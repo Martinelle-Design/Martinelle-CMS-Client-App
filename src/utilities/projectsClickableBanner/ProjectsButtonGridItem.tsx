@@ -72,7 +72,7 @@ export const ProjectButtonsGridItem = ({
               name={"url"}
               label="Project Button URL"
               defaultValue={data.url}
-              multiline={false}
+              multiline={true}
               variant="standard"
             />
           </FormControl>
@@ -91,7 +91,7 @@ export const ProjectButtonsGridItem = ({
               name={"imgDescription"}
               label="Image Description"
               defaultValue={""}
-              multiline={false}
+              multiline={true}
               variant="standard"
             />
           </CategoryFormControl>

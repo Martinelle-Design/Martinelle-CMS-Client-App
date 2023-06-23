@@ -70,10 +70,6 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   const timestamp = getUnixTime(new Date());
   const idx = e.idx ? parseInt(e.idx.toString()) : 0;
   const newDoc: Partial<ProjectButtonItem> = {
-    pk: {
-      itemType: "project-button-item",
-      timestamp,
-    },
     orderIdx: idx,
     title: e.title ? e.title.toString() : "",
     url: e.url ? e.url.toString() : "",

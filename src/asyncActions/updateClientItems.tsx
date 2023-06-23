@@ -7,14 +7,22 @@ const updateClientItems = async <T,>({
   token,
 }: {
   itemType: string;
-  data: Partial<T>;
+  data: Partial<T> & {
+    pk: {
+      itemType: string;
+      timestamp: number | string;
+    };
+  };
   token: string;
 }) => {
   try {
     const result = await axios({
       url: `${restApiUrl}${itemType}`,
       method: "POST",
-      data: data,
+      data: {
+        ...data,
+        key: data.pk,
+      },
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

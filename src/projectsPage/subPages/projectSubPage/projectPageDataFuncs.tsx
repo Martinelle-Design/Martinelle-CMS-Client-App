@@ -49,10 +49,6 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   const idx = e.idx ? parseInt(e.idx.toString()) : 0;
   const newDoc: Partial<ProjectItem> = {
     orderIdx: idx,
-    pk: {
-      itemType: "project-item",
-      timestamp,
-    },
     caption: e.caption ? e.caption.toString() : "",
   };
   const img = generateSingleImg({

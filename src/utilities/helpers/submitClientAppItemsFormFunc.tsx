@@ -30,7 +30,6 @@ export const submitClientAppItemsFormFunc = async <T,>({
   //we continue since we need to upload images
   const result = await updateItem(e, false);
   if (!result) return;
-  console.log(result);
   const { setItems, newItems, itemIdx, data, updateDatabaseItems } = result;
   const currItemData = newItems[itemIdx];
   const createSingleDoc = generateSingleImg({});

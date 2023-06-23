@@ -61,10 +61,6 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   }
   const newDoc: Partial<ServiceItem> = {
     orderIdx: idx,
-    pk: {
-      itemType: "service-item",
-      timestamp,
-    },
     title: e.title ? e.title.toString() : "",
     subCategories: subCategories,
   };

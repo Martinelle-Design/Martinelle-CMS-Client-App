@@ -1,12 +1,12 @@
-import {
-  FormControl,
-} from "@mui/material";
+import { FormControl } from "@mui/material";
 export const CategoryFormControl = ({
   children,
   heading,
+  noFormControl,
 }: {
   children: JSX.Element | JSX.Element[] | string;
   heading: string;
+  noFormControl?: boolean;
 }) => {
   const categoryBoxesStyles: React.CSSProperties = {
     marginBottom: "1em",
@@ -15,8 +15,8 @@ export const CategoryFormControl = ({
     border: "1.5px solid lightgray",
     borderRadius: "0.3em",
   };
-  return (
-    <FormControl fullWidth style={categoryBoxesStyles}>
+  const childrenEls = (
+    <>
       <h3
         style={{
           width: "100%",
@@ -27,6 +27,13 @@ export const CategoryFormControl = ({
         {heading}
       </h3>
       {children}
+    </>
+  );
+  return noFormControl ? (
+    <div style={{ ...categoryBoxesStyles, width: "100%" }}>{childrenEls}</div>
+  ) : (
+    <FormControl fullWidth style={categoryBoxesStyles}>
+      {childrenEls}
     </FormControl>
   );
 };

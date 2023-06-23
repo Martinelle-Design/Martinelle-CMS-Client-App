@@ -107,10 +107,6 @@ export const updateItemFunc = (e?: { [k: string]: FormDataEntryValue }) => {
   const timestamp = getUnixTime(new Date());
   const newDoc: Partial<HomePageItems> = {
     orderIdx: idx,
-    pk: {
-      itemType: "home-pg-item",
-      timestamp,
-    },
     subType: e.subType as HomePageItems["subType"],
     textDescription: e.textDescription
       ? e.textDescription.toString()

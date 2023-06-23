@@ -35,10 +35,9 @@ const compareHistory = async <T,>(
   const oldSameItemsById = oldItems.filter((item) => newSet.has(item.id));
   //it doesn't matter which one we use as it will always be the same
   //since we seperated already filtered out the same items by id
-  const { differentNewItems: updatedItems } = determineObjChanges(
-    newSameItemsById,
-    oldSameItemsById
-  );
+  const {
+    differentNewItems: updatedItems,
+  } = determineObjChanges(oldSameItemsById, newSameItemsById);
   return { addedItems, removedItems, updatedItems };
 };
 export default compareHistory;

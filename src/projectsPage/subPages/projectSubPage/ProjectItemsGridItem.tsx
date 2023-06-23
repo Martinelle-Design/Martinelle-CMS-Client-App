@@ -34,8 +34,8 @@ export const ProjectItemsGridItem = ({
   colIdx?: number;
   totalColumns?: number;
 } & Partial<SortableListProps<ProjectItem>>) => {
-    const [openModal, setOpenModal] = useState(false);
-    const mediumWidth = useWindowWidth(768)
+  const [openModal, setOpenModal] = useState(false);
+  const mediumWidth = useWindowWidth(768);
   const data = item.data;
   const imgsObj = data.images as ProjectItem["images"];
   const imgsData = imgsObj
@@ -75,7 +75,7 @@ export const ProjectItemsGridItem = ({
               name={"imgDescription"}
               label="Image Description"
               defaultValue={""}
-              multiline={false}
+              multiline={true}
               variant="standard"
             />
           </CategoryFormControl>

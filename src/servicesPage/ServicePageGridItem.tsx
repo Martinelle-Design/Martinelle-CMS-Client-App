@@ -238,7 +238,7 @@ export const ServicePageGridItem = ({
               name={"imgDescription"}
               label="Image Description"
               defaultValue={""}
-              multiline={false}
+              multiline={true}
               variant="standard"
             />
           </CategoryFormControl>
