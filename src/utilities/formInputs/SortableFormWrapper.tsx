@@ -6,6 +6,7 @@ import LoadingIcon from "../loadingIcon/LoadingIcon";
 import PopUpModal from "../popUpModal/PopUpModal";
 import { useDropZoneProvider } from "./FormDropZone/FormDropZoneContext";
 import { MediaFile, MediaLink } from "./Thumbnails";
+import { unstable_batchedUpdates } from "react-dom";
 export type SubmitFormFuncEventBody<T> = {
   e: React.FormEvent<HTMLFormElement>;
   updateItem?: SortableListProps<T>["updateItem"];
@@ -34,20 +35,23 @@ export const SortableFormWrapper = <T,>({
     e.preventDefault();
     //insert any images uploaded here
     const token = await auth?.refreshAccessToken();
-    callFunction({
+    await callFunction({
       e,
       updateItem,
       newImages: newImages as MediaFile[],
       storedImages,
       token: token ? token : null,
     });
+    setNewImages([]);
   };
   return (
     <PopUpModal
       onClose={() => {
-        setOpenModal(false);
-        setNewImages([]);
-        setStoredImages([]);
+        unstable_batchedUpdates(() => {
+          setOpenModal(false);
+          setNewImages([]);
+          setStoredImages([]);
+        });
       }}
     >
       <div

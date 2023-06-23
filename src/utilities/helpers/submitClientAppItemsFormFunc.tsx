@@ -133,7 +133,6 @@ export const submitClientAppItemsFormFunc = async <T,>({
     },
   });
   const newImgObj = {
-    ...currItemData.images,
     [createSingleDoc.id]: {
       ...createSingleDoc,
       pk: {

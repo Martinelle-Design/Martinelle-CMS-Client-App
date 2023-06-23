@@ -28,7 +28,7 @@ export const uploadImgToS3 = async ({
       mimeType: resizeProps.mimeType,
     },
   });
-  const { imgKey, placeholderKey, signedImgUrl, signedImgPlaceholderUrl } =
+  const { imgKey, imgPlaceholderKey, signedImgUrl, signedImgPlaceholderUrl } =
     data;
   const file = resizeProps.fileBuffer;
   //resizeImg
@@ -60,7 +60,7 @@ export const uploadImgToS3 = async ({
   await Promise.all([originalImgResult, placeholderImgResult]);
   return {
     imgUrl: `https://${process.env.REACT_APP_MEDIA_FILES_URL}/${imgKey}`,
-    imgPlaceholderUrl: `Https://${process.env.REACT_APP_MEDIA_FILES_URL}/${placeholderKey}`,
+    imgPlaceholderUrl: `https://${process.env.REACT_APP_MEDIA_FILES_URL}/${imgPlaceholderKey}`,
   };
 };
 
