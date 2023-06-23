@@ -3,6 +3,7 @@ import { MediaFile, MediaLink, isMediaLink } from "../formInputs/Thumbnails";
 import { unstable_batchedUpdates } from "react-dom";
 import { generateSingleImg, uploadImgToS3 } from "./generateImgDoc";
 import { GeneralProps } from "../types/types";
+import { getUnixTime } from "date-fns";
 export const submitClientAppItemsFormFunc = async <T,>({
   e,
   updateItem,
@@ -35,7 +36,13 @@ export const submitClientAppItemsFormFunc = async <T,>({
   const createSingleDoc = generateSingleImg({});
   //upload content to s3 bucket
   if (isMediaLink(images[0])) {
-    const { placeholderUrl, url, description } = images[0];
+    const {
+      placeholderUrl,
+      url,
+      description,
+      id,
+      timestamp: imgTimestamp,
+    } = images[0];
     if (!placeholderUrl || !url) {
       unstable_batchedUpdates(() => {
         setItems(newItems);
@@ -43,14 +50,19 @@ export const submitClientAppItemsFormFunc = async <T,>({
       if (updateDatabaseItems) await updateDatabaseItems(newItems);
       return;
     }
+    const timestamp = imgTimestamp
+      ? imgTimestamp.toString()
+      : getUnixTime(new Date());
     newItems[itemIdx].images = {
       ...currItemData.images,
-      [createSingleDoc.id]: {
+      [id]: {
         ...createSingleDoc,
         pk: {
           ...createSingleDoc.pk,
+          timestamp,
           itemType: itemType,
         },
+        timestamp,
         imgUrl: url,
         placeholderUrl: placeholderUrl,
         description: description ? description : undefined,

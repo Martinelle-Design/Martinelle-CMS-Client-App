@@ -66,7 +66,9 @@ export const uploadImgToS3 = async ({
 export const generateSingleImg = (e: Partial<Image>): Image => {
   const { imgUrl, placeholderUrl, description, pk, id, orderIdx } = e;
   const imageId = id ? id : uuid();
-  const timestamp = pk?.timestamp ? pk.timestamp : getUnixTime(new Date());
+  const timestamp = pk?.timestamp
+    ? pk.timestamp
+    : getUnixTime(new Date()).toString();
   if (
     !imgUrl ||
     !placeholderUrl ||

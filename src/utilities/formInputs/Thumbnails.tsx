@@ -12,6 +12,7 @@ export type MediaLink = {
   placeholderUrl?: string;
   description?: string;
   mediaType: "image" | "video";
+  timestamp?: string | number;
 };
 export type MediaFileProps = {
   readonly name: string;
@@ -44,7 +45,7 @@ export interface ThumbnailProps {
   file: MediaFileProps | MediaLink;
   onRemoveThumbnail?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
-export type MediaFile = MediaFileProps & {file: File};
+export type MediaFile = MediaFileProps & { file: File };
 
 export const ThumbnailWrapper = ({
   children,

@@ -46,6 +46,7 @@ export const ProjectButtonsGridItem = ({
           url: imgsData[0].imgUrl,
           placeholderUrl: imgsData[0].placeholderUrl,
           description: imgsData[0].description,
+          timestamp: imgsData[0].timestamp,
           mediaType: "image",
         }
       : undefined;
