@@ -18,6 +18,7 @@ import { submitFormFunc } from "./servicePageDataFuncs";
 type CategoryInput = {
   id: string;
   content: string;
+  orderIdx: number;
 };
 const namespace = "services-pg";
 const inputHiddenStyles: React.CSSProperties = {
@@ -33,6 +34,7 @@ const addItemCategoryFunc = () => {
   return {
     id: uuid(),
     content: "Placeholder",
+    orderIdx: 0,
   };
 };
 const ServicePageGridItemCategoryItem = ({
@@ -179,8 +181,9 @@ export const ServicePageGridItem = ({
     }
   >({
     ...item.data,
-    subCategories: item.data.subCategories.map((content) => ({
+    subCategories: item.data.subCategories.map((content, idx) => ({
       id: uuid(),
+      orderIdx: idx,
       content: content,
     })),
   });

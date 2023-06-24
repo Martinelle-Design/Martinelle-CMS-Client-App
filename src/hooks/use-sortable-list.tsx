@@ -27,11 +27,13 @@ export type SortableListProps<T> = {
           React.SetStateAction<
             (T & {
               id: string;
+              orderIdx: number;
             })[]
           >
         >;
         newItems: (T & {
           id: string;
+          orderIdx: number;
         })[];
       }
     | undefined
@@ -40,6 +42,7 @@ export type SortableListProps<T> = {
     React.SetStateAction<
       (T & {
         id: string;
+        orderIdx: number;
       })[]
     >
   >;
@@ -51,7 +54,7 @@ const useSortableList = <T,>({
   customOnDragOver,
   updateDatabaseItems,
 }: {
-  defaultArr: (T & { id: string })[];
+  defaultArr: (T & { id: string; orderIdx: number })[];
   addItemFunc?: (e?: { [k: string]: FormDataEntryValue }) => T | undefined;
   updateDatabaseItems?: (
     newItems: ClientAppItemProps<T>[]
@@ -70,11 +73,13 @@ const useSortableList = <T,>({
     e: DragOverEvent;
     items: (T & {
       id: string;
+      orderIdx: number;
     })[];
     setItems: React.Dispatch<
       React.SetStateAction<
         (T & {
           id: string;
+          orderIdx: number;
         })[]
       >
     >;
@@ -88,18 +93,20 @@ const useSortableList = <T,>({
   const addItem = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     if (!addItemFunc) return;
-    const newItem = addItemFunc();
+    const newItem = addItemFunc() as T & { id: string; orderIdx: number };
     if (!newItem) return;
-    const containsId = (e: any): e is T & { id: string } => {
+    const containsId = (e: any): e is T & { id: string; orderIdx: number } => {
       try {
         return e.id;
       } catch (err) {
         return false;
       }
     };
-    if (containsId(newItem))
-      setItems([newItem as T & { id: string }, ...items]);
-    else setItems([{ ...newItem, id: uuid() }, ...items]);
+    let newItems: (T & { id: string; orderIdx: number })[] = [];
+    if (containsId(newItem)) newItems = [newItem, ...items];
+    else newItems = [{ ...(newItem as any), id: uuid() }, ...items];
+    newItems = newItems.map((item, idx) => ({ ...item, orderIdx: idx }));
+    setItems(newItems);
   };
   const updateItem = async (
     e: React.FormEvent<HTMLFormElement>,
@@ -136,7 +143,9 @@ const useSortableList = <T,>({
   const deleteItem = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const dataset = e.currentTarget.dataset;
     const id = dataset.id;
-    const newItems = items.filter((item) => item.id !== id);
+    const newItems = items
+      .filter((item) => item.id !== id)
+      .map((item, idx) => ({ ...item, orderIdx: idx }));
     setItems(newItems);
   };
   const defaultDragOver = (e: DragOverEvent) => {
@@ -156,11 +165,14 @@ const useSortableList = <T,>({
     const newItem = items.find(
       (item) => item.id === activeId
     ) as ClientAppItemProps<T>;
-    newItem.orderIdx = newActiveItemIdx;
     if (!newItem) return;
     newItems.splice(activeItemIdx, 1);
     newItems.splice(newActiveItemIdx, 0, newItem);
-    setItems(newItems);
+    const adjustedItems = newItems.map((item, idx) => ({
+      ...item,
+      orderIdx: idx,
+    }));
+    setItems(adjustedItems);
   };
   const onDragOver = (e: DragOverEvent) => {
     if (customOnDragOver)

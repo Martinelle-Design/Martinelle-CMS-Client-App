@@ -93,7 +93,6 @@ const ProjectSubPage = ({
 }: {
   className?: string;
   title: string;
-  projectItemArr: ProjectItem[];
   subType: string;
 }) => {
   const {
