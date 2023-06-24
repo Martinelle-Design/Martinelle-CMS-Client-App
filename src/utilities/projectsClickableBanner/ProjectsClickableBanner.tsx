@@ -134,7 +134,6 @@ const ProjectsClickableBanner = ({ noEdit }: { noEdit?: boolean }) => {
       setItems(databaseItems);
     },
   });
-    console.log(items);
   return (
     <>
       {status === "loading" &&
